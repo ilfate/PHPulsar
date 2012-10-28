@@ -7,12 +7,16 @@
  */
 
 
-echo 'Hello World!';
+if (version_compare(phpversion(), '5.3', '<') == true) {
+	die("requires PHP 5.3.x");
+}
+
+define('ILFATE_PATH', __DIR__);
+
+require 'engine/classes/Core.php';
+Core::init();
 
 
 
-echo 'second commit data';
-
-echo 'one more test';
 
 
