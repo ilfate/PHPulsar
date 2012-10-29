@@ -1,0 +1,6 @@
+127.0.0.1 - - [29/Oct/2012:13:23:43 +0400] "GET / HTTP/1.1" 200 448 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"
+127.0.0.1 - - [29/Oct/2012:13:23:43 +0400] "GET /favicon.ico HTTP/1.1" 200 31 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"
+127.0.0.1 - - [29/Oct/2012:13:23:43 +0400] "GET /favicon.ico HTTP/1.1" 200 31 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"
+127.0.0.1 - - [29/Oct/2012:13:23:47 +0400] "GET / HTTP/1.1" 200 31 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"
+127.0.0.1 - - [29/Oct/2012:13:23:48 +0400] "GET / HTTP/1.1" 200 31 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"
+127.0.0.1 - - [29/Oct/2012:13:24:00 +0400] "GET /?action=ttterf HTTP/1.1" 200 41 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:16.0) Gecko/20100101 Firefox/16.0"

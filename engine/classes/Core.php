@@ -37,7 +37,7 @@ class Core {
     self::init();
   }
   /*
-   * here we start to build all we need to our engine
+   * here we start to build all we need for our engine
    */
   public static function init() {
     if(self::$inited) {
