@@ -13,6 +13,18 @@
 class CoreRouting implements CoreInterfaceRouting{
   
   /**
+   * Executing class name
+   * @var String
+   */
+  private $class;
+  
+  /**
+   * Executing class method name
+   * @var String
+   */
+  private $method;
+  
+  /**
    *
    * @var CoreInterfaceRequest 
    */
@@ -20,6 +32,10 @@ class CoreRouting implements CoreInterfaceRouting{
   
   public function __construct(CoreInterfaceRequest $request) {
     $this->request = $request;
+  }
+  
+  public static function __staticConstruct() {
+	
   }
 
   public function getClass() {
@@ -31,14 +47,24 @@ class CoreRouting implements CoreInterfaceRouting{
   }
 
   public function execute() {
-    foreach ($this->request->getGet() as $var) {
-      dump($var); echo '<br>';
-    }
+	$get = CoreRequest::getGet();
+	$controller = key($get);
+	$method = $get[$controller];
+	try {
+	  class_exists('Controller_'.$controller);
+	} catch(CoreError $e) {
+		throw new CoreRoutingError('Cant');
+	}
+	if(!method_exists($method, $method_name)) {
+		
+	}
   }
-  
-  
-  
-  //put your code here
 }
+
+
+/**
+ * Core Routing Error.
+ */
+class CoreRoutingError extends CoreError {}
 
 ?>

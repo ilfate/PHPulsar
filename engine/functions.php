@@ -28,10 +28,15 @@ function ilfate_autoloader($class) {
   $file = ILFATE_PATH . $path . '/' . $type . '/' . str_replace('_', '/', $class_edited) . '.php';
   
   if (file_exists($file) && include_once($file)) {
+	
+	if(method_exists($class, '__staticConstruct')) {
+		call_user_func($class.'::__staticConstruct');
+	}
     return TRUE;
   } else {
-    trigger_error("The class '$class' or the file '$file' failed to spl_autoload", E_USER_WARNING);
-    return FALSE;
+    //trigger_error("The class '$class' or the file '$file' failed to spl_autoload", E_USER_WARNING);
+	throw new CoreError("The class '$class' or the file '$file' failed to spl_autoload");
+	return FALSE;
   }
 
 }

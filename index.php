@@ -13,7 +13,9 @@ if (version_compare(phpversion(), '5.3', '<') == true) {
 
 define('ILFATE_PATH', __DIR__);
 
+// include main engine class
 require 'engine/classes/Core.php';
+// and initialize it
 Core::init();
 
 

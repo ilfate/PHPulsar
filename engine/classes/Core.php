@@ -22,13 +22,23 @@ class Core {
    * @var CoreInterfaceRequest 
    */
   private static $request;
+  
   /**
    *
    * @var CoreInterfaceRouting 
    */
   private static $routing;
+  
+  /**
+   * Project configuration
+   * @var mixed 
+   */
   private static $config;
   
+  /**
+   * shows is Core initialized
+   * @var Boolean
+   */
   private static $inited = false;
   /**
    * we close it for singltone
@@ -54,6 +64,16 @@ class Core {
     self::$request = self::initModule('Request');
     self::$routing = self::initModule('Routing', array(self::$request));
     
+	if(self::$request->getExecutingMode() == CoreRequest::EXECUTE_MODE_HTTP) {
+	  self::commonExecuting();
+	}
+  }
+  
+  /**
+   * Normal executing
+   */
+  public static function commonExecuting() 
+  {
     self::$routing->execute();
   }
   
