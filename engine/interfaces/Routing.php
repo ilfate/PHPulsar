@@ -19,8 +19,7 @@ interface CoreInterfaceRouting {
   
   public function getMethod();
   
-  public function execute();
-  //put your code here
+  public function execute(CoreInterfaceServiceExecuter $serviceExecuter);
 }
 
 ?>

@@ -10,5 +10,7 @@ return array(
         'modules_path' => '/modules', 
         'Request' => 'CoreRequest',
         'Routing' => 'CoreRouting',
+        'Service' => 'CoreService',
+        'ServiceExecuter' => 'CoreServiceExecuter',
     )
 );

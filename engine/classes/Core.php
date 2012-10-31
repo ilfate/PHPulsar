@@ -30,6 +30,12 @@ class Core {
   private static $routing;
   
   /**
+   *
+   * @var CoreInterfaceServiceExecuter
+   */
+  private static $serviceExecuter;
+  
+  /**
    * Project configuration
    * @var mixed 
    */
@@ -43,14 +49,17 @@ class Core {
   /**
    * we close it for singltone
    */
-  private function __construct() {
+  private function __construct() 
+  {
     self::init();
   }
   /*
    * here we start to build all we need for our engine
    */
-  public static function init() {
-    if(self::$inited) {
+  public static function init() 
+  {
+    if(self::$inited) 
+	{
       die("Fatal error. Attempt to init Core second time");
     }
     self::$inited = true;
@@ -64,7 +73,8 @@ class Core {
     self::$request = self::initModule('Request');
     self::$routing = self::initModule('Routing', array(self::$request));
     
-	if(self::$request->getExecutingMode() == CoreRequest::EXECUTE_MODE_HTTP) {
+	if(self::$request->getExecutingMode() == CoreRequest::EXECUTE_MODE_HTTP) 
+	{
 	  self::commonExecuting();
 	}
   }
@@ -74,22 +84,42 @@ class Core {
    */
   public static function commonExecuting() 
   {
-    self::$routing->execute();
+	self::$serviceExecuter = self::initModule('ServiceExecuter');
+	
+    self::$routing->execute(self::$serviceExecuter);
   }
   
-  private static function initModule($name, Array $args = array()) {
-    if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) {
+  
+  
+  private static function initModule($name, Array $args = array()) 
+  {
+    if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) 
+	{
       CoreError::error('Can init module '. $name.'. This module class must appear in config', 101);
     }
-    if(!class_exists(self::$config['project'][$name])) {
+	
+    if(!class_exists(self::$config['project'][$name])) 
+	{
       CoreError::error('Can init module '. $name.'. Class not found', 102);
     }
+	
     if(count($args) == 0)
+	{
       return new self::$config['project'][$name];
-    else {
+    } else {
       $r = new ReflectionClass(self::$config['project'][$name]);
       return $r->newInstanceArgs($args);
     }
+  }
+  
+  public static function getConfig($name) 
+  {
+    if(isset(self::$config['project'][$name]))
+	{
+	  return self::$config['project'][$name];
+	} else {
+	  return null;
+	}
   }
 }
 
