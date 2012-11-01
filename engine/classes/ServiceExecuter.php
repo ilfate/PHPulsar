@@ -24,9 +24,4 @@ class CoreServiceExecuter implements CoreInterfaceServiceExecuter{
 }
 
 
-/**
- * Core Service Error.
- */
-class CoreServiceError extends CoreError {}
-
 ?>

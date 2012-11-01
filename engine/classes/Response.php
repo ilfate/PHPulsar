@@ -10,16 +10,10 @@
  *
  * @author ilfate
  */
-class CoreResponse implements CoreInterfaceResponse
+abstract class CoreResponse implements CoreInterfaceResponse
 {
-  
-  
+
 }
 
-
-/**
- * Core Routing Error.
- */
-class CoreResponseError extends CoreError {}
 
 ?>

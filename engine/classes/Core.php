@@ -89,18 +89,33 @@ class Core {
     self::$routing->execute(self::$serviceExecuter);
   }
   
+  /**
+   * Init and returns response object
+   * 
+   * @param type $content
+   */
+  public static function initResponse($content) 
+  {
+	  if(isset(self::$config['project']['Response'][self::$request->getExecutingMode()])) 
+	  {
+		return new self::$config['project']['Response'][self::$request->getExecutingMode()]($content, self::$routing);
+	  } else {
+		throw new CoreException_Error('Cant find Response implementation class for "' . self::$request->getExecutingMode() . '" in config');
+	  }
+  }
+  
   
   
   private static function initModule($name, Array $args = array()) 
   {
     if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) 
 	{
-      CoreError::error('Can init module '. $name.'. This module class must appear in config', 101);
+		throw new CoreException_Error('Can init module '. $name.'. This module class must appear in config', 101);
     }
 	
     if(!class_exists(self::$config['project'][$name])) 
 	{
-      CoreError::error('Can init module '. $name.'. Class not found', 102);
+		throw new CoreException_Error('Can init module '. $name.'. Class not found', 102);
     }
 	
     if(count($args) == 0)

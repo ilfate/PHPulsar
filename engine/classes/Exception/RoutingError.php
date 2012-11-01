@@ -6,16 +6,13 @@
  */
 
 /**
- * Description of Response
- *
+ * 
  * @author ilfate
  */
-interface CoreInterfaceResponse {
-	
-
-  public function __construct($result, $routing);
+class CoreException_RoutingError extends CoreException_Error {
   
- 
 }
+
+
 
 ?>

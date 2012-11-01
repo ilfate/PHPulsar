@@ -60,7 +60,7 @@ class CoreRouting implements CoreInterfaceRouting{
 	{
 	  return $this->class;	
 	} else {
-		throw new CoreRoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
+		throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
 	}
   }
 
@@ -76,7 +76,7 @@ class CoreRouting implements CoreInterfaceRouting{
 	{
 	  return $this->method;	
 	} else {
-		throw new CoreRoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
+		throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
 	}
   }
 
@@ -108,33 +108,27 @@ class CoreRouting implements CoreInterfaceRouting{
 	  // If there is no such class we will catch exception about it
 	  class_exists($prefixed_class);
 	} catch(CoreError $e) {
-		throw new CoreRoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
+		throw new CoreException_RoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
 	}
 	
 	if(!method_exists($prefixed_class, $method)) 
 	{
-		throw new CoreRoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
+		throw new CoreException_RoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
 	}
 	
-	$this->class = $prefixed_class;
+	$this->class = $class;
 	$this->method = $method;
 	
+	// here we execute services BEFORE main content
 	$serviceExecuter->callPreServices();
 	
-	$response_name = Core::getConfig('Response');
+	$obj = new $prefixed_class();
+	$response = Core::initResponse($obj->$method());
 	
-	$obj = new $this->class();
-	$response = new $response_name($obj->$method());
-	
+	// here we execute services AFTER main content
 	$serviceExecuter->callPostServices();
 	return $response;
   }
 }
-
-
-/**
- * Core Routing Error.
- */
-class CoreRoutingError extends CoreError {}
 
 ?>
