@@ -6,16 +6,14 @@
  */
 
 /**
- * Description of Main
+ * Description of CoreView
  *
  * @author ilfate
  */
-class Controller_Main {
-	//put your code here
-	
-	public function index() {
-		return array();
-	}
+abstract class CoreView implements CoreInterfaceView
+{
+
 }
+
 
 ?>

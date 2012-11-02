@@ -13,19 +13,37 @@
  */
 class CoreResponse_Http extends CoreResponse 
 {
-	
-  const TEMPLATE_FILE_EXTENSION = 'tpl';
-	
+		
   /**
    *
    * @var CoreInterfaceRouting 
    */
   private $routing;
+  
+  /**
+   *
+   * @var CoreInterfaceView 
+   */
+  private $view;
+  
+  /**
+   *
+   * @var array 
+   */
+  private $result;
+  
+  /**
+   *
+   * @var string 
+   */
+  private $content;
+  
   /**
    * 
-   * @param type $result
+   * @param array                    $result
+   * @param CoreInterfaceRouting     $routing
    */
-  public function __construct($result, CoreInterfaceRouting $routing) 
+  public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null) 
   {
 	$this->routing = $routing;
 	if(!is_array($result))
@@ -33,12 +51,17 @@ class CoreResponse_Http extends CoreResponse
 	  throw new CoreException_ResponseHttpError('Returned content of type Array expected');
 	}
 	
+	
+	if(!$view)
+	{
+	  throw new CoreException_ResponseHttpError('ResponseHttp needs View to build response');
+	}
+	$this->view = $view;
 	if(!isset($result['tpl']))
 	{
 	  $result['tpl'] = $this->getTemplateByRoute();
 	}
-	
-	
+	$this->result = $result;
   }
   
   /**
@@ -48,7 +71,19 @@ class CoreResponse_Http extends CoreResponse
    */
   private function getTemplateByRoute() 
   {
-    return $this->routing->getClass() . '/' . $this->routing->getMethod() . '.' . self::TEMPLATE_FILE_EXTENSION;	  
+    return $this->routing->getClass() . '/' . $this->routing->getMethod() . '.' . CoreView_Http::TEMPLATE_FILE_EXTENSION;	  
+  }
+  
+  /**
+   * returns content
+   */
+  public function getContent() 
+  {
+    if(!$this->content) 
+	{
+      $this->content = $this->view->render($this->result['tpl'], $this->result);
+	}
+	return $this->content;
   }
 }
 

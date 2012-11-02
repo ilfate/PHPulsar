@@ -16,5 +16,9 @@ return array(
 			'abstract'      => 'CoreResponse',
 			'http'          => 'CoreResponse_Http'
 		),
+        'View'                   => array(
+			'abstract'      => 'CoreView',
+			'http'          => 'CoreView_Http'
+		),
     )
 );

@@ -31,6 +31,12 @@ class Core {
   
   /**
    *
+   * @var array
+   */
+  private static $views;
+  
+  /**
+   *
    * @var CoreInterfaceServiceExecuter
    */
   private static $serviceExecuter;
@@ -86,7 +92,21 @@ class Core {
   {
 	self::$serviceExecuter = self::initModule('ServiceExecuter');
 	
-    self::$routing->execute(self::$serviceExecuter);
+    $response = self::$routing->execute(self::$serviceExecuter);
+	
+	self::output($response);
+  }
+  
+  /**
+   * This function takes response and flushs it
+   * 
+   * @param CoreInterfaceResponse $response
+   */
+  public static function output(CoreInterfaceResponse $response)
+  {
+	$content = $response->getContent();
+	
+	echo $content;
   }
   
   /**
@@ -96,12 +116,20 @@ class Core {
    */
   public static function initResponse($content) 
   {
-	  if(isset(self::$config['project']['Response'][self::$request->getExecutingMode()])) 
+	if(!isset(self::$config['project']['Response'][self::$request->getExecutingMode()])) 
+	{
+	  throw new CoreException_Error('Cant find Response implementation class for "' . self::$request->getExecutingMode() . '" in config');
+	} 
+	if(!isset(self::$views[self::$request->getExecutingMode()]))
+    {
+	  if(isset(self::$config['project']['View'][self::$request->getExecutingMode()])) 
 	  {
-		return new self::$config['project']['Response'][self::$request->getExecutingMode()]($content, self::$routing);
+	    self::$views[self::$request->getExecutingMode()] = new self::$config['project']['View'][self::$request->getExecutingMode()]();
 	  } else {
-		throw new CoreException_Error('Cant find Response implementation class for "' . self::$request->getExecutingMode() . '" in config');
+		self::$views[self::$request->getExecutingMode()] = null;
 	  }
+	}
+	return new self::$config['project']['Response'][self::$request->getExecutingMode()]($content, self::$routing, self::$views[self::$request->getExecutingMode()]);
   }
   
   
