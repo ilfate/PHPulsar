@@ -3,7 +3,7 @@
 
 
 return array(
-    'project' => array(
+  'project' => array(
         'main_path'                  => 'config.php',
         'engine_path'                => '/engine',
         'app_path'                   => '/app',
@@ -14,11 +14,13 @@ return array(
         'ServiceExecuter'            => 'CoreServiceExecuter',
         'Response'                   => array(
 			'abstract'      => 'CoreResponse',
-			'http'          => 'CoreResponse_Http'
+			'http'          => 'CoreResponse_Http',
+			'subquery'      => 'CoreResponse_Http'
 		),
-        'View'                   => array(
+        'View'                       => array(
 			'abstract'      => 'CoreView',
-			'http'          => 'CoreView_Http'
+			'http'          => 'CoreView_Http',
+			'subquery'      => 'CoreView_Http'
 		),
-    )
+  )
 );

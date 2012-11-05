@@ -10,12 +10,39 @@
  *
  * @author ilfate
  */
-class Controller_Main {
+class Controller_Main extends Controller {
 	//put your code here
 	
-	public function index() {
+  /**
+   * @cache 10 tag tag2aw[1] tags
+   * @return type 
+   */
+	public static function _index() {
+    dump('index no chache');
 		return array();
 	}
+  
+  
+  /**
+   * 
+   * @return type 
+   */
+  public static function _page()
+  {
+    return array(
+      'tpl' => 'Main/index.tpl'
+    );
+  }
+  
+  /**
+   * @cache 15
+   * @return type 
+   */
+  public static function _Menu() 
+  {
+    dump('menu no cahche');
+    return array();
+  }
 }
 
 ?>

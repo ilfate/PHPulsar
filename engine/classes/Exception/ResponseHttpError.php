@@ -9,7 +9,8 @@
  * 
  * @author ilfate
  */
-class CoreException_ResponseHttpError extends CoreException_Error {
+class CoreException_ResponseHttpError extends CoreException_Error 
+{
   
 }
 

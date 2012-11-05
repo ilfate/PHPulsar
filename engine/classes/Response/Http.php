@@ -45,23 +45,23 @@ class CoreResponse_Http extends CoreResponse
    */
   public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null) 
   {
-	$this->routing = $routing;
-	if(!is_array($result))
-	{
-	  throw new CoreException_ResponseHttpError('Returned content of type Array expected');
-	}
-	
-	
-	if(!$view)
-	{
-	  throw new CoreException_ResponseHttpError('ResponseHttp needs View to build response');
-	}
-	$this->view = $view;
-	if(!isset($result['tpl']))
-	{
-	  $result['tpl'] = $this->getTemplateByRoute();
-	}
-	$this->result = $result;
+    $this->routing = $routing;
+    if(!is_array($result))
+    {
+      throw new CoreException_ResponseHttpError('Returned content of type Array expected');
+    }
+
+
+    if(!$view)
+    {
+      throw new CoreException_ResponseHttpError('ResponseHttp needs View to build response');
+    }
+    $this->view = $view;
+    if(!isset($result['tpl']))
+    {
+      $result['tpl'] = $this->getTemplateByRoute();
+    }
+    $this->result = $result;
   }
   
   /**
@@ -80,10 +80,12 @@ class CoreResponse_Http extends CoreResponse
   public function getContent() 
   {
     if(!$this->content) 
-	{
-      $this->content = $this->view->render($this->result['tpl'], $this->result);
-	}
-	return $this->content;
+    {
+      $tpl = isset($this->result['tpl']) ? $this->result['tpl'] : '';
+      $layout = isset($this->result['layout']) ? $this->result['layout'] : array();
+      $this->content = $this->view->render($tpl, $this->result, $layout);
+    }
+    return $this->content;
   }
 }
 

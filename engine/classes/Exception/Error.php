@@ -10,8 +10,10 @@
  *
  * @author ilfate
  */
-class CoreException_Error extends Exception {
-  public static function error($text, $type) {
+class CoreException_Error extends Exception 
+{
+  public static function error($text, $type) 
+  {
     
   }
 }

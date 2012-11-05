@@ -24,6 +24,8 @@ class CoreRouting implements CoreInterfaceRouting{
    */
   private $method;
   
+  private $save;
+  
   /**
    * prefix witch we will add to all route class to call
    */
@@ -57,27 +59,38 @@ class CoreRouting implements CoreInterfaceRouting{
   public function getClass() 
   {
     if($this->class) 
-	{
-	  return $this->class;	
-	} else {
-		throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
-	}
+    {
+      return $this->class;	
+    } else {
+      throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
+    }
+  }
+  
+  /**
+   * returns executing class name
+   * 
+   * @return String
+   * @throws CoreRoutingError
+   */
+  public function getPrefixedClass() 
+  {
+    return self::CLASS_PREFIX . $this->getClass();
   }
 
   /**
    * returns executing metod name
    * 
    * @return String
-   * @throws CoreRoutingError
+   * @throws CoreRoutingError$prefixed_class
    */
   public function getMethod() 
   {
     if($this->method) 
-	{
-	  return $this->method;	
-	} else {
-		throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
-	}
+    {
+      return $this->method;	
+    } else {
+      throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
+    }
   }
 
   /**
@@ -90,44 +103,63 @@ class CoreRouting implements CoreInterfaceRouting{
    * 
    * @throws CoreRoutingError
    */
-  public function execute(CoreInterfaceServiceExecuter $serviceExecuter = null) 
+  public function execute() 
   {
-	$get = CoreRequest::getGet();
-	if(!$get) // if there is no params in GET we need to set default
-	{
-	  $class = self::DEFAULT_CLASS;
-	  $method = self::DEFAULT_METHOD;
-	} else {
-	  $class = key($get);
-	  $method = $get[$class];
-	}
-	
-	$prefixed_class = self::CLASS_PREFIX . $class;
-	
-	try {// here we try to force out autoloader.
-	  // If there is no such class we will catch exception about it
-	  class_exists($prefixed_class);
-	} catch(CoreError $e) {
-		throw new CoreException_RoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
-	}
-	
-	if(!method_exists($prefixed_class, $method)) 
-	{
-		throw new CoreException_RoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
-	}
-	
-	$this->class = $class;
-	$this->method = $method;
-	
-	// here we execute services BEFORE main content
-	$serviceExecuter->callPreServices();
-	
-	$obj = new $prefixed_class();
-	$response = Core::initResponse($obj->$method());
-	
-	// here we execute services AFTER main content
-	$serviceExecuter->callPostServices();
-	return $response;
+    $get = CoreRequest::getGet();
+    if(!$get) // if there is no params in GET we need to set default
+    {
+      $class = self::DEFAULT_CLASS;
+      $method = self::DEFAULT_METHOD;
+    } else {
+      $class = key($get);
+      $method = $get[$class];
+    }
+
+    $prefixed_class = self::CLASS_PREFIX . $class;
+
+    try {// here we try to force out autoloader.
+      // If there is no such class we will catch exception about it
+      class_exists($prefixed_class);
+    } catch(CoreError $e) {
+      throw new CoreException_RoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
+    }
+
+    if(!method_exists($prefixed_class, $method) && !method_exists($prefixed_class, '_' . $method) ) 
+    {
+      throw new CoreException_RoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
+    }
+
+    $this->class = $class;
+    $this->method = $method;
+  }
+  
+  
+  /**
+   * Save current request and sets new fake params
+   * @param type $get
+   * @param type $post 
+   */
+  public function setFakeRouting($class, $method)
+  {
+    $data = array('class' => $this->getClass(), 'method' => $this->getMethod());
+    if(!$this->save)
+    {
+      $this->save = array($data);
+    } else {
+      $this->save[] = $data;
+    }
+    $this->class = $class;
+    $this->method = $method;
+  }
+  
+  public function restoreRouting()
+  {
+    if($this->save)
+    {
+      $data = array_pop($this->save);
+      $this->class = $data['class'];
+      $this->method = $data['method'];
+    }
   }
 }
 

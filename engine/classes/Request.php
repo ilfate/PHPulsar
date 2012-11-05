@@ -14,31 +14,39 @@ class CoreRequest implements CoreInterfaceRequest {
   
   private static $post;
   private static $get;
+  private static $save;
   
   const EXECUTE_MODE_HTTP = 'http';
   const EXECUTE_MODE_HTTP_AJAX = 'ajax';
   const EXECUTE_MODE_HTTP_SUBQUERY = 'subquery';
   const EXECUTE_MODE_CLI = 'cli';
+  
+  const PARAM_AJAX = '__ajax';
 
   private $executingMode;
 
   //put your code here
-  public function getRequest() {
+  public function getRequest() 
+  {
     
   }
   
-  public function __construct() {
+  public function __construct() 
+  {
     $escape_function = function(&$item, $key) {
       $item = htmlentities($item);
       $item = mysql_real_escape_string($item);
     };
-    self::$post = $_POST;
-    self::$get = $_GET;
     
-    if(self::$post) {
+    self::$get = $_GET;
+    self::$post = $_POST;
+       
+    if(self::$post) 
+    {
       array_walk_recursive(self::$post, $escape_function);
     }
-    if(self::$get) {
+    if(self::$get) 
+    {
       array_walk_recursive(self::$get, $escape_function);
     }
   }
@@ -48,7 +56,8 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getPost() {
+  public static function getPost() 
+  {
     return self::$post;
   }
   
@@ -57,8 +66,39 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getGet() {
+  public static function getGet() 
+  {
     return self::$get;
+  }
+  
+  /**
+   * Save current request and sets new fake params
+   * @param type $get
+   * @param type $post 
+   */
+  public function setFakeRequest($get, $post)
+  {
+    $data = array('get' => self::$get, 'post' => $post, 'mode' => $this->getExecutingMode());
+    if(!self::$save)
+    {
+      self::$save = array($data);
+    } else {
+      self::$save[] = $data;
+    }
+    self::$get = $get;
+    self::$post = $post;
+    $this->executingMode = self::EXECUTE_MODE_HTTP_SUBQUERY;
+  }
+  
+  public function restoreRequest()
+  {
+    if(self::$save)
+    {
+      $data = array_pop(self::$save);
+      self::$get = $data['get'];
+      self::$post = $data['post'];
+      $this->executingMode = $data['mode'];
+    }
   }
   
   /**
@@ -66,14 +106,47 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return string
    */
-  public function getExecutingMode() {
-	if(!$this->executingMode) 
-	{
-	  // if no mode setted, let it be HTTP
-	  $this->executingMode = self::EXECUTE_MODE_HTTP;
-	}
-	return $this->executingMode;
+  public function getExecutingMode() 
+  {
+    if(!$this->executingMode) 
+    {
+      if(isset(self::$get[self::PARAM_AJAX]))
+      {
+        $this->executingMode = self::EXECUTE_MODE_HTTP_AJAX;
+      } else {
+        // if no mode setted, let it be HTTP
+        $this->executingMode = self::EXECUTE_MODE_HTTP;
+      }
+    }
+    return $this->executingMode;
   }
+  
+  
+  /**
+	 * Get user IP
+	 *
+	 * @return string
+	 */
+	public static function getRemoteAddress() 
+  {
+		return (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && !empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
+	}
+  
+  /**
+	 * Get URI of the request (without server adress)
+	 *
+	 * @return string
+	 */
+	public static function getUri() 
+  {
+		if(isset($_SERVER["REQUEST_URI"])) 
+    {
+			$uri = parse_url($_SERVER["REQUEST_URI"]);
+			return ($uri["path"] == "/" ? $uri["path"] : rtrim($uri["path"], "/")) . (isset($uri["query"]) ? "?" . $uri["query"] : "");
+		} else {
+			return "";
+		}
+	}
 }
 
 ?>

@@ -9,7 +9,7 @@
  * 
  * @author ilfate
  */
-class CoreException_RoutingError extends CoreException_Error 
+class CoreException_CacheError extends CoreException_Error 
 {
   
 }

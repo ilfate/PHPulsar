@@ -35,7 +35,7 @@ function ilfate_autoloader($class) {
     return TRUE;
   } else {
     //trigger_error("The class '$class' or the file '$file' failed to spl_autoload", E_USER_WARNING);
-	throw new CoreError("The class '$class' or the file '$file' failed to spl_autoload");
+	throw new CoreException_Error("The class '$class' or the file '$file' failed to spl_autoload");
 	return FALSE;
   }
 

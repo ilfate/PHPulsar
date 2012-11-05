@@ -6,14 +6,14 @@
  */
 
 /**
- * 
+ * Helper class 
+ *
  * @author ilfate
  */
-class CoreException_RoutingError extends CoreException_Error 
+class Helper extends CoreHelper
 {
   
+ 
 }
-
-
 
 ?>
