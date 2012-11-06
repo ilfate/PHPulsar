@@ -20,6 +20,8 @@ interface CoreInterfaceRouting {
   public function getMethod();
   
   public function execute();
+  
+  public function getUrl($class, $method);
 }
 
 ?>

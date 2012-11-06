@@ -33,6 +33,32 @@ class CoreHelper
   }
   
   
+  public static function url(array $route, array $get = null)
+  {
+	list($class, $method) = $route;
+	$url = Core::createUrl($class, $method);
+	if($get)
+	{	
+      $url .= (strpos($url, '?') === false) ? '?' : '&';
+	  $url .= http_build_query($get);
+	}
+	return $url;
+  }
+  
+  
+  public static function redirect($redirect_way, array $get = null)
+  {
+	if(is_string($redirect_way))
+	{
+      $url = $redirect_way;
+	} elseif(is_array($redirect_way)) 
+	{
+      $url = Helper::url($redirect_way, $get);
+	}
+	header('Location: ' . $url);
+  }
+  
+  
   
  
 }

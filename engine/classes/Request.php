@@ -35,7 +35,8 @@ class CoreRequest implements CoreInterfaceRequest {
   {
     $escape_function = function(&$item, $key) {
       $item = htmlentities($item);
-      $item = mysql_real_escape_string($item);
+      //$item = mysql_real_escape_string($item);
+	  
     };
     
     self::$get = $_GET;

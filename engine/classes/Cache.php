@@ -42,7 +42,7 @@ class CoreCache {
 	 * @throws CoreException_CacheError if extension isn't loaded
 	 * @return Memcache|Memcached the memcache instance 
 	 */
-	protected function getMemCache()
+	protected static function getMemCache()
 	{
 		if(self::$cache !== null)
     {
@@ -63,7 +63,7 @@ class CoreCache {
 		}
 	}
   
-  private function getServers()
+  private static function getServers()
   {
     
   }
@@ -90,12 +90,12 @@ class CoreCache {
    * @return Boolean 
    */
   public static function set($key, $value, $expire = 0, array $tags = null)
-	{
-		if($expire>0)
+  {
+    if($expire>0)
     {
-			$expire+=time();
-    }	else {
-			$expire=0;
+      $expire+=time();
+    } else {
+      $expire=0;
     }
     if($tags)
     {
@@ -115,8 +115,8 @@ class CoreCache {
     
     self::$local[$key] = $value;
     
-		return self::$cache->set($key, $value, $expire);
-	}
+	return self::$cache->set($key, $value, $expire);
+  }
   
   /**
    *
@@ -126,12 +126,12 @@ class CoreCache {
    * @return Boolean 
    */
   public static function add($key, $value, $expire, array $tags = null)
-	{
-		if($expire>0)
+  {
+    if($expire>0)
     {
-			$expire+=time();
-    }	else {
-			$expire=0;
+      $expire+=time();
+    } else {
+      $expire=0;
     }
     
     if($tags)
@@ -163,12 +163,13 @@ class CoreCache {
    * @return Boolean 
    */
   public static function delete($key)
-	{
-    if(isset(self::$local[$key])) {
+  {
+    if(isset(self::$local[$key])) 
+    {
       unset(self::$local[$key]);
     }
-		return self::$cache->delete($key, 0);
-	}
+    return self::$cache->delete($key, 0);
+  }
   
   /**
 	 * Delete all keys that are marked with tag
@@ -176,29 +177,30 @@ class CoreCache {
 	 * @param string $tag Tag
 	 * @return boolean
 	 */
-	public static function deleteTag($tag) 
+  public static function deleteTag($tag) 
   {
-		$keys = self::$cache->get("__tag__" . $tag);
-		if ($keys) {
-			$keys = explode("||", $keys);
-			foreach ($keys as $key) 
+    $keys = self::$cache->get("__tag__" . $tag);
+    if ($keys) 
+    {
+      $keys = explode("||", $keys);
+      foreach ($keys as $key) 
       {
-				self::delete($key);
-			}
-			self::delete("__tag__" . $tag);
-			$result = true;
-		} else {
-			$result =  false;
-		}
-		return $result;
-	}
+        self::delete($key);
+      }
+      self::delete("__tag__" . $tag);
+      $result = true;
+    } else {
+      $result =  false;
+    }
+    return $result;
+  }
   
   
-  public function flushValues()
-	{
+  public static function flush()
+  {
     self::$local = array();
-		return $this->cache->flush();
-	}
+    return self::$cache->flush();
+  }
   
   
 }

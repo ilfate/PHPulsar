@@ -135,7 +135,8 @@ class CoreRouting implements CoreInterfaceRouting{
   
   
   /**
-   * Save current request and sets new fake params
+   * Save current rouring and sets new fake params
+   * 
    * @param type $get
    * @param type $post 
    */
@@ -152,6 +153,9 @@ class CoreRouting implements CoreInterfaceRouting{
     $this->method = $method;
   }
   
+  /**
+   * Restore previous routing params
+   */
   public function restoreRouting()
   {
     if($this->save)
@@ -159,7 +163,21 @@ class CoreRouting implements CoreInterfaceRouting{
       $data = array_pop($this->save);
       $this->class = $data['class'];
       $this->method = $data['method'];
-    }
+    } else {
+      throw new CoreException_RoutingError('Cant restore Routing settings.');
+	}
+  }
+  
+  /**
+   * Revers routing. Creates url from Class and Method
+   * 
+   * @param string $class
+   * @param string $method
+   * @return string
+   */
+  public function getUrl($class, $method)
+  {
+	  return '?' . $class . '=' . $method;
   }
 }
 

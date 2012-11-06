@@ -102,7 +102,7 @@ class Core {
 
       $class = self::$routing->getPrefixedClass();
       $method = self::$routing->getMethod();
-      $response = Core::initResponse($class::$method('tttty','rrrfg'));
+      $response = Core::initResponse($class::$method());
       self::output($response);
       // here we execute services AFTER main content
       self::$serviceExecuter->callPostServices();
@@ -213,6 +213,12 @@ class Core {
     } else {
       return null;
     }
+  }
+  
+  
+  public static function createUrl($class, $method)
+  {
+	return self::$routing->getUrl($class, $method);
   }
 }
 

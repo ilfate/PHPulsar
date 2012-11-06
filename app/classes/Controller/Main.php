@@ -14,10 +14,19 @@ class Controller_Main extends Controller {
 	//put your code here
 	
   /**
-   * @cache 10 tag tag2aw[1] tags
+   * 
    * @return type 
    */
 	public static function _index() {
+    dump('index no chache');
+		return array();
+	}
+	
+  /**
+   * @cache 10 tag tag2aw[1] tags
+   * @return type 
+   */
+	public static function _cache() {
     dump('index no chache');
 		return array();
 	}
@@ -42,6 +51,12 @@ class Controller_Main extends Controller {
   {
     dump('menu no cahche');
     return array();
+  }
+  
+  public static function flush()
+  {
+	Cache::flush();
+	Helper::redirect(array('Main', 'index'));
   }
 }
 
