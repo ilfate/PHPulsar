@@ -10,7 +10,7 @@
  *
  * @author ilfate
  */
-class ModuleRequest implements CoreInterfaceRequest {
+class ModuleRequest extends CoreRequest {
   public static $test = 'awdawd';
   //put your code here
   public function getRequest() {

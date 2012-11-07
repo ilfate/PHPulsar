@@ -76,10 +76,10 @@ class Core {
 
       spl_autoload_register('ilfate_autoloader');
 
-      self::$request = self::initModule('Request');
+      self::$request = new Request();
       self::$routing = self::initModule('Routing', array(self::$request));
     
-    if(self::$request->getExecutingMode() == CoreRequest::EXECUTE_MODE_HTTP) 
+    if(self::$request->getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
     {
       self::commonExecuting();
     }
