@@ -31,6 +31,14 @@ class Controller_Main extends Controller {
 		return array();
 	}
   
+  public static function mysql()
+  {
+    $user = new Model_User();
+    dump($user->load(). '<br>');
+    return array(
+      'tpl' => 'Main/index.tpl'
+    );
+  }
   
   /**
    * 

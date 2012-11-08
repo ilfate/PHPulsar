@@ -49,4 +49,16 @@ function dump() {
   }
 }
 
+/**
+ * Somewhat naive way to determine if an array is a hash.
+ */
+function is_hash(&$array)
+{
+	if (!is_array($array))
+		return false;
+
+	$keys = array_keys($array);
+	return @is_string($keys[0]) ? true : false;
+}
+
 
