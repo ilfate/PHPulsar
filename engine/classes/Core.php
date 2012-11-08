@@ -77,7 +77,7 @@ class Core {
       spl_autoload_register('ilfate_autoloader');
 
       self::$request = new Request();
-      self::$routing = self::initModule('Routing', array(self::$request));
+      self::$routing = new Routing(self::$request);
     
     if(self::$request->getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
     {
@@ -90,7 +90,7 @@ class Core {
    */
   public static function commonExecuting() 
   {
-    self::$serviceExecuter = self::initModule('ServiceExecuter');
+    self::$serviceExecuter = new ServiceExecuter();
     
     // define routing class and method
     self::$routing->execute();
@@ -184,26 +184,26 @@ class Core {
   
   
   
-  private static function initModule($name, Array $args = array()) 
-  {
-    if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) 
-    {
-      throw new CoreException_Error('Can init module '. $name.'. This module class must appear in config', 101);
-    }
-	
-    if(!class_exists(self::$config['project'][$name])) 
-    {
-      throw new CoreException_Error('Can init module '. $name.'. Class not found', 102);
-    }
-	
-    if(count($args) == 0)
-    {
-      return new self::$config['project'][$name];
-    } else {
-      $r = new ReflectionClass(self::$config['project'][$name]);
-      return $r->newInstanceArgs($args);
-    }
-  }
+//  private static function initModule($name, Array $args = array()) 
+//  {
+//    if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) 
+//    {
+//      throw new CoreException_Error('Can init module '. $name.'. This module class must appear in config', 101);
+//    }
+//	
+//    if(!class_exists(self::$config['project'][$name])) 
+//    {
+//      throw new CoreException_Error('Can init module '. $name.'. Class not found', 102);
+//    }
+//	
+//    if(count($args) == 0)
+//    {
+//      return new self::$config['project'][$name];
+//    } else {
+//      $r = new ReflectionClass(self::$config['project'][$name]);
+//      return $r->newInstanceArgs($args);
+//    }
+//  }
   
   public static function getConfig($name) 
   {

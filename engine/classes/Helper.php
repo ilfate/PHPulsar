@@ -54,6 +54,8 @@ class CoreHelper
 	} elseif(is_array($redirect_way)) 
 	{
       $url = Helper::url($redirect_way, $get);
+	} else {
+		throw new CoreException_Error('Error during redirect. Can`t find link or correct route.');
 	}
 	header('Location: ' . $url);
   }

@@ -10,11 +10,8 @@
  *
  * @author ilfate
  */
-class Cache extends ModuleCache
-{
-  
-  
-  
+class ModuleCache extends CoreCache {
+    
 }
 
 ?>

@@ -18,16 +18,16 @@ class Controller_Main extends Controller {
    * @return type 
    */
 	public static function _index() {
-    dump('index no chache');
+        self::cache('aaa', 'bbb', 'ccc');
 		return array();
 	}
 	
   /**
-   * @cache 10 tag tag2aw[1] tags
+   * @cache 10 tag tag2aw[1] tags t2[2][0]
    * @return type 
    */
 	public static function _cache() {
-    dump('index no chache');
+    dump('_cache method. no chache<br>');
 		return array();
 	}
   

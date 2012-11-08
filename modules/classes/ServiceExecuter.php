@@ -6,15 +6,14 @@
  */
 
 /**
- * Cache class 
+ * Description of ServiceExecuter
  *
  * @author ilfate
  */
-class Cache extends ModuleCache
+class ModuleServiceExecuter extends CoreServiceExecuter
 {
   
-  
-  
 }
+
 
 ?>

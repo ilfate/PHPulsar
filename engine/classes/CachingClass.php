@@ -10,9 +10,14 @@
  *
  * @author ilfate
  */
-class CoreCachingClass
+abstract class CoreCachingClass
 {
   
+  const TAGS_PARAM_DELIMITER = '__p__';
+  const TAGS_DELIMITER       = '__t__';
+  const CLASS_DELIMITER      = '__c__';
+  
+	
   private static $meta;
   
   public static $forceNoCache = false;
@@ -28,9 +33,9 @@ class CoreCachingClass
 	public static function getCacheKey($method, $parameters) {
 		$class = get_called_class();
 		if (empty($parameters)) {
-			return $class . "__c__" . $method;
+			return $class . self::CLASS_DELIMITER . $method;
 		} else {
-			return $class . "__c__" . $method . "__" . md5(str_replace("\"", "", json_encode($parameters)));
+			return $class . self::CLASS_DELIMITER . $method . "__" . md5(str_replace("\"", "", json_encode($parameters)));
 		}
 	}
 
@@ -40,25 +45,31 @@ class CoreCachingClass
 	 * @param string $tag tag name
 	 * @return string
 	 */
-	public static function getCacheTag($tag, $parameters) {
-		$class = get_called_class();
+  public static function getCacheTag($tag, $parameters) 
+  {
+    $class = get_called_class();
     if(strpos($tag, '[') !== false)
     {
       $maches = array();
-      preg_match('#\[(\d+)\]#', $tag, $maches);
-      if(isset($maches[1]))
+	  // search for params like [0] [1] [2] ect...
+      preg_match_all('#\[(\d+)\]#', $tag, $maches);
+	  
+      if(sizeof($maches) > 0)
       {
-        if(!isset($parameters[$maches[1]]))
-        {
-          throw new CoreException_CacheError('Error during caching Tag with param. Param '. $maches[1] . ' is mising');
-        }
-        $tag = strstr($tag, '[', true);
-        $tag .= '_' . $parameters[$maches[1]];
+        $param_arr = $maches[1];
+		$tag = strstr($tag, '[', true) . self::TAGS_PARAM_DELIMITER;
+		foreach ($param_arr as $param_num)
+		{
+		  if(!isset($parameters[$param_num]))
+		  {
+			throw new CoreException_CacheError('Error during caching Tag with param. Param '. $param_num . ' is mising');
+		  }
+		  $tag .= '_' . $parameters[$param_num];
+		}
       }
     }
-    dump($class . "__t__" . $tag .'<br>');
-		return $class . "__t__" . $tag;
-	}
+    return $class . self::TAGS_DELIMITER . $tag;
+  }
 
   /**
    * What we doing here? We saying that every class that extends from this one
@@ -69,38 +80,39 @@ class CoreCachingClass
    * if you write "@cache 60 myTag" method will be cached with "myTag" tag.
    * 
    */
-	public static function __callStatic($method, $arguments = array()) {
-		$class = get_called_class();
-		$callMethod = "_" . $method;
-		if (!method_exists($class, $callMethod)) 
+  public static function __callStatic($method, $arguments = array()) 
+  {
+    $class = get_called_class();
+    $callMethod = "_" . $method;
+    if (!method_exists($class, $callMethod)) 
     {
-			throw new CoreException_Error("Method " . $class . "::" . $method . "() does not exist");
-		}
+      throw new CoreException_Error("Method " . $class . "::" . $method . "() does not exist");
+    }
     // metaKey uses or saving methods params to not analize them many times
-		$metaKey = $class . "::" . $callMethod;
-		if (!isset(self::$meta[$metaKey])) 
+    $metaKey = $class . "::" . $callMethod;
+    if (!isset(self::$meta[$metaKey])) 
     {
-			$meta = new ReflectionMethod($class, $callMethod);
-			$comment = $meta->getDocComment();
-			$params = array();
-			if (!empty($comment)) // If there is phpDoc search it for comments that we need
+      $meta = new ReflectionMethod($class, $callMethod);
+      $comment = $meta->getDocComment();
+      $params = array();
+      if (!empty($comment)) // If there is phpDoc search it for comments that we need
       { 
-				preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
-				if (!empty($matches)) 
+        preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
+        if (!empty($matches)) 
         {
-					$params["cache"] = true;
-					$params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
-					$params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
-				}
-			}
-			self::$meta[$metaKey] = $params;
-		}
+          $params["cache"] = true;
+          $params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
+          $params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
+        }
+      }
+      self::$meta[$metaKey] = $params;
+    }
 
     // If if have correct params we starting to looking for cache
-		if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
+    if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
     {
-			$cacheKey = self::getCacheKey($method, $arguments);
-			if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) 
+      $cacheKey = self::getCacheKey($method, $arguments);
+      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) 
       {
 				$result = forward_static_call_array(array($class, $callMethod), $arguments);
 				$tags = null;
