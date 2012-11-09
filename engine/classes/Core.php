@@ -182,29 +182,6 @@ class Core {
     return new self::$config['project']['Response'][self::$request->getExecutingMode()]($content, self::$routing, self::$views[self::$request->getExecutingMode()]);
   }
   
-  
-  
-//  private static function initModule($name, Array $args = array()) 
-//  {
-//    if(!isset(self::$config['project'][$name]) || !self::$config['project'][$name]) 
-//    {
-//      throw new CoreException_Error('Can init module '. $name.'. This module class must appear in config', 101);
-//    }
-//	
-//    if(!class_exists(self::$config['project'][$name])) 
-//    {
-//      throw new CoreException_Error('Can init module '. $name.'. Class not found', 102);
-//    }
-//	
-//    if(count($args) == 0)
-//    {
-//      return new self::$config['project'][$name];
-//    } else {
-//      $r = new ReflectionClass(self::$config['project'][$name]);
-//      return $r->newInstanceArgs($args);
-//    }
-//  }
-  
   public static function getConfig($name) 
   {
     if(isset(self::$config['project'][$name]))

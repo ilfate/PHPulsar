@@ -84,85 +84,41 @@ abstract class CoreCachingClass
   {
     $class = get_called_class();
     $callMethod = "_" . $method;
-    if (!method_exists($class, $callMethod)) 
-    {
-      throw new CoreException_Error("Method " . $class . "::" . $method . "() does not exist");
-    }
-    // metaKey uses or saving methods params to not analize them many times
-    $metaKey = $class . "::" . $callMethod;
-    if (!isset(self::$meta[$metaKey])) 
-    {
-      $meta = new ReflectionMethod($class, $callMethod);
-      $comment = $meta->getDocComment();
-      $params = array();
-      $matches = array();
-      if (!empty($comment)) // If there is phpDoc search it for comments that we need
-      { 
-        preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
-        if (!empty($matches)) 
-        {
-          $params["cache"] = true;
-          $params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
-          $params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
-        }
-      }
-      self::$meta[$metaKey] = $params;
-    }
-
+    $metaKey = self::getMetaKeyMethod($method, true);
+    
     // If if have correct params we starting to looking for cache
     if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
     {
       $cacheKey = self::getCacheKey($method, $arguments);
-      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) 
+      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false)  
       {
-				$result = forward_static_call_array(array($class, $callMethod), $arguments);
-				$tags = null;
-				if (!empty(self::$meta[$metaKey]["tags"])) {
-					// Расставить теги если они есть
-					$tags = array();
-					foreach (self::$meta[$metaKey]["tags"] as $tag) {
-						$tags[] = self::getCacheTag($tag, $arguments);
-					}
-				}
-				Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
-			} elseif ($result === "\0") {
-				$result = false;
-			}
-		} else {
-			$result = forward_static_call_array(array($class, $callMethod), $arguments);
-		}
-		static::$forceNoCache = false;
-		return $result;
-	}
+        $result = forward_static_call_array(array($class, $callMethod), $arguments);
+        $tags = null;
+        if (!empty(self::$meta[$metaKey]["tags"])) 
+        {
+        // set up tags, if they are exists
+          $tags = array();
+          foreach (self::$meta[$metaKey]["tags"] as $tag) 
+          {
+            $tags[] = self::getCacheTag($tag, $arguments);
+          }
+        }
+        Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
+      } elseif ($result === "\0") {
+        $result = false;
+      }
+    } else {
+      $result = forward_static_call_array(array($class, $callMethod), $arguments);
+    }
+    static::$forceNoCache = false;
+    return $result;
+  }
   
   
   public function __call($method, $arguments = array()) 
   {
-    $class = get_called_class();
     $callMethod = "_" . $method;
-    if (!method_exists($class, $callMethod)) 
-    {
-      throw new CoreException_Error("Method " . $class . "->" . $method . "() does not exist");
-    }
-    $metaKey = $class . "->" . $callMethod;
-    if (!isset(self::$meta[$metaKey])) 
-    {
-      $meta = new ReflectionMethod($class, $callMethod);
-      $comment = $meta->getDocComment();
-      $params = array();
-      $matches = array();
-      if (!empty($comment)) // If there is phpDoc search it for comments that we need
-      { 
-        preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
-        if (!empty($matches)) 
-        {
-          $params["cache"] = true;
-          $params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
-          $params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
-        }
-      }
-      self::$meta[$metaKey] = $params;
-    }
+    $metaKey = self::getMetaKeyMethod($method, false);
     
     // If if have correct params we starting to looking for cache
     if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
@@ -170,24 +126,56 @@ abstract class CoreCachingClass
       $cacheKey = self::getCacheKey($method, $arguments);
       if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) 
       {
-				$result = call_user_func_array(array($this, $callMethod), $arguments);
-				$tags = null;
-				if (!empty(self::$meta[$metaKey]["tags"])) {
-					// Расставить теги если они есть
-					$tags = array();
-					foreach (self::$meta[$metaKey]["tags"] as $tag) {
-						$tags[] = self::getCacheTag($tag, $arguments);
-					}
-				}
-				Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
-			} elseif ($result === "\0") {
-				$result = false;
-			}
-		} else {
-			$result = call_user_func_array(array($this, $callMethod), $arguments);
-		}
-		static::$forceNoCache = false;
-		return $result;
+        $result = call_user_func_array(array($this, $callMethod), $arguments);
+        $tags = null;
+        if (!empty(self::$meta[$metaKey]["tags"])) 
+        {
+	    // set up tags, if they are exists
+          $tags = array();
+          foreach (self::$meta[$metaKey]["tags"] as $tag) 
+          {
+            $tags[] = self::getCacheTag($tag, $arguments);
+          }
+        }
+        Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
+      } elseif ($result === "\0") {
+        $result = false;
+      }
+    } else {
+      $result = call_user_func_array(array($this, $callMethod), $arguments);
+    }
+    static::$forceNoCache = false;
+    return $result;
+  }
+  
+  protected static function getMetaKeyMethod($method, $is_static)
+  {
+    $class = get_called_class();
+    $callMethod = "_" . $method;
+    if (!method_exists($class, $callMethod)) 
+    {
+      throw new CoreException_Error("Method " . $class . ($is_static?"::":"->") . $method . "() does not exist");
+    }
+	$metaKey = $class . ($is_static?"::":"->") . $callMethod;
+	if (!isset(self::$meta[$metaKey])) 
+    {
+      $meta = new ReflectionMethod($class, $callMethod);
+      $comment = $meta->getDocComment();
+      $params = array();
+      $matches = array();
+      if (!empty($comment)) // If there is phpDoc search it for comments that we need
+      { 
+        preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
+        if (!empty($matches)) 
+        {
+          $params["cache"] = true;
+          $params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
+          $params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
+        }
+      }
+      self::$meta[$metaKey] = $params;
+    }
+	return $metaKey;
   }
  
 }
