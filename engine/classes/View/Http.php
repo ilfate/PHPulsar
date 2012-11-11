@@ -13,10 +13,10 @@
  */
 class CoreView_Http extends CoreView
 {
-	
+  
   const TEMPLATE_FILE_EXTENSION = 'tpl';
   const TEMPLATE_PATH = 'app/tpl/';
-	
+  
   private static $global_values = array();
 
 
@@ -24,8 +24,8 @@ class CoreView_Http extends CoreView
   
   public function __construct() 
   {
-	
-	
+  
+  
   }
   
   

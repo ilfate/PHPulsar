@@ -12,15 +12,16 @@
  */
 class Model_User extends Model
 {
-  
+  public static $table_name = 'users';
   /**
    * @cache 5
    * @return string 
    */
-  public function _load()
+  public function _load($id)
   {
     dump('no cache');
-    return 'aaasd';
+    $user = self::getByPK($id);
+    return $user;
   }
 }
 

@@ -47,7 +47,7 @@ class CoreRouting implements CoreInterfaceRouting{
   
   public static function __staticConstruct() 
   {
-	
+  
   }
 
   /**
@@ -60,7 +60,7 @@ class CoreRouting implements CoreInterfaceRouting{
   {
     if(self::$class) 
     {
-      return self::$class;	
+      return self::$class;  
     } else {
       throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
     }
@@ -87,7 +87,7 @@ class CoreRouting implements CoreInterfaceRouting{
   {
     if(self::$method) 
     {
-      return self::$method;	
+      return self::$method;  
     } else {
       throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
     }
@@ -165,7 +165,7 @@ class CoreRouting implements CoreInterfaceRouting{
       self::$method = $data['method'];
     } else {
       throw new CoreException_RoutingError('Cant restore Routing settings.');
-	}
+  }
   }
   
   /**
@@ -177,7 +177,7 @@ class CoreRouting implements CoreInterfaceRouting{
    */
   public function getUrl($class, $method)
   {
-	  return '?' . $class . '=' . $method;
+    return '?' . $class . '=' . $method;
   }
 }
 

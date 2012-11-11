@@ -13,7 +13,7 @@
  */
 class CoreResponse_Http extends CoreResponse 
 {
-		
+    
   /**
    *
    * @var CoreInterfaceRouting 
@@ -71,7 +71,7 @@ class CoreResponse_Http extends CoreResponse
    */
   private function getTemplateByRoute() 
   {
-    return $this->routing->getClass() . '/' . $this->routing->getMethod() . '.' . CoreView_Http::TEMPLATE_FILE_EXTENSION;	  
+    return $this->routing->getClass() . '/' . $this->routing->getMethod() . '.' . CoreView_Http::TEMPLATE_FILE_EXTENSION;    
   }
   
   /**

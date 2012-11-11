@@ -19,5 +19,7 @@ return array(
 			'http'          => 'CoreView_Http',
 			'subquery'      => 'CoreView_Http'
 		),
+      
+    'log_sql' => true
   )
 );

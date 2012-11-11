@@ -23,7 +23,7 @@ class CoreRequest implements CoreInterfaceRequest {
   
   const PARAM_AJAX = '__ajax';
 
-  private $executingMode;
+  private static $executingMode;
 
   //put your code here
   public function getRequest() 
@@ -36,7 +36,7 @@ class CoreRequest implements CoreInterfaceRequest {
     $escape_function = function(&$item, $key) {
       $item = htmlentities($item);
       //$item = mysql_real_escape_string($item);
-	  
+    
     };
     
     self::$get = $_GET;
@@ -88,7 +88,7 @@ class CoreRequest implements CoreInterfaceRequest {
     }
     self::$get = $get;
     self::$post = $post;
-    $this->executingMode = self::EXECUTE_MODE_HTTP_SUBQUERY;
+    self::$executingMode = self::EXECUTE_MODE_HTTP_SUBQUERY;
   }
   
   public function restoreRequest()
@@ -98,7 +98,7 @@ class CoreRequest implements CoreInterfaceRequest {
       $data = array_pop(self::$save);
       self::$get = $data['get'];
       self::$post = $data['post'];
-      $this->executingMode = $data['mode'];
+      self::$executingMode = $data['mode'];
     }
   }
   
@@ -107,47 +107,47 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return string
    */
-  public function getExecutingMode() 
+  public static function getExecutingMode() 
   {
-    if(!$this->executingMode) 
+    if(!self::$executingMode) 
     {
       if(isset(self::$get[self::PARAM_AJAX]))
       {
-        $this->executingMode = self::EXECUTE_MODE_HTTP_AJAX;
+        self::$executingMode = self::EXECUTE_MODE_HTTP_AJAX;
       } else {
         // if no mode setted, let it be HTTP
-        $this->executingMode = self::EXECUTE_MODE_HTTP;
+        self::$executingMode = self::EXECUTE_MODE_HTTP;
       }
     }
-    return $this->executingMode;
+    return self::$executingMode;
   }
   
   
   /**
-	 * Get user IP
-	 *
-	 * @return string
-	 */
-	public static function getRemoteAddress() 
+   * Get user IP
+   *
+   * @return string
+   */
+  public static function getRemoteAddress() 
   {
-		return (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && !empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
-	}
+    return (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && !empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
+  }
   
   /**
-	 * Get URI of the request (without server adress)
-	 *
-	 * @return string
-	 */
-	public static function getUri() 
+   * Get URI of the request (without server adress)
+   *
+   * @return string
+   */
+  public static function getUri() 
   {
-		if(isset($_SERVER["REQUEST_URI"])) 
+    if(isset($_SERVER["REQUEST_URI"])) 
     {
-			$uri = parse_url($_SERVER["REQUEST_URI"]);
-			return ($uri["path"] == "/" ? $uri["path"] : rtrim($uri["path"], "/")) . (isset($uri["query"]) ? "?" . $uri["query"] : "");
-		} else {
-			return "";
-		}
-	}
+      $uri = parse_url($_SERVER["REQUEST_URI"]);
+      return ($uri["path"] == "/" ? $uri["path"] : rtrim($uri["path"], "/")) . (isset($uri["query"]) ? "?" . $uri["query"] : "");
+    } else {
+      return "";
+    }
+  }
 }
 
 ?>

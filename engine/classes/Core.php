@@ -79,7 +79,7 @@ class Core {
       self::$request = new Request();
       self::$routing = new Routing(self::$request);
     
-    if(self::$request->getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
+    if(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
     {
       self::commonExecuting();
     }
@@ -195,7 +195,7 @@ class Core {
   
   public static function createUrl($class, $method)
   {
-	return self::$routing->getUrl($class, $method);
+  return self::$routing->getUrl($class, $method);
   }
 }
 

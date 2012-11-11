@@ -11,30 +11,40 @@
  * @author ilfate
  */
 class Controller_Main extends Controller {
-	//put your code here
-	
+  //put your code here
+  
   /**
    * 
    * @return type 
    */
-	public static function _index() {
+  public static function _index() {
         self::cache('aaa', 'bbb', 'ccc');
-		return array();
-	}
-	
+    return array();
+  }
+  
   /**
    * @cache 10 tag tag2aw[1] tags t2[2][0]
    * @return type 
    */
-	public static function _cache() {
+  public static function _cache() {
     dump('_cache method. no chache<br>');
-		return array();
-	}
+    return array();
+  }
   
   public static function mysql()
   {
-    $user = new Model_User();
-    dump($user->load(). '<br>');
+    //$user = Model_User::load(3);
+    //Logger::dump($user->name);
+    //$user->name = 'masha_' . mt_rand(1000, 9999);
+    //$user->save();
+    //$user2 = new Model_User(array('id' => 6, 'name' => 'ilfate', 'email' => mt_rand(1000, 9999).'@mail.com'));
+    //$user2->save();
+    $users = Model_User::getValue('email',' id > ?', array(3));
+    dump($users);
+//    foreach ($users as $id => $user)
+//    {
+//      dump('id = '. $id .' name ='.$user->name .' email = '. $user->email.'<br>');
+//    }
     return array(
       'tpl' => 'Main/index.tpl'
     );
@@ -63,8 +73,8 @@ class Controller_Main extends Controller {
   
   public static function flush()
   {
-	Cache::flush();
-	Helper::redirect(array('Main', 'index'));
+  Cache::flush();
+  Helper::redirect(array('Main', 'index'));
   }
 }
 

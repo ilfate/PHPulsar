@@ -39,29 +39,29 @@ class CoreCache {
   /**
    * Here we creates Memcache obj ans sets some params
    * 
-	 * @throws CoreException_CacheError if extension isn't loaded
-	 * @return Memcache|Memcached the memcache instance 
-	 */
-	protected static function getMemCache()
-	{
-		if(self::$cache !== null)
+   * @throws CoreException_CacheError if extension isn't loaded
+   * @return Memcache|Memcached the memcache instance 
+   */
+  protected static function getMemCache()
+  {
+    if(self::$cache !== null)
     {
-			return self::$cache;
+      return self::$cache;
     }
-		else
-		{
-			$extension = self::MEMCACHED;
-			if(!extension_loaded($extension))
+    else
+    {
+      $extension = self::MEMCACHED;
+      if(!extension_loaded($extension))
       {
-				throw new CoreException_CacheError('Cache requires PHP ' . $extension . ' extension to be loaded');
+        throw new CoreException_CacheError('Cache requires PHP ' . $extension . ' extension to be loaded');
       }
       self::$cache = new Memcached;
       self::$cache->setOption(Memcached::OPT_COMPRESSION, false);
       self::$cache->setOption(Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
       
-			return self::$cache;
-		}
-	}
+      return self::$cache;
+    }
+  }
   
   private static function getServers()
   {
@@ -74,13 +74,13 @@ class CoreCache {
    * @return mixed 
    */
   public static function get($key)
-	{
+  {
     if(!isset(self::$local[$key])) 
     {
       self::$local[$key] = self::$cache->get($key);
     } 
     return self::$local[$key];
-	}
+  }
   
   /**
    *
@@ -115,7 +115,7 @@ class CoreCache {
     
     self::$local[$key] = $value;
     
-	return self::$cache->set($key, $value, $expire);
+  return self::$cache->set($key, $value, $expire);
   }
   
   /**
@@ -154,8 +154,8 @@ class CoreCache {
     {
       self::$local[$key] = $value;
     }
-		return self::$cache->add($key, $value, $expire);
-	}
+    return self::$cache->add($key, $value, $expire);
+  }
   
   /**
    *
@@ -172,11 +172,11 @@ class CoreCache {
   }
   
   /**
-	 * Delete all keys that are marked with tag
-	 *
-	 * @param string $tag Tag
-	 * @return boolean
-	 */
+   * Delete all keys that are marked with tag
+   *
+   * @param string $tag Tag
+   * @return boolean
+   */
   public static function deleteTag($tag) 
   {
     $keys = self::$cache->get("__tag__" . $tag);

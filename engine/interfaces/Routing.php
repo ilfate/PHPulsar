@@ -10,7 +10,8 @@
  *
  * @author ilfate
  */
-interface CoreInterfaceRouting {
+interface CoreInterfaceRouting 
+{
   // init Routing using Request data (that is a-a-a-all you need...)
   public function __construct(CoreInterfaceRequest $request);
   

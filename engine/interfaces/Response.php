@@ -10,9 +10,8 @@
  *
  * @author ilfate
  */
-interface CoreInterfaceResponse {
-	
-
+interface CoreInterfaceResponse 
+{
   public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null);
   
   public function getContent();

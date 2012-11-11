@@ -10,7 +10,8 @@
  *
  * @author ilfate
  */
-interface CoreInterfaceView {
+interface CoreInterfaceView 
+{
   
   // render some data
   public function render($template , $values);

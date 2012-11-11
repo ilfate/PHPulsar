@@ -12,9 +12,10 @@
  */
 class Config_DB 
 {
-  public $host = 'localhost';
-  public $user = 'root';
-  public $pass = '123';
+  public $dbname = 'test';
+  public $host   = 'localhost';
+  public $login  = 'ilfate';
+  public $pass   = '';
  
 }
 
