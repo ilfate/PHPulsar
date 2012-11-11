@@ -14,7 +14,7 @@ interface CoreInterfaceView
 {
   
   // render some data
-  public function render($template , $values);
+  public function render($template , $values, array $layout);
   
 }
 

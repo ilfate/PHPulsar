@@ -27,20 +27,20 @@ class Controller_Main extends Controller {
    * @return type 
    */
   public static function _cache() {
-    dump('_cache method. no chache<br>');
+    Logger::dump('_cache method. no chache<br>');
     return array();
   }
   
   public static function mysql()
   {
-    //$user = Model_User::load(3);
+    $user = Model_User::load(3);
     //Logger::dump($user->name);
-    //$user->name = 'masha_' . mt_rand(1000, 9999);
-    //$user->save();
+    $user->name = 'masha_' . mt_rand(1000, 9999);
+    $user->save();
     //$user2 = new Model_User(array('id' => 6, 'name' => 'ilfate', 'email' => mt_rand(1000, 9999).'@mail.com'));
     //$user2->save();
     $users = Model_User::getValue('email',' id > ?', array(3));
-    dump($users);
+    Logger::dump($users);
 //    foreach ($users as $id => $user)
 //    {
 //      dump('id = '. $id .' name ='.$user->name .' email = '. $user->email.'<br>');
@@ -67,7 +67,7 @@ class Controller_Main extends Controller {
    */
   public static function _Menu() 
   {
-    dump('menu no cahche');
+    Logger::dump('menu no cahche');
     return array();
   }
   

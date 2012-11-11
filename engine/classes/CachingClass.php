@@ -57,15 +57,15 @@ abstract class CoreCachingClass
       if(sizeof($maches) > 0)
       {
         $param_arr = $maches[1];
-    $tag = strstr($tag, '[', true) . self::TAGS_PARAM_DELIMITER;
-    foreach ($param_arr as $param_num)
-    {
-      if(!isset($parameters[$param_num]))
-      {
-      throw new CoreException_CacheError('Error during caching Tag with param. Param '. $param_num . ' is mising');
-      }
-      $tag .= '_' . $parameters[$param_num];
-    }
+        $tag = strstr($tag, '[', true) . self::TAGS_PARAM_DELIMITER;
+        foreach ($param_arr as $param_num)
+        {
+          if(!isset($parameters[$param_num]))
+          {
+            throw new CoreException_CacheError('Error during caching Tag with param. Param '. $param_num . ' is mising');
+          }
+          $tag .= '_' . $parameters[$param_num];
+        }
       }
     }
     return $class . self::TAGS_DELIMITER . $tag;
@@ -156,8 +156,8 @@ abstract class CoreCachingClass
     {
       throw new CoreException_Error("Method " . $class . ($is_static?"::":"->") . $method . "() does not exist");
     }
-  $metaKey = $class . ($is_static?"::":"->") . $callMethod;
-  if (!isset(self::$meta[$metaKey])) 
+    $metaKey = $class . ($is_static?"::":"->") . $callMethod;
+    if (!isset(self::$meta[$metaKey])) 
     {
       $meta = new ReflectionMethod($class, $callMethod);
       $comment = $meta->getDocComment();
@@ -175,7 +175,7 @@ abstract class CoreCachingClass
       }
       self::$meta[$metaKey] = $params;
     }
-  return $metaKey;
+    return $metaKey;
   }
  
 }

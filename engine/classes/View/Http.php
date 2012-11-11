@@ -22,6 +22,9 @@ class CoreView_Http extends CoreView
 
   private $checked_files = array();
   
+  private $layout = array();
+  private $values = array();
+  
   public function __construct() 
   {
   
@@ -33,22 +36,27 @@ class CoreView_Http extends CoreView
   public function render($template, $values, array $layout = array()) 
   {
     $values = array_merge(self::$global_values, $values);
+    $this->values = $values;
+    $this->layout = $layout;
     $file = self::TEMPLATE_PATH . $template;
+    
     $this->checkFile($file);
 
     extract($values);
     ob_start();
-
+    
     include $file;
-
+    
     $html = ob_get_clean();
-    if(!$layout)
+    
+    if(!$this->layout)
     {
       return $html;
     } else {
-      $layout_template = array_pop($layout);
-      $values['content'] = $html;
-      return $this->render($layout_template, $values, $layout);
+      
+      $layout_template = array_pop($this->layout);
+      $this->values['content'] = $html;
+      return $this->render($layout_template, $this->values, $this->layout);
     }
   }
   

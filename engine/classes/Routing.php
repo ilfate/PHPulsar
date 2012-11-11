@@ -179,6 +179,12 @@ class CoreRouting implements CoreInterfaceRouting{
   {
     return '?' . $class . '=' . $method;
   }
+  
+  public function getDefaultLayout()
+  {
+    $class_name = self::getPrefixedClass();
+    return $class_name::$layout;
+  }
 }
 
 ?>

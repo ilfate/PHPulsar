@@ -11,11 +11,11 @@
  *
  * @author ilfate
  */
-class Service_Auth extends CoreService
+class Service_Layout extends CoreService
 {
 	public static function preExecute() 
   {
-    
+    CoreView_Http::setGlobal('page_title', 'Ilfate');
   }
   
   public static function postExecute() 

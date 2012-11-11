@@ -12,6 +12,9 @@
  */
 class CoreLogger 
 {
+  
+  const VARIABLES_OUTPUT = 'output';
+  const VARIABLES_LOGGER = 'logger';
   /**
    * is Logger needed
    *
@@ -28,10 +31,32 @@ class CoreLogger
   private static $is_day_logging = false;
   
   private static $is_log_sql = false;
- 
+  
+  /**
+   * Shows is Sql query logging is enabled
+   * @var type 
+   */
+  private static $sql_logger;
+  
+  /**
+   * Could be 'logger' OR 'output'
+   *
+   * @var String 
+   */
+  private static $variable_logging = self::VARIABLES_LOGGER;
+  
+  private static $variables_container;
+  
   
   public static function __staticConstruct() {
     self::$is_log_sql = Core::getConfig('log_sql');
+    
+    if(self::$is_log_sql) 
+    {
+      self::$sql_logger = new CoreLogger_Sql();
+    } else {
+      self::$sql_logger = new CoreLogger_SqlEmpty();
+    }
   }
   /**
    *
@@ -44,26 +69,70 @@ class CoreLogger
     {
       self::outputData($data);
     } else if($mode == 'file' || (Request::getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {
-      ob_start();
-      self::outputData($data);
-      $content = ob_get_clean();
-      self::saveToFile($content, $file);
-    }
-      
+      self::saveToFile($data, $file);
+    }   
+  }
+  
+  public static function getDump()
+  {
+    return self::$variables_container;
+  }
+  
+  public static function setVariablesOutput()
+  {
+    self::$variable_logging = self::VARIABLES_OUTPUT;
+  }
+  
+  public static function setVariablesLogging()
+  {
+    self::$variable_logging = self::VARIABLES_LOGGER;
+  }
+  
+  public static function sql_addQuery($query)
+  {
+    self::$sql_logger->addQuery($query);
+  }
+  
+  public static function sql_getLog()
+  {
+    return self::$sql_logger->getLog();
+  }
+  
+  public static function sql_start($query)
+  {
+    self::$sql_logger->start($query);
+  }
+  
+  public static function sql_finish()
+  {
+    self::$sql_logger->finish();
   }
   
   private static function outputData($data)
   {
+    ob_start();
     if(is_array($data) || is_object($data))
     {
       print_r($data);
     } else {
       var_dump($data);
     }
+    $content = ob_get_clean();
+    
+    if(self::$variable_logging == self::VARIABLES_OUTPUT)
+    {
+      echo $content;
+    } else {
+      self::$variables_container[] = $content;
+    }
   }
   
-  private static function saveToFile($content, $file = null)
+  private static function saveToFile($data, $file = null)
   {
+    ob_start();
+    self::outputData($data);
+    $content = ob_get_clean();
+    
     if(!$file) $file = self::$log_file;
     if(self::$is_day_logging) $file .= '_' . date('Ymd');
     $file .= '.log';

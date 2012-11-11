@@ -1,0 +1,26 @@
+/* 
+    Document   : main
+    Created on : Nov 12, 2012, 12:37:16 AM
+    Author     : ilfate
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+body {
+  padding-top: 60px;
+  background: url('../images/dark-tile.png');
+}
+
+.main-content-well, .main-content-well-side {
+  min-height: 600px;
+  
+}
+
+.well, .navbar {
+  background: url('../images/grid.png');
+}

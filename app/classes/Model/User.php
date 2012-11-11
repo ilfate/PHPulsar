@@ -19,7 +19,7 @@ class Model_User extends Model
    */
   public function _load($id)
   {
-    dump('no cache');
+    
     $user = self::getByPK($id);
     return $user;
   }

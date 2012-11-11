@@ -12,7 +12,7 @@
  */
 class Controller extends CoreCachingClass
 {
-  
+  public static $layout = array('html.tpl', 'head.tpl', 'layout.tpl');
  
 }
 

@@ -60,16 +60,21 @@ class CoreProvider_PDOmysql extends CoreProvider
   
   public static function fetch($query, $params)
   {
+    Logger::sql_start($query);
     $source = self::$PDO->prepare($query);
     $source->execute($params);
     $data = $source->fetchAll(PDO::FETCH_ASSOC);
+    Logger::sql_finish();
     return $data;
   }
   
   public static function execute($query, $params)
   {
+    Logger::sql_start($query);
     $source = self::$PDO->prepare($query);
-    return $source->execute($params);
+    $data = $source->execute($params);
+    Logger::sql_finish();
+    return $data;
   }
   
   
