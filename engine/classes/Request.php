@@ -16,6 +16,7 @@ class CoreRequest implements CoreInterfaceRequest {
   private static $get;
   private static $save;
   
+  
   const EXECUTE_MODE_HTTP = 'http';
   const EXECUTE_MODE_HTTP_AJAX = 'ajax';
   const EXECUTE_MODE_HTTP_SUBQUERY = 'subquery';
@@ -24,12 +25,6 @@ class CoreRequest implements CoreInterfaceRequest {
   const PARAM_AJAX = '__ajax';
 
   private static $executingMode;
-
-  //put your code here
-  public function getRequest() 
-  {
-    
-  }
   
   public function __construct() 
   {
@@ -148,6 +143,89 @@ class CoreRequest implements CoreInterfaceRequest {
       return "";
     }
   }
+  
+  public static function getValue($name)
+  {
+    if(isset($_REQUEST[$name]))
+    {
+      return $_REQUEST[$name];
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * returns SESSION value
+   *
+   * @param type $name
+   * @return null 
+   */
+  public static function getSession($name) 
+  {
+    if(isset($_SESSION[$name]))
+    {
+      return $_SESSION[$name];
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * set SESSION value
+   *
+   * @param type $name
+   * @param type $value 
+   */
+  public static function setSession($name, $value) 
+  {
+    $_SESSION[$name] = $value;
+  }
+  
+  /**
+   * unsets SESSION value
+   * @param type $name 
+   */
+  public static function deleteSession($name) 
+  {
+    unset($_SESSION[$name]);
+  }
+
+  /**
+   * returns COOKIE value
+   *
+   * @param type $name
+   * @return null 
+   */
+  public static function getCookie($name) 
+  {
+    if(isset($_COOKIE[$name]))
+    {
+      return $_COOKIE[$name];
+    } else {
+      return null;
+    }
+  }
+  
+  /**
+	 * Returns page adress where request come from
+	 * 
+	 * @return string 
+	 */
+	public static function getReferer() {
+		return isset($_REQUEST["__referer"]) ? $_REQUEST["__referer"] : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");
+	}
+
+  /**
+   * Host
+   *
+   * @return type 
+   */
+	public static function getHost() {
+		return isset($_SERVER["HTTP_X_FORWARDED_HOST"]) ? $_SERVER["HTTP_X_FORWARDED_HOST"] : (isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "");
+	}
+  
+  
+
 }
 
 ?>

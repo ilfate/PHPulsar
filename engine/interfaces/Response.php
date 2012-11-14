@@ -15,6 +15,7 @@ interface CoreInterfaceResponse
   public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null);
   
   public function getContent();
+  public function setHeaders();
 }
 
 ?>

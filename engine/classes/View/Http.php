@@ -22,9 +22,6 @@ class CoreView_Http extends CoreView
 
   private $checked_files = array();
   
-  private $layout = array();
-  private $values = array();
-  
   public function __construct() 
   {
   
@@ -32,31 +29,36 @@ class CoreView_Http extends CoreView
   }
   
   
-
-  public function render($template, $values, array $layout = array()) 
+  /**
+   * Renders a themplate
+   * 
+   * @param string $template
+   * @param array $values
+   * @param array $layout
+   * @return type 
+   */
+  public function render($render__template, $render__values = array(), array $render__layout = array()) 
   {
-    $values = array_merge(self::$global_values, $values);
-    $this->values = $values;
-    $this->layout = $layout;
-    $file = self::TEMPLATE_PATH . $template;
+    $render__merged_values = array_merge(self::$global_values, $render__values);
+    $render__file = self::TEMPLATE_PATH . $render__template;
     
-    $this->checkFile($file);
+    $this->checkFile($render__file);
 
-    extract($values);
+    extract($render__merged_values);
     ob_start();
     
-    include $file;
+    require $render__file;
     
     $html = ob_get_clean();
     
-    if(!$this->layout)
+    if(!$render__layout)
     {
       return $html;
     } else {
       
-      $layout_template = array_pop($this->layout);
-      $this->values['content'] = $html;
-      return $this->render($layout_template, $this->values, $this->layout);
+      $layout_template = array_pop($render__layout);
+      $render__values['content'] = $html;
+      return $this->render($layout_template, $render__values, $render__layout);
     }
   }
   

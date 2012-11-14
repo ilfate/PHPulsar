@@ -34,9 +34,18 @@ abstract class CoreModel extends CoreCachingClass
   private $data;
   private $origin_data;
   
-  public function __construct($data, $origin_data = null) {
+  /**
+   * 
+   *
+   * @param type $data
+   * @param type $is_new_object if true passed data will not be saved as origin
+   */
+  public function __construct($data, $is_new_object = false) {
     $this->data = $data;
-    $this->origin_data = $origin_data;
+    if(!$is_new_object)
+    {
+      $this->origin_data = $origin_data;
+    }
   }
   /**
    * Our static constructor will init for us that connection. 
@@ -79,7 +88,7 @@ abstract class CoreModel extends CoreCachingClass
     
     $data = self::select($query, is_array(static::$PK)?$params:array($pk));
     $class = get_called_class();
-    return new $class($data[0], $data[0]);
+    return new $class($data[0]);
   }
   
   /**
@@ -310,7 +319,7 @@ abstract class CoreModel extends CoreCachingClass
     $return = array();
     foreach ($data as $row) 
     {
-      $obj = new $class($row, $row);
+      $obj = new $class($row);
       if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
       {
         $return[$row[static::$PK]] = $obj;

@@ -1,15 +1,4 @@
-<div class="navbar navbar-fixed-top">
-  <div class="">
-    <div class="container">
-      <a class="brand" href="#">Title</a>
-      <ul class="nav">
-        <li class="active"><a href="#!/">Start</a></li>
-        <li><a href="#!/success">Success</a></li>
-        <li><a href="#!/error">Error</a></li>
-      </ul>
-    </div>
-  </div>
-</div>
+<?= $this->render('menu.tpl') ?>
 
 <div class="container">
   <div class="row">
@@ -20,7 +9,7 @@
     </div>
     <div class="span3">
       <div class="main-content-well-side well well-small">
-		<?= Helper::exe('Logger', 'index'); ?>
+        <?= Helper::exe('Logger', 'index'); ?>
       </div>
     </div>
   </div>

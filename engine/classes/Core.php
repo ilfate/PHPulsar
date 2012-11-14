@@ -90,13 +90,14 @@ class Core {
    */
   public static function commonExecuting() 
   {
-    self::$serviceExecuter = new ServiceExecuter();
-    
-    // define routing class and method
-    self::$routing->execute();
     
     try
     {
+      self::$serviceExecuter = new ServiceExecuter();
+
+      // define routing class and method
+      self::$routing->execute();
+    
       // here we execute services BEFORE main content
       self::$serviceExecuter->callPreServices();
 
@@ -107,7 +108,13 @@ class Core {
       // here we execute services AFTER main content
       self::$serviceExecuter->callPostServices();
     } catch (Exception $e) {
-      throw $e;
+      Logger::dump($e->getMessage(), 'file', 'logs/CoreErrorLog.log');
+      if(self::getConfig('is_dev')) 
+      {
+        throw $e;
+      } else {
+        Helper::redirect(array('Error', 'page500'));
+      }
     }
     
   }
@@ -151,6 +158,8 @@ class Core {
   {
     $content = $response->getContent();
 
+    $headers = $response->setHeaders();
+    
     if(!$return_string)
     {
       echo $content;
