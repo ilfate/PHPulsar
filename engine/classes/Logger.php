@@ -108,6 +108,22 @@ class CoreLogger
     self::$sql_logger->finish();
   }
   
+  public static function time($function, $times = 1000) 
+  {
+	  if($function instanceof Closure)
+	  {
+		  $func = $function;
+	  } else {
+		  $func = function () use($function) { eval($function); };
+	  }
+	  $time = microtime(true);
+	  for($i=0; $i < $times; $i++)
+	  {
+		  $func();
+	  }
+	  self::dump('Execution time = ' . (microtime(true)-$time));
+  }
+  
   private static function outputData($data)
   {
     ob_start();

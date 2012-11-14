@@ -62,3 +62,23 @@ function is_hash(&$array)
 }
 
 
+
+function val($array, $value, $default = null) {
+	if(isset($array[$value]))
+	{
+		return $array[$value];
+	} else {
+		return $default;
+	}
+}
+
+function val2(&$array, $value, $default = null) {
+	if(isset($array[$value]))
+	{
+		return $array[$value];
+	} else {
+		return $default;
+	}
+}
+
+

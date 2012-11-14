@@ -24,3 +24,12 @@ body {
 .well, .navbar {
   background: url('../images/grid.png');
 }
+
+
+
+
+#error, #success
+{
+    
+    display: none;
+}
