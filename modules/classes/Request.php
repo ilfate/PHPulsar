@@ -11,11 +11,7 @@
  * @author ilfate
  */
 class ModuleRequest extends CoreRequest {
-  public static $test = 'awdawd';
-  //put your code here
-  public function getRequest() {
-    
-  }
+
 }
 
 ?>

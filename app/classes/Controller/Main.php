@@ -17,8 +17,8 @@ class Controller_Main extends Controller {
    * 
    * @return type 
    */
-  public static function _index() {
-        //self::cache('aaa', 'bbb', 'ccc');
+  public static function index() {
+        self::cache('aaa', 'bbb', 'ccc');
 	  
 	    
     return array();

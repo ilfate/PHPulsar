@@ -71,6 +71,8 @@ abstract class CoreModel extends CoreCachingClass
    * One of the moust important Model functions. 
    * It is actualy creates Model object and returns it.
    * 
+   * returns FLASE if coudnot find value
+   * 
    * @param Mixed $pk 
    */
   public static function getByPK($pk)
@@ -87,8 +89,13 @@ abstract class CoreModel extends CoreCachingClass
     $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
     
     $data = self::select($query, is_array(static::$PK)?$params:array($pk));
-    $class = get_called_class();
-    return new $class($data[0]);
+	if($data)
+	{
+		$class = get_called_class();
+		return new $class($data[0]);
+	} else {
+		return false;
+	}
   }
   
   /**
@@ -144,8 +151,11 @@ abstract class CoreModel extends CoreCachingClass
     list($where, $params) = self::getWhereStringAndParams($where, $params);    
     $query = 'SELECT `' . $field . '` FROM ' .static::$table_name . ' WHERE '. $where;
     $data = self::select($query, $params);
-    
-    return $data[0][$field];
+    if($data && isset($data[0])) {
+		return $data[0][$field];
+	} else {
+		return false;
+	}
   }
   
   /**
@@ -317,16 +327,19 @@ abstract class CoreModel extends CoreCachingClass
   protected static function createObjectList($data, $class, $is_assoc = true)
   {
     $return = array();
-    foreach ($data as $row) 
-    {
-      $obj = new $class($row);
-      if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
-      {
-        $return[$row[static::$PK]] = $obj;
-      } else {
-        $return[] = $obj;
-      }
-    }
+	if($data)
+	{
+		foreach ($data as $row) 
+		{
+		  $obj = new $class($row);
+		  if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
+		  {
+			$return[$row[static::$PK]] = $obj;
+		  } else {
+			$return[] = $obj;
+		  }
+		}
+	}
     return $return;
   }
 }
