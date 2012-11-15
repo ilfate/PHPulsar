@@ -15,49 +15,108 @@ class Service_Auth extends CoreService
 {
   const SESSION_AUTH_KEY = 'user_auth';
   const SESSION_AUTH_KEY_EXPIRES = 3600;
-	
+  
+  const COOKIE_AUTH_KEY = 'user_auth';
+  const COOKIE_AUTH_KEY_EXPIRES = 3600;
+  
+  const ALL_METHODS_ARE_PUBLIC = true;
+  
+  private static $priority = 5;
+  
   /**
    *
-   * @var Boolean 
+   * @var Model_User
    */
-  private static $authorized = false;
-	
+  private static $current_user;
+  
+  /**
+   * List of public routs
+   * Class is Key 
+   * Methods are elements of the array
+   *
+   * @var type 
+   */
+  private static $public_controllers = array(
+    'Main' => array('index'),
+    'Error' => self::ALL_METHODS_ARE_PUBLIC,
+  );
+  
   public static function preExecute() 
   {
-	  // try auth via session
-    if($session = Request::getCookie(self::SESSION_AUTH_KEY))
-	{ // if session exists
-	  if(time() < ($session['time'] + self::SESSION_AUTH_KEY_EXPIRES))
-	  { // if seesion if not expired
-	    $id_user = $session['id'];
-	  }
-	} else {
-	  // try auth via cookie	
-	} 
+      // try auth via session
+    if($session = Request::getSession(self::SESSION_AUTH_KEY))
+    { // if session exists
+      if(time() < ($session['time'] + self::SESSION_AUTH_KEY_EXPIRES))
+      { // if seesion if not expired
+        $user = Model_User::getByPK($session['id']);
+        if($user)
+        {
+          self::$current_user = $user;
+        }
+      }
+    } 
+    if(empty(self::$current_user) && $cookie = Request::getCookie(self::COOKIE_AUTH_KEY)) 
+    { // try auth via cookie  
+      $user = Model_User::getRecord(array('cookie' => $cookie));
+      if($user)
+      {
+        self::$current_user = $user;
+      }
+    }
+    
+    if(empty(self::$current_user))
+    { // it is guest here
+      if(!self::isRoutePublic())
+      {
+        Helper::redirect();
+      }
+    }
   }
-  
-  
   
   public static function postExecute() 
   {
   }
   
+  private static function isRoutePublic()
+  {
+    $class = Routing::getClass();
+    if(isset(self::$public_controllers[$class]))
+    { // ok class is public
+      if(self::$public_controllers[$class] === self::ALL_METHODS_ARE_PUBLIC)
+      {
+        return true;
+      } else {
+        $method = Routing::getMethod();
+        if(in_array($method, self::$public_controllers[$class]))
+        {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+  
   private static function saveSession($id_user)
   {
-	$session= array(
-	  'id'   => $id_user,
-	  'time' => time()
-	);
-	Request::setSession(self::SESSION_AUTH_KEY, $session);
+    $session= array(
+      'id'   => $id_user,
+      'time' => time()
+    );
+    Request::setSession(self::SESSION_AUTH_KEY, $session);
   }
   
   public static function isAuth()
   {
-	return self::$authorized;
+    return self::$current_user ? true : false;
+  }
+  
+  public static function getUser()
+  {
+    return self::$current_user;
   }
 
   public static function getPriority() {
-    return 5;
+    return self::$priority;
   }
   
   

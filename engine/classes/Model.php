@@ -89,13 +89,38 @@ abstract class CoreModel extends CoreCachingClass
     $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
     
     $data = self::select($query, is_array(static::$PK)?$params:array($pk));
-	if($data)
-	{
-		$class = get_called_class();
-		return new $class($data[0]);
-	} else {
-		return false;
-	}
+    if($data)
+    {
+      $class = get_called_class();
+      return new $class($data[0]);
+    } else {
+      return false;
+    }
+  }
+  
+  /**
+   * This method creates single model object 
+   * If there more then one object will return first one
+   * Where can be: array('name' => 'ilfate') --> " WHERE `name` = 'ilfate' "
+   * 
+   * @param mixed $where
+   * @param array $params
+   * @return array 
+   */
+  public static function getRecord($where, $params = null)
+  {
+    list($where, $params) = self::getWhereStringAndParams($where, $params);
+    
+    $query = 'SELECT * FROM ' .static::$table_name . ' WHERE '. $where;
+    $data = self::select($query, $params);
+    if(isset($data[0]))
+    {
+      $class = get_called_class();
+      return new $class($data[0]);
+    } else {
+      return false;
+    }
+      
   }
   
   /**
@@ -152,10 +177,10 @@ abstract class CoreModel extends CoreCachingClass
     $query = 'SELECT `' . $field . '` FROM ' .static::$table_name . ' WHERE '. $where;
     $data = self::select($query, $params);
     if($data && isset($data[0])) {
-		return $data[0][$field];
-	} else {
-		return false;
-	}
+    return $data[0][$field];
+  } else {
+    return false;
+  }
   }
   
   /**
@@ -327,19 +352,19 @@ abstract class CoreModel extends CoreCachingClass
   protected static function createObjectList($data, $class, $is_assoc = true)
   {
     $return = array();
-	if($data)
-	{
-		foreach ($data as $row) 
-		{
-		  $obj = new $class($row);
-		  if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
-		  {
-			$return[$row[static::$PK]] = $obj;
-		  } else {
-			$return[] = $obj;
-		  }
-		}
-	}
+  if($data)
+  {
+    foreach ($data as $row) 
+    {
+      $obj = new $class($row);
+      if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
+      {
+      $return[$row[static::$PK]] = $obj;
+      } else {
+      $return[] = $obj;
+      }
+    }
+  }
     return $return;
   }
 }
