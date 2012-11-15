@@ -19,7 +19,8 @@ unset($http_path, $path);
 
 $paths = array(
     realpath(dirname(__FILE__) . '/../library'),
-    '.',
+    realpath(dirname(__FILE__) . '/..'),
+    '../',
 	'/usr/lib/php5/'
 );
 set_include_path(implode(PATH_SEPARATOR, $paths));
