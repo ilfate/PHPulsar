@@ -52,7 +52,7 @@ class CoreServiceExecuter implements CoreInterfaceServiceExecuter
       class_exists('Cache');
       $cached = Cache::get(self::CACHE_KEY);
       if(!$cached) {
-        $iterator = new GlobIterator(self::SERVICES_PATH . '*.php');
+        $iterator = new GlobIterator(ILFATE_PATH . self::SERVICES_PATH . '*.php');
         $filelist = array();
         foreach($iterator as $entry) 
         {

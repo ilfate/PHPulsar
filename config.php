@@ -21,7 +21,7 @@ return array(
 		),
       
     'log_sql' => true,
-    'is_dev'  => false
+    'is_dev'  => true
       
   )
 );

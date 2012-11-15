@@ -47,7 +47,7 @@ class CoreView_Http extends CoreView
     extract($render__merged_values);
     ob_start();
     
-    require $render__file;
+    require ILFATE_PATH . $render__file;
     
     $html = ob_get_clean();
     
@@ -72,7 +72,7 @@ class CoreView_Http extends CoreView
   {
     if(!isset($this->checked_files[$file]))
     {
-      if(!file_exists($file)) 
+      if(!file_exists(ILFATE_PATH . $file)) 
       {
         throw new CoreException_ViewHttpError('Can`t locate template file at ' . $file);
       }  

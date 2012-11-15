@@ -18,7 +18,6 @@ define('HTTP_ROOT', $http_path);
 unset($http_path, $path);
 
 $paths = array(
-    realpath(dirname(__FILE__) . '/../library'),
     realpath(dirname(__FILE__) . '/..'),
     '../',
 	'/usr/lib/php5/'
