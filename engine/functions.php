@@ -42,13 +42,6 @@ function ilfate_autoloader($class) {
 }
 
 
-function dump() {
-  $args = func_get_args();
-  foreach ($args as $arg) {
-    htmlspecialchars(print_r($arg));
-  }
-}
-
 /**
  * Somewhat naive way to determine if an array is a hash.
  */
