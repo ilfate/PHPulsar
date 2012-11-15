@@ -1,7 +1,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
   <title><?= $page_title ?></title>
-  <? $path_to_web = ILFATE_PATH . 'app/web/' ?>
+  <? $path_to_web = HTTP_ROOT . 'app/web/' ?>
   
   
   <link rel="stylesheet" href="<?=$path_to_web?>bootstrap/css/bootstrap.min.css" type="text/css" media="screen" >
