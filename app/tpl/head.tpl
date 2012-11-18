@@ -5,6 +5,7 @@
   
   
   <link rel="stylesheet" href="<?=$path_to_web?>bootstrap/css/bootstrap.min.css" type="text/css" media="screen" >
+  <link rel="stylesheet" href="<?=$path_to_web?>bootstrap/css/bootstrap-responsive.min.css" type="text/css" media="screen" >
   
   <link rel="stylesheet" href="<?=$path_to_web?>css/main.css" type="text/css" />
   
@@ -14,8 +15,7 @@
   
 </head>
 <body>
-  <?= $content ?>
-
+  
   <script type="text/javascript" src="<?=$path_to_web?>js/jquery-1.8.2.min.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>bootstrap/js/bootstrap.min.js"></script>
   
@@ -23,5 +23,12 @@
   <script type="text/javascript" src="<?=$path_to_web?>js/backbone.js"></script>
   
   <script type="text/javascript" src="<?=$path_to_web?>js/index.js"></script>
+  <script type="text/javascript" src="<?=$path_to_web?>js/ajax.js"></script>
+  <script type="text/javascript" src="<?=$path_to_web?>js/modal.js"></script>
+  
+  
+  <?= $content ?>
+
+  
   
 </body>

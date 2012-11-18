@@ -53,3 +53,8 @@ var Start = Backbone.View.extend({
 
 var start = new Start();
 
+
+function info(data)
+{
+  console.info(data);
+}

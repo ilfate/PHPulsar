@@ -77,6 +77,11 @@ class CoreProvider_PDOmysql extends CoreProvider
     return $data;
   }
   
+  public static function lastInsertId()
+  {
+    return self::$PDO->lastInsertId();
+  }
+  
   
   public function native_database_types()
 	{

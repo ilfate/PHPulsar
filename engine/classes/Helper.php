@@ -32,7 +32,13 @@ class CoreHelper
     return Core::subExecute($class, $method, $get, $post);
   }
   
-  
+  /**
+   * Generates url using Roution to create url from path
+   *
+   * @param array $route
+   * @param array $get
+   * @return String 
+   */
   public static function url(array $route, array $get = null)
   {
     list($class, $method) = $route;
@@ -44,6 +50,21 @@ class CoreHelper
     }
     return $url;
   }
+  
+  /**
+   * Generates url using Roution to create url from path
+   *
+   * @param array $route
+   * @param array $get
+   * @return String 
+   */
+  public static function urlAjax(array $route, array $get = null)
+  {
+    $get = array_merge((array)$get, array(Request::PARAM_AJAX => 'true'));   
+    return self::url($route, $get);
+  }
+  
+  
   
   /**
    * Redirects

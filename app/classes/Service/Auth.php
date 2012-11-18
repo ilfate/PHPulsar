@@ -37,8 +37,9 @@ class Service_Auth extends CoreService
    * @var type 
    */
   private static $public_controllers = array(
-    'Main' => array('index'),
+    'Main' => array('index', 'mysql'),
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
+    'Auth' => self::ALL_METHODS_ARE_PUBLIC,
   );
   
   public static function preExecute() 
@@ -68,7 +69,7 @@ class Service_Auth extends CoreService
     { // it is guest here
       if(!self::isRoutePublic())
       {
-        Helper::redirect();
+        Helper::redirect(null, array('access_restricted' => true));
       }
     }
   }

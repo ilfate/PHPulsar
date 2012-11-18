@@ -13,6 +13,8 @@ if (version_compare(phpversion(), '5.3', '<') == true) {
 
 define('ILFATE_PATH', __DIR__ . '/');
 
+define('SERVER_NAME', $_SERVER['SERVER_NAME']);
+
 if(!defined('HTTP_ROOT')) 
 {
 	$http_path = '/';

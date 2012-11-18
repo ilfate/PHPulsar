@@ -12,12 +12,13 @@ return array(
     'Response'                   => array(
       'abstract'      => 'CoreResponse',
       'http'          => 'CoreResponse_Http',
-      'subquery'      => 'CoreResponse_Http'
+      'subquery'      => 'CoreResponse_Http',
+      'ajax'          => 'CoreResponse_HttpAjax',
 		),
     'View'                       => array(
 			'abstract'      => 'CoreView',
 			'http'          => 'CoreView_Http',
-			'subquery'      => 'CoreView_Http'
+			'subquery'      => 'CoreView_Http',
 		),
       
     'log_sql' => true,

@@ -62,9 +62,19 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getGet() 
+  public static function getGet($param = null) 
   {
-    return self::$get;
+    if($param)
+    {
+      if(isset(self::$get[$param]))
+      {
+        return self::$get[$param];
+      } else {
+        return false;
+      }
+    } else {
+      return self::$get;
+    }
   }
   
   /**

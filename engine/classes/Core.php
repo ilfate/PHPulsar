@@ -55,6 +55,15 @@ class Core {
   /**
    * we close it for singltone
    */
+  
+  /**
+   * keeps all initiaalized controllers
+   *
+   * @var array 
+   */
+  private static $stored_controllers = array();
+  
+  
   private function __construct() 
   {
     self::init();
@@ -82,6 +91,8 @@ class Core {
     if(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
     {
       self::commonExecuting();
+    } elseif(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP_AJAX) {
+      self::ajaxExecuting();
     }
   }
   
@@ -103,7 +114,12 @@ class Core {
 
       $class = self::$routing->getPrefixedClass();
       $method = self::$routing->getMethod();
-      $response = Core::initResponse($class::$method());
+      $obj = self::getController($class);
+      $response = Core::initResponse($obj->$method());
+      
+      Runtime::setHttpHeader("Content-Type", "text/html; charset=utf-8");
+      $response->setHeaders();
+      
       self::output($response);
       // here we execute services AFTER main content
       self::$serviceExecuter->callPostServices();
@@ -117,6 +133,44 @@ class Core {
       }
     }
     
+  }
+  
+  /**
+   * Ajax executing
+   */
+  public static function ajaxExecuting() 
+  {
+    
+    try
+    {
+      self::$serviceExecuter = new ServiceExecuter();
+
+      // define routing class and method
+      self::$routing->execute();
+    
+      // here we execute services BEFORE main content
+      self::$serviceExecuter->callPreServices();
+
+      $class = self::$routing->getPrefixedClass();
+      $method = self::$routing->getMethod();
+      $obj = self::getController($class);
+      $response = Core::initResponse($obj->$method());
+      
+      Runtime::setHttpHeader("Content-Type", "application/json; charset=utf-8");
+      $response->setHeaders();
+      
+      self::output($response);
+      // here we execute services AFTER main content
+      self::$serviceExecuter->callPostServices();
+    } catch (Exception $e) {
+      Logger::dump($e->getMessage(), 'file', 'logs/CoreErrorLog.log');
+      if(self::getConfig('is_dev')) 
+      {
+        throw $e;
+      } else {
+        Helper::redirect(array('Error', 'page500'));
+      }
+    }
   }
   
   /**
@@ -171,24 +225,33 @@ class Core {
   /**
    * Init and returns response object
    * 
-   * @param type $content
+   * @param CoreInterfaceResponse $content
    */
   public static function initResponse($content) 
   {
-    if(!isset(self::$config['project']['Response'][self::$request->getExecutingMode()])) 
+    if(is_array($content) && isset($content['mode']))
     {
-      throw new CoreException_Error('Cant find Response implementation class for "' . self::$request->getExecutingMode() . '" in config');
-    } 
-    if(!isset(self::$views[self::$request->getExecutingMode()]))
+      $mode = $content['mode'];
+    } else {
+      $mode = self::$request->getExecutingMode();
+    }
+    
+    if(!isset(self::$config['project']['Response'][$mode])) 
     {
-      if(isset(self::$config['project']['View'][self::$request->getExecutingMode()])) 
+      throw new CoreException_Error('Cant find Response implementation class for "' . $mode . '" in config');
+    }
+    
+    if(!isset(self::$views[$mode]))
+    {
+      if(isset(self::$config['project']['View'][$mode])) 
       {
-        self::$views[self::$request->getExecutingMode()] = new self::$config['project']['View'][self::$request->getExecutingMode()]();
+        self::$views[$mode] = new self::$config['project']['View'][$mode]();
       } else {
-      self::$views[self::$request->getExecutingMode()] = null;
+      self::$views[$mode] = null;
       }
     }
-    return new self::$config['project']['Response'][self::$request->getExecutingMode()]($content, self::$routing, self::$views[self::$request->getExecutingMode()]);
+    
+    return new self::$config['project']['Response'][$mode]($content, self::$routing, self::$views[$mode]);
   }
   
   public static function getConfig($name) 
@@ -201,10 +264,25 @@ class Core {
     }
   }
   
-  
+  /**
+   * crete url via routing
+   *
+   * @param type $class
+   * @param type $method
+   * @return type 
+   */
   public static function createUrl($class, $method)
   {
-  return self::$routing->getUrl($class, $method);
+    return self::$routing->getUrl($class, $method);
+  }
+  
+  private static function getController($name)
+  {
+    if(!isset(self::$stored_controllers[$name]))
+    {
+      self::$stored_controllers[$name] = new $name();
+    }
+    return self::$stored_controllers[$name];
   }
 }
 

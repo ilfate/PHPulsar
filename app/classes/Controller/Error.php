@@ -17,21 +17,21 @@ class Controller_Error extends Controller {
    * 
    * @return type 
    */
-  public static function index() {
+  public function index() {
     return array(
       'error_num' => 404,
       'tpl' => 'Error/errorPage.tpl'
     );
   }
   
-  public static function page404() {
+  public function page404() {
     return array(
       'error_num' => 404,
       'tpl' => 'Error/errorPage.tpl'
     );
   }
   
-  public static function page500() {
+  public function page500() {
     return array(
       'error_num' => 500,
       'tpl' => 'Error/errorPage.tpl'

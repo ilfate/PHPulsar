@@ -30,7 +30,16 @@ body {
   background: url('../images/grid.png');
 }
 
+/****  Auth  *****/
 
+.form-signin {
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+.move-to-footer, .move-to-header {
+  display: none;
+}
 
 
 #error, #success

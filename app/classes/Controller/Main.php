@@ -17,9 +17,9 @@ class Controller_Main extends Controller {
    * 
    * @return type 
    */
-  public static function index() {
+  public function index() {
         self::cache('aaa', 'bbb', 'ccc');
-	  
+        //Model_User::createUserWithEmail('email', 'pass', '$name');
 	    
     return array();
   }
@@ -33,7 +33,7 @@ class Controller_Main extends Controller {
     return array();
   }
   
-  public static function mysql()
+  public function mysql()
   {
     $user = Model_User::load(3);
     //Logger::dump($user->name);
@@ -56,7 +56,7 @@ class Controller_Main extends Controller {
    * 
    * @return type 
    */
-  public static function _page()
+  public function _page()
   {
     return array(
       'tpl' => 'Main/index.tpl'
@@ -67,13 +67,13 @@ class Controller_Main extends Controller {
    * @cache 15
    * @return type 
    */
-  public static function _Menu() 
+  public function _Menu() 
   {
     Logger::dump('menu no cahche');
     return array();
   }
   
-  public static function flush()
+  public function flush()
   {
   Cache::flush();
   Helper::redirect(array('Main', 'index'));

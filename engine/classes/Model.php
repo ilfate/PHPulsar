@@ -194,6 +194,7 @@ abstract class CoreModel extends CoreCachingClass
   {
     return forward_static_call(array(self::$provider_type, 'fetch'), $query, $params);
   }
+  
   /**
    * this function just executes query and returns RAW result
    *
@@ -204,6 +205,16 @@ abstract class CoreModel extends CoreCachingClass
   public static function execute($query, $params)
   {
     return forward_static_call(array(self::$provider_type, 'execute'), $query, $params);
+  }
+  
+  /**
+   * returns last Insert Id !!
+   *
+   * @return integer
+   */
+  public static function lastInsertId()
+  {
+    return forward_static_call(array(self::$provider_type, 'lastInsertId'));
   }
   
   /**
@@ -308,6 +319,7 @@ abstract class CoreModel extends CoreCachingClass
     $values = implode(', ', $values_arr);
     $query = 'INSERT INTO ' . static::$table_name . ' ( ' . $fields . ' ) VALUES ( ' . $values . ' ) ';
     self::execute($query, $params);
+    return self::lastInsertId();
   }
   
   /**

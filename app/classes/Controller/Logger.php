@@ -17,7 +17,7 @@ class Controller_Logger extends Controller {
    * 
    * @return type 
    */
-  public static function index() {
+  public function index() {
     $queryes = Logger::sql_getLog();
     $variables = Logger::getDump();
     return array(
