@@ -43,10 +43,18 @@ class Controller_Auth extends Controller {
   
   public function signUp()
   {
-    $post = Request::getPost();
+    if(!Validator::validateForm(
+      array(
+        'email' => array('notEmpty', array('minLength', 3), 'email'),
+        'name'  => array('notEmpty', array('minLength', 4), array('maxLength', 16)),
+        'pass'  => array('notEmpty', array('equalField', 'pass2'), array('minLength', 6)),
+      )  
+    ))
+    {
+      return Validator::getFormErrorAnswer();
+    }
     return array(
       'sucsess' => true,
-      'er'      => Request::getPost(),
       'actions' => array('Modal.close'),
       'args'    => array('arg')
     );

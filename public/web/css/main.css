@@ -6,6 +6,15 @@
         Purpose of the stylesheet follows.
 */
 
+/*
+main theme colors
+  white #FFF0DD
+  blue  #6062FF
+  red   #FFB68A
+  green #65B54C
+  dark  #384541
+*/
+
 * {
   margin: 0px;
   padding: 0px;
@@ -41,8 +50,20 @@ body {
   display: none;
 }
 
+/**** Alert ****/
 
-#error, #success
+.alert {
+  background-color: #777777;
+  border: 1px solid #FFB68A;
+  color: #FFB68A;
+  text-shadow: 0 1px 0 rgba(103, 98, 89, 0.5);
+}
+.alert .close {
+  top: 2px;
+}
+
+
+#error, #success, .alert
 {
     
     display: none;

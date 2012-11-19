@@ -1,6 +1,8 @@
 <?= $this->render('menu.tpl') ?>
 
-<div class="container">
+
+
+<div class="container main">
   <div class="row">
     <div class="span9">
       <div class="main-content-well well well-small ">

@@ -41,3 +41,6 @@ Modal = new Modal();
 $(document).ready(function(){
     Modal.init();
   });
+  
+  
+  

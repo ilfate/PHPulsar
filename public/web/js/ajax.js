@@ -61,10 +61,6 @@ Ajax = function() {
   
   this.doneJson = function(data, n_cb)
   {
-    if(n_cb >= 0)
-    {
-      this.callBack[n_cb]();
-    }
     if(data.actions)
     {
       for(var key in data.actions)
@@ -78,6 +74,10 @@ Ajax = function() {
         var handler = eval("(" + data.actions[key] + ")");
         handler.call(this, args);
       }
+    }
+    if(n_cb >= 0)
+    {
+      this.callBack[n_cb]();
     }
   }
   this.doneHtml = function(data, n_cb)
