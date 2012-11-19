@@ -32,12 +32,19 @@ CREATE TABLE `users` (
  */
 class Model_User extends Model
 {
-  const PASS_SALT = 'adg34gwe34hb';
+  const PASS_SALT = 'adG34gWe34hb';
+  const PASS_SALT_PRE = 'cXs3';
   
   public static $table_name = 'users';
  
   
-  
+  /**
+   * creates user by listed params
+   * 
+   * @param String $email
+   * @param String $password
+   * @param String $name
+   */
   public static function createUserWithEmail($email, $password, $name)
   {
     $user = array(
@@ -52,11 +59,22 @@ class Model_User extends Model
     Logger::dump($id, 'output');
   }
   
+  /**
+   * ecode password to keep it in database
+   * 
+   * @param type $password
+   * @return type
+   */
   public static function encodePassword($password)
   {
-    return sha1($password . self::PASS_SALT);
+    return sha1(self::PASS_SALT_PRE . $password . self::PASS_SALT);
   }
   
+  /**
+   * generate Cookie
+   * 
+   * @return string
+   */
   public static function genCookie()
   {
     return md5(time() + mt_rand(10000,99999));

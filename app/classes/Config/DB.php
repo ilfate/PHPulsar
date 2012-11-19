@@ -15,7 +15,7 @@ class Config_DB
   public $dbname = 'ilfate';
   public $host   = 'localhost';
   public $login  = 'root';
-  public $pass   = '12317233';
+  public $pass   = '';
  
 }
 

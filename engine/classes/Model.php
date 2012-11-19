@@ -52,7 +52,7 @@ abstract class CoreModel extends CoreCachingClass
    */
   public static function __staticConstruct()
   {
-    self::initProvider();
+	  self::initProvider();
   }
   
   protected static function initProvider()

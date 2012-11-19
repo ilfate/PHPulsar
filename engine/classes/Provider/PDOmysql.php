@@ -30,7 +30,7 @@ class CoreProvider_PDOmysql extends CoreProvider
 		PDO::ATTR_STRINGIFY_FETCHES => false
   );
   
-  public function __staticConstruct() 
+  public static function __staticConstruct() 
   {
     if(!class_exists('PDO'))
     {

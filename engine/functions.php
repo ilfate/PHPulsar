@@ -31,12 +31,23 @@ function ilfate_autoloader($class) {
   {
     if(method_exists($class, '__staticConstruct')) 
     {
-      call_user_func($class.'::__staticConstruct');
+ 	  try{
+		call_user_func($class.'::__staticConstruct');
+	  } catch (Exception $e) {
+		  if(Core::getConfig('is_dev')) {
+			  echo $e->getMessage();
+		  }
+		  //throw new CoreException_Error("The class '$class' or the file '$file' failed to spl_autoload. Reason:" . $e->getMessage());
+		  Logger::dump("The class '$class' or the file '$file' failed to spl_autoload. Reason:" . $e->getMessage());
+		  exit;
+	  }
+	  
     }
     return TRUE;
   } else {
     //trigger_error("The class '$class' or the file '$file' failed to spl_autoload", E_USER_WARNING);
-    throw new CoreException_Error("The class '$class' or the file '$file' failed to spl_autoload");
+    //throw new CoreException_Error("The class '$class' or the file '$file' failed to spl_autoload");
+	Logger::dump("The class '$class' or the file '$file' failed to spl_autoload.");
     return FALSE;
   }
 
@@ -54,25 +65,4 @@ function is_hash(&$array)
   $keys = array_keys($array);
   return @is_string($keys[0]) ? true : false;
 }
-
-
-
-function val($array, $value, $default = null) {
-	if(isset($array[$value]))
-	{
-		return $array[$value];
-	} else {
-		return $default;
-	}
-}
-
-function val2(&$array, $value, $default = null) {
-	if(isset($array[$value]))
-	{
-		return $array[$value];
-	} else {
-		return $default;
-	}
-}
-
 

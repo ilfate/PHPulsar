@@ -194,7 +194,8 @@ class Core {
     
     $call_class = self::$routing->getPrefixedClass();
     $call_method = self::$routing->getMethod();
-    $response = Core::initResponse($call_class::$call_method());
+    $obj = self::getController($call_class);
+    $response = Core::initResponse($obj->$call_method());
     
     $return = self::output($response, true);
     
