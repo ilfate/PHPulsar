@@ -8,6 +8,18 @@
  * Main js entrance to my engine
  */
 
+function Action() 
+{
+  this.refresh = function()
+  {
+    document.location.reload(true);
+  }
+  this.redirect = function(data)
+  {
+	  window.location = data;
+  }
+}
+Action = new Action();
 
 function ilAlert(data)
 {

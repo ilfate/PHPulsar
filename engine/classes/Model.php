@@ -44,7 +44,7 @@ abstract class CoreModel extends CoreCachingClass
     $this->data = $data;
     if(!$is_new_object)
     {
-      $this->origin_data = $origin_data;
+      $this->origin_data = $data;
     }
   }
   /**
@@ -364,19 +364,19 @@ abstract class CoreModel extends CoreCachingClass
   protected static function createObjectList($data, $class, $is_assoc = true)
   {
     $return = array();
-  if($data)
-  {
-    foreach ($data as $row) 
+    if($data)
     {
-      $obj = new $class($row);
-      if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
+      foreach ($data as $row) 
       {
-      $return[$row[static::$PK]] = $obj;
-      } else {
-      $return[] = $obj;
+        $obj = new $class($row);
+        if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
+        {
+          $return[$row[static::$PK]] = $obj;
+        } else {
+          $return[] = $obj;
+        }
       }
     }
-  }
     return $return;
   }
 }

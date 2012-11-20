@@ -37,6 +37,7 @@ body {
 
 .well, .navbar {
   background: url('../images/grid.png');
+  box-shadow: 0 0 6px 0 #384541;
 }
 
 /****  Auth  *****/

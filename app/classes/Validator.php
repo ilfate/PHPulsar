@@ -17,12 +17,14 @@ class Validator
   private static $formErrors = array();
   
   private static $error_names = array(
-    'email'       => 'Not valid email',
-    'notEmpty'    => 'Field must not be empty',
-    'minLength'   => 'Field must contain at least %s letters',
-    'maxLength'   => 'Field must contain not more then %s letters',
-    'isNumeric'   => 'Field must be numeric',
-    'equalField'  => 'Field is not equal to %s field',
+    'email'            => 'Not valid email',
+    'notEmpty'         => 'Field must not be empty',
+    'minLength'        => 'Field must contain at least %s letters',
+    'maxLength'        => 'Field must contain not more then %s letters',
+    'isNumeric'        => 'Field must be numeric',
+    'equalField'       => 'Field is not equal to %s field',
+    'userEmailUnique'  => 'User with this email is already exists',
+    'userNameUnique'   => 'This user name has been taken. Sorry.',
   );
   
   public static function email($value)
@@ -35,21 +37,29 @@ class Validator
   }
   public static function minLength($value, $param) 
   {
-		return (empty($value) || mb_strlen($value, "UTF-8") >= $param);
-	}
-	public static function maxLength($value, $param) 
+    return (empty($value) || mb_strlen($value, "UTF-8") >= $param);
+  }
+  public static function maxLength($value, $param) 
   {
-		return (empty($value) || mb_strlen($value, "UTF-8") < $param);
-	}
-	public static function isNumeric($value) 
+     return (empty($value) || mb_strlen($value, "UTF-8") < $param);
+  }
+  public static function isNumeric($value) 
   {
-		return (empty($value) || is_numeric($value));
-	}
-	public static function equalField($value, $param) 
+    return (empty($value) || is_numeric($value));
+  }
+  public static function equalField($value, $param) 
   {
     $post = Request::getPost();
-		return (empty($value) || (isset($post[$param]) && $value == $post[$param]));
-	}
+    return (empty($value) || (isset($post[$param]) && $value == $post[$param]));
+  }
+  public static function userEmailUnique($value)
+  {
+    return (empty($value) || !Model_User::isEmailExists($value));
+  }
+  public static function userNameUnique($value)
+  {
+    return (empty($value) || !Model_User::isNameExists($value));
+  }
   
   /**
    *
@@ -81,7 +91,12 @@ class Validator
   
   private static function addError($filter, $param)
   {
-    self::$errors[] = $param ? sprintf(self::$error_names[$filter], $param) : self::$error_names[$filter];
+	if(isset(self::$error_names[$filter]))
+	{
+      self::$errors[] = $param ? sprintf(self::$error_names[$filter], $param) : self::$error_names[$filter];
+	} else {
+	  self::$errors[] = 'Error occurred in form. Please try to fix data.'; 
+	}
   }
   
   public static function getLastError()
@@ -90,23 +105,17 @@ class Validator
   }
   
   
-  public static function validateForm(array $config, $name = null)
+  public static function validateForm(array $config, array $form = null)
   {
-    $post = Request::getPost();
-    if($name) 
-    {
-      $preffix = $name . '_'; 
-    } else {
-      $preffix = '';
-    }
+    if(!$form) $form = Request::getPost();
     foreach ($config as $field_name => $filters)
     {
-      if(!isset($post[$preffix.$field_name]))
+      if(!isset($form[$field_name]))
       {
         self::$formErrors[] = array('field' => $field_name, 'error' => 'Field not found');
         return false;
       }
-      if(!self::validate($post[$preffix.$field_name], $filters))
+      if(!self::validate($form[$field_name], $filters))
       {
         self::$formErrors[] = array('field' => $field_name, 'error' => self::getLastError());
         return false;

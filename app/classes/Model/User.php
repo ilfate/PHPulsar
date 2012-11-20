@@ -79,5 +79,17 @@ class Model_User extends Model
   {
     return md5(time() + mt_rand(10000,99999));
   }
+  
+  public static function isEmailExists($email)
+  {
+	$list = self::getFields(array('id'), array('email' => $email));
+	return !!$list;
+  }
+  
+  public static function isNameExists($name)
+  {
+	$list = self::getFields(array('id'), array('name' => $name));
+	return !!$list;
+  }
 }
 

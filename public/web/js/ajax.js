@@ -71,6 +71,7 @@ Ajax = function() {
         } else {
           var args = [];
         }
+		info(data.actions[key]);
         var handler = eval("(" + data.actions[key] + ")");
         handler.call(this, args);
       }

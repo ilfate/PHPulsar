@@ -45,18 +45,21 @@ class Controller_Auth extends Controller {
   {
     if(!Validator::validateForm(
       array(
-        'email' => array('notEmpty', array('minLength', 3), 'email'),
-        'name'  => array('notEmpty', array('minLength', 4), array('maxLength', 16)),
-        'pass'  => array('notEmpty', array('equalField', 'pass2'), array('minLength', 6)),
+        'email' => array('notEmpty', array('minLength', 3), 'email', 'userEmailUnique'),
+		'pass'  => array('notEmpty', array('equalField', 'pass2'), array('minLength', 6)),
+        'name'  => array('notEmpty', array('minLength', 4), array('maxLength', 16), 'userNameUnique'),
       )  
     ))
     {
       return Validator::getFormErrorAnswer();
     }
+	
+	$post = Request::getPost();
+	Model_User::createUserWithEmail($post['email'], $post['pass'], $post['name']);
+	
     return array(
       'sucsess' => true,
-      'actions' => array('Modal.close'),
-      'args'    => array('arg')
+      'actions' => array('Action.refresh'),
     );
   }
   
