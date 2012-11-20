@@ -1,3 +1,4 @@
+<?= Js::getHtml()?>
 <?= $this->render('menu.tpl') ?>
 
 

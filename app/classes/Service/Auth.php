@@ -17,7 +17,7 @@ class Service_Auth extends CoreService
   const SESSION_AUTH_KEY_EXPIRES = 3600;
   
   const COOKIE_AUTH_KEY = 'user_auth';
-  const COOKIE_AUTH_KEY_EXPIRES = 3600;
+  const COOKIE_AUTH_KEY_EXPIRES = 0;
   
   const ALL_METHODS_ARE_PUBLIC = true;
   
@@ -71,7 +71,7 @@ class Service_Auth extends CoreService
       {
         Helper::redirect(null, array('access_restricted' => true));
       }
-    }
+    } 
   }
   
   public static function postExecute() 

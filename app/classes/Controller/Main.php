@@ -20,7 +20,7 @@ class Controller_Main extends Controller {
   public function index() 
   {
     self::cache('aaa', 'bbb', 'ccc');
-	$users = Model_User::getValue('email',' id > ?', array(3));
+    
         //Model_User::createUserWithEmail('email', 'pass', '$name');
 	    
     return array();

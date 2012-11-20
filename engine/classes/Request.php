@@ -188,7 +188,12 @@ class CoreRequest implements CoreInterfaceRequest {
    */
   public static function setSession($name, $value) 
   {
-    $_SESSION[$name] = $value;
+    if($value === null) 
+    {
+      unset($_SESSION[$name]);
+    } else {
+      $_SESSION[$name] = $value;
+    }
   }
   
   /**

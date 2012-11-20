@@ -17,14 +17,15 @@ class Validator
   private static $formErrors = array();
   
   private static $error_names = array(
-    'email'            => 'Not valid email',
-    'notEmpty'         => 'Field must not be empty',
-    'minLength'        => 'Field must contain at least %s letters',
-    'maxLength'        => 'Field must contain not more then %s letters',
-    'isNumeric'        => 'Field must be numeric',
-    'equalField'       => 'Field is not equal to %s field',
-    'userEmailUnique'  => 'User with this email is already exists',
-    'userNameUnique'   => 'This user name has been taken. Sorry.',
+    'email'                   => 'Not valid email',
+    'notEmpty'                => 'Field must not be empty',
+    'minLength'               => 'Field must contain at least %s letters',
+    'maxLength'               => 'Field must contain not more then %s letters',
+    'isNumeric'               => 'Field must be numeric',
+    'equalField'              => 'Field is not equal to %s field',
+    'userEmailUnique'         => 'User with this email is already exists',
+    'userNameUnique'          => 'This user name has been taken. Sorry.',
+    'authEmailAndPassword'    => 'Email or password are wrong.',
   );
   
   public static function email($value)
@@ -59,6 +60,15 @@ class Validator
   public static function userNameUnique($value)
   {
     return (empty($value) || !Model_User::isNameExists($value));
+  }
+  public static function authEmailAndPassword($value, $param) 
+  {
+    $post = Request::getPost();
+    if(isset($post[$param])) 
+    {
+      return Model_User::getUserByEmailAndPassword($value, $post[$param]);
+    } 
+    return false;
   }
   
   /**

@@ -37,7 +37,7 @@ class CoreRuntime implements CoreInterfaceRuntime
 	 * @param bool $secure 
 	 * @param bool $httpOnly only HTTP
 	 */
-	public static function setCookie($name, $value, $expire = null, $path = "/", $domain = "", $secure = false, $httpOnly = false) 
+	public static function setCookie($name, $value, $expire = 0, $path = "/", $domain = "", $secure = false, $httpOnly = false) 
   {
 		if ($expire !== null) {
 			if (is_numeric($expire)) {

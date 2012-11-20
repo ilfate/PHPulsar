@@ -26,6 +26,7 @@
   <script type="text/javascript" src="<?=$path_to_web?>js/ajax.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>js/modal.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>js/form.js"></script>
+  <script type="text/javascript" src="<?=$path_to_web?>js/events.js"></script>
   
   
   <?= $content ?>

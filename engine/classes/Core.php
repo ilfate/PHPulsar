@@ -78,6 +78,8 @@ class Core {
         die("Fatal error. Attempt to init Core second time");
       }
       self::$inited = true;
+      
+      session_start();
 
       include ILFATE_PATH . '/engine/functions.php';
 

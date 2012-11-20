@@ -72,6 +72,15 @@ class CoreLogger
       self::saveToFile($data, $file);
     }   
   }
+  /**
+   * just outputs data
+   *
+   * @param type $data
+   */
+  public static function output($data)
+  {
+    self::dump($data, 'output');
+  }
   
   public static function getDump()
   {

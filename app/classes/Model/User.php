@@ -55,8 +55,8 @@ class Model_User extends Model
       'registation_time'  => time(),
       'cookie'            => self::genCookie()
     );
-    $id = self::insert($user);
-    Logger::dump($id, 'output');
+    $user['id'] = self::insert($user);
+    return new Model_User($user);
   }
   
   /**
@@ -80,12 +80,38 @@ class Model_User extends Model
     return md5(time() + mt_rand(10000,99999));
   }
   
+  /**
+   * Finds user by email and pass. no magic here. =)
+   * 
+   * @cache 3000
+   * @param String $email
+   * @param String $password
+   * @return Model_User 
+   */
+  public static function _getUserByEmailAndPassword($email, $password)
+  {
+    $pass = self::encodePassword($password);
+    return self::getRecord(array('email' => $email, 'password' => $pass));
+  }
+  
+  /**
+   * Checks is email exists in table
+   *
+   * @param String $email
+   * @return Boolean 
+   */
   public static function isEmailExists($email)
   {
 	$list = self::getFields(array('id'), array('email' => $email));
 	return !!$list;
   }
   
+  /**
+   * Checks is name exists in table
+   *
+   * @param String $name
+   * @return Boolean 
+   */
   public static function isNameExists($name)
   {
 	$list = self::getFields(array('id'), array('name' => $name));

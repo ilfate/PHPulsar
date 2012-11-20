@@ -111,6 +111,22 @@ Ajax = function() {
 				form.attr("inited", "inited");
 			}
 		});
+    
+    $("a.ajax").each(function() {
+      var link = $(this);
+			if (link.attr("inited") != "inited") {
+				link.bind("click", function() {
+          if(link.hasClass("disabled")) return false;
+					Ajax.linkLoadingStart(link);
+					Ajax.json(this.href, {
+            params : '__csrf=' + Ajax.getCSRF(),
+            callBack : function(){Ajax.linkLoadingEnd(link)}
+          });
+					return false;
+				});
+				link.attr("inited", "inited");
+			}
+		});
   }
   
   this.formLoadingStart = function(form)
@@ -122,6 +138,14 @@ Ajax = function() {
   {
     form.find('[type=submit]').button('reset');
     form.removeClass("inactive");
+  }
+  this.linkLoadingStart = function(link)
+  {
+    link.addClass("disabled");
+  }
+  this.linkLoadingEnd = function(link)
+  {
+    link.removeClass("disabled");
   }
   
   
