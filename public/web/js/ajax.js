@@ -71,7 +71,7 @@ Ajax = function() {
         } else {
           var args = [];
         }
-		info(data.actions[key]);
+    info(data.actions[key]);
         var handler = eval("(" + data.actions[key] + ")");
         handler.call(this, args);
       }
@@ -97,36 +97,36 @@ Ajax = function() {
   {
     $("form[method='post']").each(function() {
       var form = $(this);
-			if (form.attr("inited") != "inited") {
-				form.bind("submit", function() {
+      if (form.attr("inited") != "inited") {
+        form.bind("submit", function() {
           if(form.hasClass("inactive")) return false;
-					Ajax.formLoadingStart(form);
-					Ajax.json(this.action, {
+          Ajax.formLoadingStart(form);
+          Ajax.json(this.action, {
             params : '__csrf=' + Ajax.getCSRF(),
             data : form.serialize(),
             callBack : function(){Ajax.formLoadingEnd(form)}
           });
-					return false;
-				});
-				form.attr("inited", "inited");
-			}
-		});
+          return false;
+        });
+        form.attr("inited", "inited");
+      }
+    });
     
     $("a.ajax").each(function() {
       var link = $(this);
-			if (link.attr("inited") != "inited") {
-				link.bind("click", function() {
+      if (link.attr("inited") != "inited") {
+        link.bind("click", function() {
           if(link.hasClass("disabled")) return false;
-					Ajax.linkLoadingStart(link);
-					Ajax.json(this.href, {
+          Ajax.linkLoadingStart(link);
+          Ajax.json(this.href, {
             params : '__csrf=' + Ajax.getCSRF(),
             callBack : function(){Ajax.linkLoadingEnd(link)}
           });
-					return false;
-				});
-				link.attr("inited", "inited");
-			}
-		});
+          return false;
+        });
+        link.attr("inited", "inited");
+      }
+    });
   }
   
   this.formLoadingStart = function(form)
@@ -151,7 +151,7 @@ Ajax = function() {
   
   this.getCSRF = function()
   {
-    return 'aa';
+    return $('#CSRF_TOKEN').val();
   }
 }
 

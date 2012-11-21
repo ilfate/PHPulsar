@@ -1,36 +1,60 @@
 <?php
 
 /**
- * Класс позволяет создовать события и привязывать Js код к ним
- * Например
+ * Class helps to create events and execute js code
+ * Example
  * Js::add(Js::C_ONLOAD, '$("#inner-content").hide().toggle(1000)');
  */
 
 Class Js
 {
-  /** Событие вызывается при загрузке страницы без аякса*/
+  /** 
+   * Event trigers on page load
+   */
   const C_ONLOAD = 'onload';
-  /** Событие вызывается при загрузке страницы без аякса после C_ONLOAD*/
+  /** 
+   * Event tringgers After C_ONLOAD
+   */
   const C_ONAFTERLOAD = 'onafterload';
 
-  /** Событие вызывается при загрузке страницы через аякс*/
+  /** 
+   * Event calls on Ajax load
+   */
   const C_AJAXONLOAD = 'ajaxonload';
 
-  /** Событие вызывается при загрузке страницыч ерез аякс. Вызывается ПОСЛЕ C_AJAXONLOAD, в этот момент загружены все сопряженные css, js*/
+  /** 
+   * Event triggers after C_AJAXONLOAD and when loading is complitly finished
+   */
   const C_AJAXLOADCOMPLETED = 'ajaxloadcompleted';
 
-  /** Событие срабатывает при ресайзе страницы */
+  /** 
+   * event triggers on page resize
+   */
   const C_ONRESIZE = 'onresize';
 
-  /** Событие срабатывает при ресайзе страницы. Добавляется из страниц, загруженных через ajax */
+  /** 
+   * Custom event form ajax load pages
+   */
   const C_AJAXONRESIZE = 'ajaxonresize';
   
   private static $events = array();
   // type="text/javascript"
-  //Возможные события
-  public static $handledEvents = array ('onload', 'onresize', 'ajaxonload', 'ajaxonresize', 'ajaxloadcompleted', 'onmousedown');
+  //possible events
+  public static $handledEvents = array (
+    self::C_ONLOAD,
+    self::C_ONAFTERLOAD,
+    self::C_AJAXONLOAD,
+    self::C_AJAXLOADCOMPLETED,
+    self::C_ONRESIZE,
+    self::C_AJAXONRESIZE
+  );
   
-  
+  /**
+   * Adds js code to event
+   * 
+   * @param String $event
+   * @param String $js
+   */
   public static function add($event,$js)
   {
     $js = str_replace(chr(13), "", $js);
@@ -45,12 +69,18 @@ Class Js
       {
         if(!isset(self::$events[$eve])) self::$events[$eve] = array();
         self::$events[$eve][] = $js . ';';
+      } else {  
+        throw new CoreException_Error('Error on attempt to add JS code to an unexisting event named: '.$eve);
       }
-      else  Logger::error('Попытка присвоить js скрипт несуществующему событию '.$eve);
     }
     
   }
   
+  /**
+   * Returns Html that needs to be included to page for this module normal work.
+   * 
+   * @return string
+   */
   public static function getHtml()
   {
     $result = '';
@@ -60,18 +90,6 @@ Class Js
     }
     $result = '<script type="text/javascript">' . $result . '</script>';
     return $result;
-  }
-}
-
-
-Class JsEvent
-{
-  public $name;
-  
-  
-  public function __construct($name)
-  {
-    $this->name = $name;
   }
 }
 

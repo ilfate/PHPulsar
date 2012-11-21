@@ -78,6 +78,14 @@ class CoreRequest implements CoreInterfaceRequest {
   }
   
   /**
+   * Returns method
+   */
+  public static function getMethod()
+  {
+    return $_SERVER['REQUEST_METHOD'];  
+  }
+  
+  /**
    * Save current request and sets new fake params
    * @param type $get
    * @param type $post 
@@ -222,22 +230,22 @@ class CoreRequest implements CoreInterfaceRequest {
   }
   
   /**
-	 * Returns page adress where request come from
-	 * 
-	 * @return string 
-	 */
-	public static function getReferer() {
-		return isset($_REQUEST["__referer"]) ? $_REQUEST["__referer"] : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");
-	}
+   * Returns page adress where request come from
+   * 
+   * @return string 
+   */
+  public static function getReferer() {
+    return isset($_REQUEST["__referer"]) ? $_REQUEST["__referer"] : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");
+  }
 
   /**
    * Host
    *
    * @return type 
    */
-	public static function getHost() {
-		return isset($_SERVER["HTTP_X_FORWARDED_HOST"]) ? $_SERVER["HTTP_X_FORWARDED_HOST"] : (isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "");
-	}
+  public static function getHost() {
+    return isset($_SERVER["HTTP_X_FORWARDED_HOST"]) ? $_SERVER["HTTP_X_FORWARDED_HOST"] : (isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "");
+  }
 
 }
 

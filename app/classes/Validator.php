@@ -28,6 +28,8 @@ class Validator
     'authEmailAndPassword'    => 'Email or password are wrong.',
   );
   
+  private static $form;
+  
   public static function email($value)
   {
     return (empty($value) || preg_match("![a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,4}!i", $value));
@@ -42,7 +44,7 @@ class Validator
   }
   public static function maxLength($value, $param) 
   {
-     return (empty($value) || mb_strlen($value, "UTF-8") < $param);
+    return (empty($value) || mb_strlen($value, "UTF-8") < $param);
   }
   public static function isNumeric($value) 
   {
@@ -50,8 +52,7 @@ class Validator
   }
   public static function equalField($value, $param) 
   {
-    $post = Request::getPost();
-    return (empty($value) || (isset($post[$param]) && $value == $post[$param]));
+    return (empty($value) || (isset(self::$form[$param]) && $value == self::$form[$param]));
   }
   public static function userEmailUnique($value)
   {
@@ -63,10 +64,9 @@ class Validator
   }
   public static function authEmailAndPassword($value, $param) 
   {
-    $post = Request::getPost();
-    if(isset($post[$param])) 
+    if(isset(self::$form[$param])) 
     {
-      return Model_User::getUserByEmailAndPassword($value, $post[$param]);
+      return Model_User::getUserByEmailAndPassword($value, self::$form[$param]);
     } 
     return false;
   }
@@ -118,14 +118,15 @@ class Validator
   public static function validateForm(array $config, array $form = null)
   {
     if(!$form) $form = Request::getPost();
+	self::$form = $form;
     foreach ($config as $field_name => $filters)
     {
-      if(!isset($form[$field_name]))
+      if(!isset(self::$form[$field_name]))
       {
         self::$formErrors[] = array('field' => $field_name, 'error' => 'Field not found');
         return false;
       }
-      if(!self::validate($form[$field_name], $filters))
+      if(!self::validate(self::$form[$field_name], $filters))
       {
         self::$formErrors[] = array('field' => $field_name, 'error' => self::getLastError());
         return false;

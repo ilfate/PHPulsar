@@ -1,4 +1,5 @@
-<?= Js::getHtml()?>
+<?= Js::getHtml() ?>
+<?= Csrf::createInput() ?>
 <?= $this->render('menu.tpl') ?>
 
 

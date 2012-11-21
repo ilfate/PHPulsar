@@ -13,7 +13,7 @@
  */
 class Service_Layout extends CoreService
 {
-	public static function preExecute() 
+  public static function preExecute() 
   {
     $access_restricted = Request::getGet('access_restricted');
     CoreView_Http::setGlobal('page_title', 'Ilfate');
