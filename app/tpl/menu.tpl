@@ -1,11 +1,11 @@
 <div class="navbar navbar-fixed-top">
   <div class="">
     <div class="container">
-      <a class="brand" href="#">Ilfate</a>
+      <a class="brand" href="/">Ilfate</a>
       <ul class="nav">
-        <li class="active"><a href="/">Start</a></li>
-        <li><a href="#!/success">Success</a></li>
-        <li><a href="#!/error">Error</a></li>
+        <? foreach ($ilfate_menu as $menu_el) { ?> 
+          <?= $this::inc('interface/top_menu_el.tpl', array('element' => $menu_el))?>
+        <? } ?>
         <li><a href="#!/error"><?=$access_restricted ? 'RESRICTED' : ''?></a></li>
       </ul>
       <? if(Service_Auth::isAuth()) { ?>

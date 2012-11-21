@@ -13,15 +13,15 @@
  */
 class Service_Auth extends CoreService
 {
-  const SESSION_AUTH_KEY = 'user_auth';
-  const SESSION_AUTH_KEY_EXPIRES = 3600;
+  const SESSION_AUTH_KEY          = 'user_auth';
+  const SESSION_AUTH_KEY_EXPIRES  = 3600;
   
-  const COOKIE_AUTH_KEY = 'user_auth';
-  const COOKIE_AUTH_KEY_EXPIRES = 0;
+  const COOKIE_AUTH_KEY           = 'user_auth';
+  const COOKIE_AUTH_KEY_EXPIRES   = 0;
   
-  const ALL_METHODS_ARE_PUBLIC = true;
+  const ALL_METHODS_ARE_PUBLIC    = true;
   
-  private static $priority = 5;
+  const PRIORITY                  = 5;
   
   /**
    *
@@ -38,6 +38,7 @@ class Service_Auth extends CoreService
    */
   private static $public_controllers = array(
     'Main' => array('index', 'mysql'),
+    'MainPages' => self::ALL_METHODS_ARE_PUBLIC,
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
     'Auth' => self::ALL_METHODS_ARE_PUBLIC,
   );
@@ -114,10 +115,6 @@ class Service_Auth extends CoreService
   public static function getUser()
   {
     return self::$current_user;
-  }
-
-  public static function getPriority() {
-    return self::$priority;
   }
   
   

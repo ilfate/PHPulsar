@@ -13,6 +13,8 @@
  */
 class Service_Csrf extends CoreService
 {
+  const PRIORITY = 80;
+  
   public static function preExecute() 
   {
     if(Request::getMethod() == "POST")
@@ -28,9 +30,6 @@ class Service_Csrf extends CoreService
   {
   }
 
-  public static function getPriority() {
-    return 5;
-  }
   
   
 }

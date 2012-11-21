@@ -13,14 +13,55 @@
  */
 class Service_Layout extends CoreService
 {
+  const PRIORITY = 70;
+  
+  private static $menu = array(
+    'main'        => array('link' => '/', 'text' => 'Main'),
+    'about_me'    => array('link' => '?MainPages=aboutMe', 'text' => 'About me'),
+  );
+  private static $menu_map = array(
+    'Main' => 'main',
+    'MainPages' => 'about_me',
+  );
+  
+  private static $default_menu = 'main';
+  
   public static function preExecute() 
   {
-    $access_restricted = Request::getGet('access_restricted');
-    CoreView_Http::setGlobal('page_title', 'Ilfate');
-    CoreView_Http::setGlobal('access_restricted', $access_restricted);
-    
     if(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP)
     {
+      $access_restricted = Request::getGet('access_restricted');
+      CoreView_Http::setGlobal('page_title', 'Ilfate');
+      CoreView_Http::setGlobal('access_restricted', $access_restricted);
+
+      /**
+       * Menu handler 
+       */
+      $class = Routing::getClass();
+      if(isset(self::$menu_map[$class]))
+      {
+        if(is_array(self::$menu_map[$class]))
+        {
+          $method = Routing::getMethod();
+          if(isset(self::$menu_map[$class][$method])) 
+          {
+            $active_menu = self::$menu_map[$class][$method];
+          }
+        } else {
+          $active_menu = self::$menu_map[$class];
+        }
+      }
+      if(!isset($active_menu)) 
+      {
+        $active_menu = self::$default_menu;
+      }
+      self::$menu[$active_menu]['active'] = true;
+      CoreView_Http::setGlobal('ilfate_menu', self::$menu);
+
+      /**
+       * Messages handler 
+       */
+    
       $messages = Message::getMessages();
       if($messages) 
       {
@@ -35,11 +76,9 @@ class Service_Layout extends CoreService
   
   public static function postExecute() 
   {
+    
   }
 
-  public static function getPriority() {
-    return 5;
-  }
   
   
 }

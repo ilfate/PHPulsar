@@ -61,6 +61,7 @@ Ajax = function() {
   
   this.doneJson = function(data, n_cb)
   {
+    F.handleEvent('ajaxonload');
     if(data.actions)
     {
       for(var key in data.actions)
@@ -71,7 +72,6 @@ Ajax = function() {
         } else {
           var args = [];
         }
-    info(data.actions[key]);
         var handler = eval("(" + data.actions[key] + ")");
         handler.call(this, args);
       }
@@ -80,10 +80,13 @@ Ajax = function() {
     {
       this.callBack[n_cb]();
     }
+    F.handleEvent('ajaxloadcompleted');
   }
   this.doneHtml = function(data, n_cb)
   {
+    F.handleEvent('ajaxonload');
     alert(data);
+    F.handleEvent('ajaxloadcompleted');
   }
   
   this.fail = function(jqXHR, textStatus)

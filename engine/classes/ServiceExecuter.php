@@ -12,6 +12,8 @@
  */
 class CoreServiceExecuter implements CoreInterfaceServiceExecuter
 {
+  const PRIORITY        = 1;
+  
   const SERVICES_PREFIX = 'Service_';
   const SERVICES_PATH   = 'app/classes/Service/';
   
@@ -57,7 +59,7 @@ class CoreServiceExecuter implements CoreInterfaceServiceExecuter
         foreach($iterator as $entry) 
         {
           $name = self::SERVICES_PREFIX . substr($entry->getFilename(), 0, -4);
-          $filelist[$name] = $name::getPriority();
+          $filelist[$name] = $name::PRIORITY;
           // keys are names and values are priority indexs for sorting
         }
         asort($filelist);

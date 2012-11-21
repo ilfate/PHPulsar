@@ -63,9 +63,17 @@ body {
   top: 2px;
 }
 
-
-#error, #success, .alert
+.alert
 {
     
     display: none;
+}
+
+/****  Main Page ****/
+
+.hero-unit {
+  padding: 35px;
+}
+.hero-unit h1 {
+  font-size: 31px;
 }
