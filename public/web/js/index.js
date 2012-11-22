@@ -29,6 +29,9 @@ function ilAlert(data)
   $('.alert').alert();
 }
 
+
+
+
 function info(data)
 {
   console.info(data);

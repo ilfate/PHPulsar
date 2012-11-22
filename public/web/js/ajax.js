@@ -130,6 +130,7 @@ Ajax = function() {
         link.attr("inited", "inited");
       }
     });
+	$('.tip').tooltip();
   }
   
   this.formLoadingStart = function(form)
