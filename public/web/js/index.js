@@ -29,7 +29,19 @@ function ilAlert(data)
   $('.alert').alert();
 }
 
+function ilfate_init() {
+  Ajax.init();
+  $('.tip').tooltip();
+  $('.tip-bottom').tooltip({placement:'bottom'});
+  $('.tip-left').tooltip({placement:'left'});
+  $('.tip-right').tooltip({placement:'right'});
+  
+}
+$(document).ready(function(){
+  ilfate_init();
+});
 
+F.manageEvent('ajaxloadcompleted', ilfate_init);
 
 
 function info(data)

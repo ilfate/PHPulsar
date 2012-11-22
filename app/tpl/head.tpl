@@ -19,14 +19,13 @@
   <script type="text/javascript" src="<?=$path_to_web?>js/jquery-1.8.2.min.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>bootstrap/js/bootstrap.min.js"></script>
   
-  <script type="text/javascript" src="<?=$path_to_web?>js/underscore.js"></script>
-  <script type="text/javascript" src="<?=$path_to_web?>js/backbone.js"></script>
+  <script type="text/javascript" src="<?=$path_to_web?>js/events.js"></script>
   
   <script type="text/javascript" src="<?=$path_to_web?>js/index.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>js/ajax.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>js/modal.js"></script>
   <script type="text/javascript" src="<?=$path_to_web?>js/form.js"></script>
-  <script type="text/javascript" src="<?=$path_to_web?>js/events.js"></script>
+  
   
   
   <?= $content ?>

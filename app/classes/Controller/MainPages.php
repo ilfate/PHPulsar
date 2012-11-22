@@ -21,7 +21,8 @@ class Controller_MainPages extends Controller {
   {
       
     return array(
-      'tpl' => 'Main/index.tpl'
+      'mode' => Request::EXECUTE_MODE_HTTP,
+      'tpl' => 'Main/aboutMe.tpl'
     );
   }
 }

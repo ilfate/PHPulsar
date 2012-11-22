@@ -18,7 +18,9 @@ Modal = function() {
     })
     
     $('#ilfateModal').on('shown', function () {
-      Ajax.init();
+      F.handleEvent('ajaxonload');
+    });
+    $('#ilfateModal').on('shown', function () {
       if($('#ilfateModal .modal-body .move-to-footer').length > 0) {
         var el = $('#ilfateModal .modal-footer .custom-footer').html('');
         $('#ilfateModal .modal-body .move-to-footer').appendTo(el).show();
@@ -32,6 +34,7 @@ Modal = function() {
       } else {
         $('#ilfateModal #myModalLabel').html('');
       }
+      F.handleEvent('ajaxloadcompleted');
     })
   }
 }

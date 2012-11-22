@@ -15,7 +15,20 @@ Ajax = function() {
   {
     if(!options) options = {};
     options.url = url;
-    options.dataType = "script";
+    options.dataType = "json";
+
+    this.execute(options);
+  }
+  /**
+   * ajax request that will return json data
+   */
+  this.html = function(url, target, options)
+  {
+    if(!options) options = {};
+    options.url = url;
+    options.type = "GET";
+    options.target = target;
+    options.dataType = "html";
 
     this.execute(options);
   }
@@ -44,16 +57,24 @@ Ajax = function() {
     if(options.data) {
       opt.data = options.data;
     }
-  
-    
-    opt.type = "POST";
+    if(options.type) {
+      opt.type = options.type;
+    } else {
+      opt.type = "POST";
+    }
+    if(options.dataType) {
+      opt.dataType = options.dataType;
+    } else {
+      opt.dataType = "json";
+    }
+      
     var request = $.ajax(opt);  
     
-    if(options.dataType == "script") 
+    if(options.dataType == "json") 
     {
       request.done(function(data){Ajax.doneJson(data, n_cb)});
     } else {
-      request.done(function(data){Ajax.doneHtml(data, n_cb)});
+      request.done(function(data){Ajax.doneHtml(data, options.target, n_cb)});
     }
     
     request.fail(function(jqXHR, textStatus){Ajax.fail(jqXHR, textStatus)});
@@ -82,10 +103,10 @@ Ajax = function() {
     }
     F.handleEvent('ajaxloadcompleted');
   }
-  this.doneHtml = function(data, n_cb)
+  this.doneHtml = function(data, target, n_cb)
   {
     F.handleEvent('ajaxonload');
-    alert(data);
+    $(target).html(data);
     F.handleEvent('ajaxloadcompleted');
   }
   
@@ -130,7 +151,22 @@ Ajax = function() {
         link.attr("inited", "inited");
       }
     });
-	$('.tip').tooltip();
+    
+    $("a.hajax").each(function() {
+      var link = $(this);
+      if (link.attr("inited") != "inited") {
+        link.bind("click", function() {
+          if(link.hasClass("disabled")) return false;
+          Ajax.linkLoadingStart(link);
+          Ajax.html(this.href, link.data('target'), {
+            params : '__csrf=' + Ajax.getCSRF(),
+            callBack : function(){Ajax.linkLoadingEnd(link)}
+          });
+          return false;
+        });
+        link.attr("inited", "inited");
+      }
+    });
   }
   
   this.formLoadingStart = function(form)
@@ -161,6 +197,3 @@ Ajax = function() {
 
 Ajax = new Ajax();
 
-$(document).ready(function(){
-  Ajax.init();
-});
