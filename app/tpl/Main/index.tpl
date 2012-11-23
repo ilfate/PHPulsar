@@ -9,6 +9,6 @@
 </div>
 Here are some things that you may find interesting for. <span class="tip" rel="tooltip" title="first tooltip" > About me </span>
 This site is centered around my blog, but contains lots of other content as well. You can use the links to the left, or else jump right to the various sections listed below:
-<a class="hajax" href="?MainPages=aboutMe" data-target=".main-content-well">
+<a class="hajax" href="?Main=aboutMe" data-target=".main-content-well">
   <img src="public/web/images/game/tank4-2.jpg" width="300px" height="300px" class="img-circle">
 </a>

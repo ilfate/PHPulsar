@@ -27,6 +27,19 @@ class Controller_Main extends Controller {
   }
   
   /**
+   * 
+   * @return type 
+   */
+  public function aboutMe() 
+  {
+      
+    return array(
+      'mode' => Request::EXECUTE_MODE_HTTP,
+      'tpl' => 'Main/aboutMe.tpl'
+    );
+  }
+  
+  /**
    * @cache 10 tag tag2aw[1] tags t2[2][0]
    * @return type 
    */

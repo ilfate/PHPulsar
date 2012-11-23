@@ -35,7 +35,7 @@ function ilfate_init() {
   $('.tip-bottom').tooltip({placement:'bottom'});
   $('.tip-left').tooltip({placement:'left'});
   $('.tip-right').tooltip({placement:'right'});
-  
+  stars();
 }
 $(document).ready(function(){
   ilfate_init();
@@ -47,4 +47,17 @@ F.manageEvent('ajaxloadcompleted', ilfate_init);
 function info(data)
 {
   console.info(data);
+}
+
+
+function stars() 
+{
+	$('.label-stars').each(function(){
+		//if()
+		var el =  $(this);
+		if(el.prev().hasClass('before-stars')) return ;
+		el.before('<div class="container-stars"></div>');
+		el.appendTo(el.prev());
+		el.before('<div class="before-stars"></div>');
+	});
 }

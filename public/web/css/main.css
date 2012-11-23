@@ -78,3 +78,28 @@ body {
   font-size: 31px;
   margin: 0px;
 }
+
+
+/**** label-stars ****/
+.label-stars {
+	
+}
+
+
+.before-stars {
+	display: inline-block;
+	width:150px;
+	height: 20px;
+	display:none;
+	position: absolute;
+	background-image: url('../images/dark-tile.png');
+	background-position: 20px 0px;
+	background-repeat: no-repeat;
+}
+
+.container-stars:hover .before-stars{
+	display:block;
+}
+.container-stars {
+	display:inline-block;
+}

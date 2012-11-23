@@ -17,11 +17,11 @@ class Service_Layout extends CoreService
   
   private static $menu = array(
     'main'        => array('link' => '/', 'text' => 'Main'),
-    'about_me'    => array('link' => '?MainPages=aboutMe', 'text' => 'About me'),
+    'about_me'    => array('link' => '?Main=aboutMe', 'text' => 'About me'),
   );
   private static $menu_map = array(
-    'Main' => 'main',
-    'MainPages' => 'about_me',
+    'Auth' => 'main',
+    'Main' => array('index' => 'main', 'aboutMe' => 'about_me' )
   );
   
   private static $default_menu = 'main';
