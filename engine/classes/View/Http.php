@@ -87,7 +87,7 @@ class CoreView_Http extends CoreView
    * @param type $values
    * @return type 
    */
-  public function inc($template, $values)
+  public function inc($template, $values = array())
   {
     return $this->render($template, $values);
   }

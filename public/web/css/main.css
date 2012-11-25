@@ -79,10 +79,17 @@ body {
   margin: 0px;
 }
 
+/**** img ****/
+
+.img-more-rounded {
+  border-radius: 36px 36px 36px 36px;
+}
+
 
 /**** label-stars ****/
 .label-stars {
-	
+	min-width: 72px;
+  text-align: center;
 }
 
 
@@ -92,9 +99,12 @@ body {
 	height: 20px;
 	display:none;
 	position: absolute;
-	background-image: url('../images/dark-tile.png');
-	background-position: 20px 0px;
+	background-position: 0px 0px;
 	background-repeat: no-repeat;
+  padding: 2px 4px;
+  border-radius: 3px 3px 3px 3px;
+  margin: 2px 0 0 0;
+  min-width: 72px;
 }
 
 .container-stars:hover .before-stars{
@@ -102,4 +112,55 @@ body {
 }
 .container-stars {
 	display:inline-block;
+  min-width: 72px;
+}
+
+.star{
+  
+  float:left;
+  width:18px;
+  height:16px;
+  margin: -1px 0 0 0;
+  text-align: center;
+}
+.under-star {
+  background-color: #F89406;
+  width: 18px;
+  height:16px;
+  position: absolute;
+}
+.img-star {
+  background-image: url('../images/star.png');
+  background-repeat: no-repeat;
+  width: 18px;
+  height:16px;
+  position: absolute;
+}
+
+/**** img-text ****/
+.img-text .text{
+  display: none;
+  position: absolute;
+  font-size: 60px;
+  color:black;
+  text-decoration: none;
+  text-align: center;
+  line-height: 270px;
+  width:270px;
+  height: 270px;
+}
+.img-text .text.extra-big{
+  font-size: 90px;
+}
+.img-text .text.invert{
+  color:white;
+}
+.img-text:hover .text{
+  display: block;
+}
+
+/**** like-h1 ****/
+.like-h1{
+  line-height: 38px;
+  margin: 10px;
 }

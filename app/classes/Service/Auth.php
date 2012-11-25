@@ -41,6 +41,8 @@ class Service_Auth extends CoreService
     'MainPages' => self::ALL_METHODS_ARE_PUBLIC,
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
     'Auth' => self::ALL_METHODS_ARE_PUBLIC,
+    'Cv' => self::ALL_METHODS_ARE_PUBLIC,
+    'Game' => array('index'),
   );
   
   public static function preExecute() 
@@ -70,7 +72,7 @@ class Service_Auth extends CoreService
     { // it is guest here
       if(!self::isRoutePublic())
       {
-        Helper::redirect(null, array('access_restricted' => true));
+        Helper::redirect(array('Auth', 'needRegistration'), array('access_restricted' => true));
       }
     } 
   }

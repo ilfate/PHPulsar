@@ -1,4 +1,3 @@
-<?= Js::getHtml() ?>
 <?= Csrf::createInput() ?>
 <?= $this->render('menu.tpl') ?>
 
@@ -12,11 +11,10 @@
       </div>
     </div>
     <div class="span3">
-      <div class="main-content-well-side well well-small">
-        <?= Helper::exe('Logger', 'index'); ?>
-      </div>
+      <?= $this->inc('sidebar.tpl')?>
     </div>
   </div>
 </div>
 
 <?= $this->render('included_templates/main.tpl') ?>
+<?= Js::getHtml() ?>

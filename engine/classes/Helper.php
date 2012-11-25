@@ -32,6 +32,15 @@ class CoreHelper
     return Core::subExecute($class, $method, $get, $post);
   }
   
+  public static function exeAjax($route, $get = null)
+  {
+    
+    $div_id = 'ajax_load_'.  mt_rand(1000, 9999);
+    $url = self::url($route, $get);
+    Js::add(Js::C_ONAFTERLOAD, 'Ajax.html("'.$url.'", "#'.$div_id.'")');
+    return '<div id="'.$div_id.'"></div>';
+  }
+  
   /**
    * Generates url using Roution to create url from path
    *

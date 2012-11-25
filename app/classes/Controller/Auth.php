@@ -108,6 +108,12 @@ class Controller_Auth extends Controller
   }
   
   
+  public function needRegistration()
+  {
+    return array();
+  }
+  
+  
 }
 
 ?>
