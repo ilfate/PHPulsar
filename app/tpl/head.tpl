@@ -9,9 +9,7 @@
   
   <link rel="stylesheet" href="<?=$path_to_web?>css/main.css" type="text/css" />
   
-  
-  
-  <link rel="shortcut icon" href="images/favocon.iso" type="image/x-icon"/>
+  <link rel="shortcut icon" href="<?=$path_to_web?>images/favocon.iso" type="image/x-icon"/>
   
 </head>
 <body>
