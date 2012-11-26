@@ -65,7 +65,7 @@ class CoreLogger
    */
   public static function dump($data, $mode = 'auto', $file = null)
   {
-    if(Request::getExecutingMode() != Request::EXECUTE_MODE_CLI && $mode != 'file')
+    if(Request::getExecutingMode() != Request::EXECUTE_MODE_CLI && ( $mode != 'file' && Core::getConfig('is_dev')) )
     {
       self::outputData($data);
     } else if($mode == 'file' || (Request::getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {

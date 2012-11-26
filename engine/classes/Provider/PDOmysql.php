@@ -62,6 +62,10 @@ class CoreProvider_PDOmysql extends CoreProvider
   {
     Logger::sql_start($query);
     $source = self::$PDO->prepare($query);
+    foreach ($params as &$param)
+    {
+      $param = mysql_real_escape_string($param);
+    }
     $source->execute($params);
     $data = $source->fetchAll(PDO::FETCH_ASSOC);
     Logger::sql_finish();
@@ -72,6 +76,10 @@ class CoreProvider_PDOmysql extends CoreProvider
   {
     Logger::sql_start($query);
     $source = self::$PDO->prepare($query);
+    foreach ($params as &$param)
+    {
+      $param = mysql_real_escape_string($param);
+    }
     $data = $source->execute($params);
     Logger::sql_finish();
     return $data;
