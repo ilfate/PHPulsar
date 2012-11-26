@@ -62,22 +62,11 @@ $.fn.starred = function()
     el.before('<div class="container-stars"></div>');
     el.appendTo(el.prev());
     el.before('<div class="before-stars label"></div>');
-    var width = el.css('width');
-    var width_num = parseInt(width);
-    var pad = Math.floor((width_num-18*4)/8);
-    var modulo = Math.floor(((width_num-18*4)%8)/2);
-    width = width_num - modulo;
     
-    
-    el.prev().css({width: width+'px', height : el.css('height'), 'padding-left': 4+modulo});
+    el.prev().css({width: el.css('width'), height : el.css('height')});
     var star_div = '<div class="star"><div class="under-star"></div><div class="img-star"></div></div>';
     el.prev().append(star_div + star_div + star_div + star_div);
-
-    if(pad) {
-      el.prev().find('.star').css('padding', '0px '+pad+'px')
-      .last().css('padding', '0px 0px 0px '+pad+'px');
-    }
-    
+	
     for(var i = 0; i < 4; i++) {
       if(value < (i+1)*25) {
         var star = el.prev().find('.star .under-star').eq(i);
