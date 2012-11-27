@@ -257,11 +257,33 @@ class Core {
     return new self::$config['project']['Response'][$mode]($content, self::$routing, self::$views[$mode]);
   }
   
+  /**
+   * Returns main project configuration field
+   * 
+   * @param type $name
+   * @return mixed
+   */
   public static function getConfig($name) 
   {
     if(isset(self::$config['project'][$name]))
     {
       return self::$config['project'][$name];
+    } else {
+      return null;
+    }
+  }
+  
+  /**
+   * Returns extended project configuration field
+   * 
+   * @param type $name
+   * @return mixed
+   */
+  public static function getExtendedConfig($type, $name) 
+  {
+    if(isset(self::$config[$type]) && isset(self::$config[$type][$name]))
+    {
+      return self::$config[$type][$name];
     } else {
       return null;
     }

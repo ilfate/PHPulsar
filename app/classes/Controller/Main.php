@@ -50,7 +50,7 @@ class Controller_Main extends Controller {
   
   public function mysql()
   {
-    $user = Model_User::load(3);
+    $user = Model_User::getByPK(3);
     //Logger::dump($user->name);
     $user->name = 'masha_' . mt_rand(1000, 9999);
     $user->save();

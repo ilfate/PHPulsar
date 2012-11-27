@@ -1,13 +1,9 @@
 <?php
 
-
+$local_configuration = include('local_config.php');
 
 return array(
   'project' => array(
-    'main_path'                  => 'config.php',
-    'engine_path'                => '/engine',
-    'app_path'                   => '/app',
-    'modules_path'               => '/modules', 
     'Service'                    => 'CoreService',
     'Response'                   => array(
       'abstract'      => 'CoreResponse',
@@ -21,8 +17,14 @@ return array(
 			'subquery'      => 'CoreView_Http',
 		),
       
-    'log_sql' => true,
-    'is_dev'  => true
+    'log_sql' => $local_configuration['project']['log_sql'],
+    'is_dev'  => $local_configuration['project']['is_dev']
       
+  ),
+  'CoreProvider_PDOmysql' => array(
+	'dbname' => 'ilfate',
+	'host'   => 'localhost',
+	'login'  => 'root',
+	'pass'  =>  $local_configuration['CoreProvider_PDOmysql']['pass'],
   )
 );

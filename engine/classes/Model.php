@@ -29,8 +29,6 @@ abstract class CoreModel extends CoreCachingClass
   
   public static $provider_type = 'CoreProvider_PDOmysql';
   
-  public static $config_name = 'Config_DB';
-  
   private $data;
   private $origin_data;
   
@@ -62,9 +60,8 @@ abstract class CoreModel extends CoreCachingClass
       throw new CoreException_ModelError('Cant init Model. "'.self::$provider_type.'" class is missing.');
     }
   
-    $config = new self::$config_name();
   
-    forward_static_call(array(self::$provider_type, 'init'), $config);
+    forward_static_call(array(self::$provider_type, 'init'));
   }
   
   /**

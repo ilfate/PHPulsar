@@ -37,18 +37,23 @@ class CoreProvider_PDOmysql extends CoreProvider
       throw new CoreException_ModelError('PDO provider needs PDO class... surprise!');
     }
   }
-  public static function init($config)
+  public static function init()
   {
-    if($config) 
-    {
-      self::$config = $config;
-    }
+    
+    self::$config = array(
+	'dbname' => Core::getExtendedConfig(__CLASS__, 'dbname'),
+	'host'   => Core::getExtendedConfig(__CLASS__, 'host'),
+	'login'  => Core::getExtendedConfig(__CLASS__, 'login'),
+	'pass'  =>  Core::getExtendedConfig(__CLASS__, 'pass'),
+  );
+  
+    
     try 
     {
       self::$PDO = new PDO(
-        'mysql:dbname='.self::$config->dbname.';host='.self::$config->host, 
-        self::$config->login, 
-        self::$config->pass,
+        'mysql:dbname='.self::$config['dbname'].';host='.self::$config['host'], 
+        self::$config['login'], 
+        self::$config['pass'],
         static::$PDO_OPTIONS
       );
     } catch(PDOException $e) {
