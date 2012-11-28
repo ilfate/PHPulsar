@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="ilfate" default="deploy">
+
+  <!-- ============================================  -->
+  <!-- (DEFAULT)  Target: deploy                     -->
+  <!-- ============================================  -->
+  <property name="ilfate.clonedir" value="test/" />
+  <property name="ilfate.config_file" value="${ilfate.clonedir}config.php" />
+  <property name="ilfate.config_file_sample" value="${ilfate.clonedir}config.php.sample" />
+  <tstamp>
+    <format property="build.time" pattern="%Y_%m_%d__%H_%M_%S" />
+  </tstamp>
+  <property file="build.properties" />
+  
+  <target name="deploy" description="Deploys a copy of Drupal Core">
+    <delete dir="${ilfate.clonedir}" includeemptydirs="true" verbose="true" failonerror="false" />
+    <mkdir  dir="${ilfate.clonedir}" />
+    <!-- Clone drupal core -->
+    <gitclone repository="https://github.com/ilfate/ilfate_php_engine.git" targetPath="${ilfate.clonedir}" />
+
+    <delete file="${ilfate.config_file}" failonerror="false" />
+    <copy file="${ilfate.config_file_sample}" tofile="${ilfate.config_file}" overwrite="true">
+	  <filterchain>
+		<replacetokens begintoken="%%" endtoken="%%">
+			<!-- MySQL TOKENS -->
+			<token key="log_sql" value="${conf.log_sql}" />
+			<token key="is_dev" value="${conf.is_dev}" />
+			<token key="db_pass" value="${conf.db.pass}" />
+		</replacetokens>
+	  </filterchain>
+    </copy>
+  </target>
+
+</project>
