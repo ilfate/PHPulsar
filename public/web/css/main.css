@@ -40,6 +40,10 @@ body {
   box-shadow: 0 0 6px 0 #384541;
 }
 
+.cv-certificate {
+	margin-right: 20px;
+}
+
 /****  Auth  *****/
 
 .form-signin {

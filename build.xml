@@ -17,10 +17,10 @@
   
   <if>
 		<not>
-			<isset property="${conf.deploy.target}"/>
+			<isset property="${conf.deploy_target}" />
 		</not>
 		<then>
-			<property name="conf.deploy.target" value="../ilfate2/" />
+			<property name="conf.deploy_target" value="../ilfate2/" />
 		</then>
   </if>
   
@@ -46,7 +46,7 @@
 
 	<echo msg="Copy project..." />
 
-	<copy todir="${ilfate.clonedir.resolved}${conf.deploy.target}" >
+	<copy todir="${ilfate.clonedir.resolved}${conf.deploy_target}" >
       <fileset dir="${ilfate.clonedir.resolved}">
         <include name="app/" />
         <exclude name=".git" />
