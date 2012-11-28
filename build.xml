@@ -5,19 +5,32 @@
   <!-- ============================================  -->
   <!-- (DEFAULT)  Target: deploy                     -->
   <!-- ============================================  -->
+  <echo msg="Preparing for build..." />
   <property name="ilfate.clonedir" value="test/" />
-  <property name="ilfate.config_file" value="${ilfate.clonedir}config.php" />
-  <property name="ilfate.config_file_sample" value="${ilfate.clonedir}config.php.sample" />
+  <resolvepath propertyName="ilfate.clonedir.resolved" file="${ilfate.clonedir}" />
+  <property name="ilfate.config_file" value="${ilfate.clonedir.resolved}config.php" />
+  <property name="ilfate.config_file_sample" value="${ilfate.clonedir.resolved}config.php.sample" />
   <tstamp>
     <format property="build.time" pattern="%Y_%m_%d__%H_%M_%S" />
   </tstamp>
   <property file="build.properties" />
   
+  <if>
+		<not>
+			<isset property="${conf.deploy.target}"/>
+		</not>
+		<then>
+			<property name="conf.deploy.target" value="../ilfate2/" />
+		</then>
+  </if>
+  
   <target name="deploy" description="Deploys a copy of Drupal Core">
-    <delete dir="${ilfate.clonedir}" includeemptydirs="true" verbose="true" failonerror="false" />
-    <mkdir  dir="${ilfate.clonedir}" />
+    <delete dir="${ilfate.clonedir.resolved}" includeemptydirs="true" verbose="true" failonerror="false" />
+    <mkdir  dir="${ilfate.clonedir.resolved}" />
     <!-- Clone drupal core -->
-    <gitclone repository="https://github.com/ilfate/ilfate_php_engine.git" targetPath="${ilfate.clonedir}" />
+    <gitclone repository="https://github.com/ilfate/ilfate_php_engine.git" targetPath="${ilfate.clonedir.resolved}" />
+
+	<echo msg="Setting configuration..." />
 
     <delete file="${ilfate.config_file}" failonerror="false" />
     <copy file="${ilfate.config_file_sample}" tofile="${ilfate.config_file}" overwrite="true">
@@ -29,6 +42,16 @@
 			<token key="db_pass" value="${conf.db.pass}" />
 		</replacetokens>
 	  </filterchain>
+    </copy>
+
+	<echo msg="Copy project..." />
+
+	<copy todir="${ilfate.clonedir.resolved}${conf.deploy.target}" >
+      <fileset dir="${ilfate.clonedir.resolved}">
+        <include name="app/" />
+        <exclude name=".git" />
+        <exclude name=".git/" />
+      </fileset>
     </copy>
   </target>
 
