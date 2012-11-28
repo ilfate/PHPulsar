@@ -8,51 +8,55 @@
   <echo msg="Preparing for build..." />
   <property name="ilfate.clonedir" value="test/" />
   <resolvepath propertyName="ilfate.clonedir.resolved" file="${ilfate.clonedir}" />
-  <property name="ilfate.config_file" value="${ilfate.clonedir.resolved}config.php" />
-  <property name="ilfate.config_file_sample" value="${ilfate.clonedir.resolved}config.php.sample" />
+  <property name="ilfate.config_file" value="${ilfate.clonedir.resolved}/config.php" />
+  <property name="ilfate.config_file_sample" value="${ilfate.clonedir.resolved}/config.php.sample" />
   <tstamp>
-    <format property="build.time" pattern="%Y_%m_%d__%H_%M_%S" />
+    <format property="build.time" pattern="%Y_%m_%d/%H_%M_%S" />
   </tstamp>
   <property file="build.properties" />
-  
+
   <if>
-		<not>
-			<isset property="${conf.deploy_target}" />
-		</not>
-		<then>
-			<property name="conf.deploy_target" value="../ilfate2/" />
-		</then>
+                <not>
+                        <isset property="${conf.deploy_target}" />
+                </not>
+                <then>
+                        <property name="conf.deploy_target" value="ilfate_builds/" />
+                </then>
   </if>
-  
+  <resolvepath propertyName="conf.dir.resolved" file="." />
+  <property name="conf.deploy.dir" value="${conf.dir.resolved}/${conf.deploy_target}${build.time}" />
   <target name="deploy" description="Deploys a copy of Drupal Core">
     <delete dir="${ilfate.clonedir.resolved}" includeemptydirs="true" verbose="true" failonerror="false" />
     <mkdir  dir="${ilfate.clonedir.resolved}" />
-    <!-- Clone drupal core -->
+    
     <gitclone repository="https://github.com/ilfate/ilfate_php_engine.git" targetPath="${ilfate.clonedir.resolved}" />
 
-	<echo msg="Setting configuration..." />
+     <echo msg="Setting configuration..." />
 
     <delete file="${ilfate.config_file}" failonerror="false" />
     <copy file="${ilfate.config_file_sample}" tofile="${ilfate.config_file}" overwrite="true">
-	  <filterchain>
-		<replacetokens begintoken="%%" endtoken="%%">
-			<!-- MySQL TOKENS -->
-			<token key="log_sql" value="${conf.log_sql}" />
-			<token key="is_dev" value="${conf.is_dev}" />
-			<token key="db_pass" value="${conf.db.pass}" />
-		</replacetokens>
-	  </filterchain>
+          <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+                        <!-- MySQL TOKENS -->
+                        <token key="log_sql" value="${conf.log_sql}" />
+                        <token key="is_dev" value="${conf.is_dev}" />
+                        <token key="db_pass" value="${conf.db.pass}" />
+                </replacetokens>
+          </filterchain>
     </copy>
 
-	<echo msg="Copy project..." />
+        <echo msg="Copy project..." />
+      <echo msg="to ${ilfate.clonedir.resolved}/${conf_deploy_target}" />
 
-	<copy todir="${ilfate.clonedir.resolved}${conf.deploy_target}" >
+  <copy todir="${conf.deploy.dir}" >
       <fileset dir="${ilfate.clonedir.resolved}">
-        <include name="app/" />
+        <include name="*/" />
         <exclude name=".git" />
         <exclude name=".git/" />
       </fileset>
-    </copy>
+  </copy>
+
+  <symlink target="${conf.deploy.dir}" link="${conf.dir.resolved}/ilfate/project" overwrite="true" />
   </target>
 
 </project>
