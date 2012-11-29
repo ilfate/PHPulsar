@@ -12,7 +12,7 @@
     <a href="<?=Helper::url(array('Cv', 'aboutMe'))?>">
       <div class="img-text" >
         <div class="text extra-big invert" >CV</div>
-        <img src="<?=HTTP_ROOT ?>web/images/ilfate.png" width="300px" height="300px" class="img-rounded">
+        <img src="<?=HTTP_ROOT ?>images/ilfate.png" width="300px" height="300px" class="img-rounded">
       </div>
     </a>
   </div>
@@ -20,7 +20,7 @@
     <a href="<?=Helper::url(array('Game_Main', 'index'))?>" data-target=".main-content-well">
       <div class="img-text" >
         <div class="text invert" >Game</div>
-        <img src="<?=HTTP_ROOT ?>web/images/game/tank1_s.jpg" width="300px" height="300px" class="img-rounded">
+        <img src="<?=HTTP_ROOT ?>images/game/tank1_s.jpg" width="300px" height="300px" class="img-rounded">
       </div>
     </a>
   </div>
