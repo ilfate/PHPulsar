@@ -8,7 +8,7 @@
   
   <link rel="stylesheet" href="<?=HTTP_ROOT?>css/main.css" type="text/css" />
   
-  <link rel="shortcut icon" href="<?=HTTP_ROOT?>images/favocon.iso" type="image/x-icon"/>
+  <link rel="shortcut icon" href="<?=HTTP_ROOT?>images/favicon.iso" type="image/x-icon"/>
   
 </head>
 <body>
