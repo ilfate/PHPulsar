@@ -27,8 +27,7 @@ class Controller_Cv extends Controller {
   {
       
     return array(
-      'mode' => Request::EXECUTE_MODE_HTTP,
-      'tpl' => 'Main/aboutMe.tpl'
+      'mode' => Request::EXECUTE_MODE_HTTP
     );
   }
   
@@ -39,8 +38,7 @@ class Controller_Cv extends Controller {
   public function skills() 
   {
     return array(
-      'mode' => Request::EXECUTE_MODE_HTTP,
-      'tpl' => 'Main/skills.tpl'
+      'mode' => Request::EXECUTE_MODE_HTTP
     );
   }
 }

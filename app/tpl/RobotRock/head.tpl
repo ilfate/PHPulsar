@@ -9,7 +9,15 @@
   <link rel="stylesheet" href="<?=HTTP_ROOT?>css/main.css" type="text/css" />
   
   <link rel="shortcut icon" href="<?=HTTP_ROOT?>images/favocon.iso" type="image/x-icon"/>
-  
+  <link href="<?=HTTP_ROOT?>rr/css/styles.css" rel="stylesheet" />
+  <script src="<?=HTTP_ROOT?>rr/lib/PulsarCV.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/PlLayer.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/PlDrawing.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/PlObject.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/PlImage.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/PlTable.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/RRgame.js"></script>
+  <script src="<?=HTTP_ROOT?>rr/lib/botLoader.js"></script>
 </head>
 <body>
   

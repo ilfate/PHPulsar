@@ -42,6 +42,7 @@ class Service_Auth extends CoreService
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
     'Auth' => self::ALL_METHODS_ARE_PUBLIC,
     'Cv' => self::ALL_METHODS_ARE_PUBLIC,
+    'RobotRock' => self::ALL_METHODS_ARE_PUBLIC,
     'Game_Main' => array('index'),
   );
   

@@ -50,7 +50,13 @@ class CoreHelper
    */
   public static function url(array $route, array $get = null)
   {
-    list($class, $method) = $route;
+    if(sizeof($route) == 1)
+    {
+      $class = $route[0];
+      $method = Routing::DEFAULT_METHOD;
+    } else {
+      list($class, $method) = $route;
+    }
     $url = Core::createUrl($class, $method);
     if($get)
     {  
