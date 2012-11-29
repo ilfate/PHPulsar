@@ -16,15 +16,15 @@ class CoreRouting implements CoreInterfaceRouting{
    * Executing class name
    * @var String
    */
-  private static $class;
+  protected static $class;
   
   /**
    * Executing class method name
    * @var String
    */
-  private static $method;
+  protected static $method;
   
-  private static $save;
+  protected static $save;
   
   /**
    * prefix witch we will add to all route class to call

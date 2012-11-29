@@ -13,7 +13,12 @@
 class Controller_Cv extends Controller {
   //put your code here
   
-  
+  public function index() 
+  {
+	return $this->aboutMe(); 
+  }
+	
+	
   /**
    * 
    * @return type 

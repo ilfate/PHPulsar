@@ -8,7 +8,7 @@
     <h1>Rubinchik Ilya - CV</h1>
   </div>
   <div class="span3">
-    <a href="ilfate.net">ilfate.net</a><br>
+    <a href="http://ilfate.net">http://ilfate.net</a><br>
     ilfate@gmail.com<br>
     Skype: illidanfate<br>
     Phone: +7 (905) 713-67-48<br>

@@ -10,7 +10,7 @@
  *
  * @author ilfate
  */
-class Controller_Game extends Controller {
+class Controller_Game_Main extends Controller {
   //put your code here
   
   

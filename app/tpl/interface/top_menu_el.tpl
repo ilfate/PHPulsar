@@ -3,5 +3,5 @@
 <li
   <?= isset($element['active'])?'class="active"':'' ?>
   >
-    <a href="<?= $element['link']?>"><?= $element['text']?></a>
+    <a href="<?= Helper::url($element['route'])?>"><?= $element['text']?></a>
 </li>

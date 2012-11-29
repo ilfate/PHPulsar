@@ -42,7 +42,7 @@ class Service_Auth extends CoreService
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
     'Auth' => self::ALL_METHODS_ARE_PUBLIC,
     'Cv' => self::ALL_METHODS_ARE_PUBLIC,
-    'Game' => array('index'),
+    'Game_Main' => array('index'),
   );
   
   public static function preExecute() 

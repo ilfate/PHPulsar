@@ -17,7 +17,7 @@
     </a>
   </div>
   <div class="span3 offset1">
-    <a href="<?=Helper::url(array('Game', 'index'))?>" data-target=".main-content-well">
+    <a href="<?=Helper::url(array('Game_Main', 'index'))?>" data-target=".main-content-well">
       <div class="img-text" >
         <div class="text invert" >Game</div>
         <img src="<?=HTTP_ROOT ?>web/images/game/tank1_s.jpg" width="300px" height="300px" class="img-rounded">

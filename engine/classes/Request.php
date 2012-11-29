@@ -161,6 +161,20 @@ class CoreRequest implements CoreInterfaceRequest {
       return "";
     }
   }
+  /**
+   * Get URI of the request (without server adress)
+   *
+   * @return string
+   */
+  public static function getDocUri() 
+  {
+    if(isset($_SERVER["DOCUMENT_URI"])) 
+    {
+      return $_SERVER["DOCUMENT_URI"];
+    } else {
+      return "/";
+    }
+  }
   
   public static function getValue($name)
   {
