@@ -55,6 +55,16 @@
       Web development<br>
       Game development<br>
       Snowboarding<br>
+      Reading<br>
+      Traveling<br>
+      Bicycling<br>
+    </div>
+    <div>
+      <h1>Interests</h1> 
+      Web development<br>
+      Game development<br>
+      Snowboarding<br>
+      Reading<br>
       Traveling<br>
       Bicycling<br>
     </div>
@@ -87,7 +97,8 @@
       <h1>Personal Projects</h1>
       <h3>Robot Rock</h3>
       Novemder 2010 - June 2011.<br>
-      You can find demo here <a href="<?=Helper::url(array('RobotRock'))?>" >http://ilfate.net/RobotRock</a>
+	  My first Php + Canvas game. Main purpose was to learn Canvas and increase my PHP skills<br>
+      You can find animation demo and information at the link below <a href="<?=Helper::url(array('RobotRock'))?>" >http://ilfate.net/RobotRock</a>
     </div>
   </div>
 </div>

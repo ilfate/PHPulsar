@@ -32,7 +32,7 @@ body {
 
 .main-content-well, .main-content-well-side {
   min-height: 700px;
-  
+  padding: 9px 9px 9px 18px;
 }
 
 .well, .navbar {

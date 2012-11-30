@@ -15,7 +15,10 @@ class Controller_Cv extends Controller {
   
   public function index() 
   {
-	return $this->aboutMe(); 
+	return array(
+	  'mode' => Request::EXECUTE_MODE_HTTP,
+	  'tpl' => 'Cv/aboutMe.tpl'
+	);
   }
 	
 	
