@@ -30,14 +30,14 @@
     </div>
     <div>
       <h1 class="pull-left">Skills</h1> 
-      <strong><a class="pull-left like-h1" href="<?=Helper::url(array('Cv', 'skills'))?>">learn more</a></strong>
+      <strong><a class="pull-left like-h1" href="<?=Helper::url('Cv', 'skills')?>">learn more</a></strong>
       <div class="clearfix"></div>
       Languages: PHP, JavaScript, Java<br>
       Web development: CSS, HTML/XHTML, Jquery, Bootstrap<br>
       DB: MySql <span class="tip" rel="tooltip" title="Module for MySql to work with it like noSql database" >HandlerSocket</span> Sphinx, Oracle, Redis<br>
       VCS: Svn, Git<br>
       Other: Nginx, Memcached, PHPUnit, Behat, Selenium, Phing<br>
-      <a href="<?=Helper::url(array('Cv', 'skills'))?>">My skills table</a>
+      <a href="<?=Helper::url('Cv', 'skills')?>">My skills table</a>
     </div>
     <div>
       <h1>Certificates</h1> 
@@ -98,7 +98,7 @@
       <h3>Robot Rock</h3>
         Novemder 2010 - June 2011.<br>
         My first Php + Canvas game. Main purpose was to learn Canvas and increase my PHP skills<br>
-        You can find animation demo and information at the link below <a href="<?=Helper::url(array('RobotRock'))?>" >http://ilfate.net/RobotRock</a>
+        You can find animation demo and information at the link below <a href="<?=Helper::url('RobotRock')?>" >http://ilfate.net/RobotRock</a>
       <h3>Ilfate framework</h3>
         October 2012 - present.<br>
         My PHP micro-framework. ilfate.net is created using this framework<br>

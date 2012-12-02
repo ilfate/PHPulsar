@@ -1,7 +1,7 @@
 
 
 
-To watch one more time <a class="btn" href="<?=Helper::url(array('RobotRock'))?>">Restart</a>.<br>
+To watch one more time <a class="btn" href="<?=Helper::url('RobotRock')?>">Restart</a>.<br>
 <br>
 <h3>Info</h3>
 This is one of my oldest projects. Robot Rock was planned as a browser game for programmers. 
@@ -15,4 +15,7 @@ and received robot actions. When fight was over gameCore created game log in jso
 So that way player saw game only after whole fight had been generated.<br>
 Also to display this animation i created my own Canvas framework named PulsarCV.
 
+<br>
+<br>
 
+<a class="btn" href="<?= Helper::url("Cv") ?>"> << Back to CV</a>

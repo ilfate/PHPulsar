@@ -87,7 +87,10 @@
   </tbody>
 </table>
 
+<br>
+<br>
 
+<a class="btn" href="<?= Helper::url("Cv") ?>"> << Back to CV</a>
 <? /*
 Hello i would like to tell you a little about my skills.<br>
 I will start with <span class="label label-stars" data-value="99">PHP</span> because it is my primary skill. 

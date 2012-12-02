@@ -32,11 +32,11 @@ class CoreHelper
     return Core::subExecute($class, $method, $get, $post);
   }
   
-  public static function exeAjax($route, $get = null)
+  public static function exeAjax($class, $method, $get = null)
   {
     
     $div_id = 'ajax_load_'.  mt_rand(1000, 9999);
-    $url = self::url($route, $get);
+    $url = self::url($class, $method, $get);
     Js::add(Js::C_ONAFTERLOAD, 'Ajax.html("'.$url.'", "#'.$div_id.'")');
     return '<div id="'.$div_id.'"></div>';
   }
@@ -44,18 +44,20 @@ class CoreHelper
   /**
    * Generates url using Roution to create url from path
    *
-   * @param array $route
-   * @param array $get
+   * @param String $class
+   * @param String $method
+   * @param array  $get
    * @return String 
    */
-  public static function url(array $route, array $get = null)
+  public static function url($class = null, $method = null, array $get = null)
   {
-    if(sizeof($route) == 1)
+    if(!$class)
     {
-      $class = $route[0];
+      $class = Routing::DEFAULT_CLASS;
+    }
+    if(!$method) 
+    {
       $method = Routing::DEFAULT_METHOD;
-    } else {
-      list($class, $method) = $route;
     }
     $url = Core::createUrl($class, $method);
     if($get)
@@ -69,36 +71,29 @@ class CoreHelper
   /**
    * Generates url using Roution to create url from path
    *
-   * @param array $route
-   * @param array $get
+   * @param String $class
+   * @param String $method
+   * @param array  $get
    * @return String 
    */
-  public static function urlAjax(array $route, array $get = null)
+  public static function urlAjax($class = null, $method = null, array $get = null)
   {
     $get = array_merge((array)$get, array(Request::PARAM_AJAX => 'true'));   
-    return self::url($route, $get);
+    return self::url($class, $method, $get);
   }
   
   
   
   /**
-   * Redirects
-   * $redirect_way could be "direct_link.com" or array('class', 'method')
-   *
-   * @param Mixed $redirect_way
-   * @param array $get 
+   * Redirects to some route
+   * 
+   * @param string $class
+   * @param string $method
+   * @param array  $get 
    */
-  public static function redirect($redirect_way= null, array $get = null)
+  public static function redirect($class = null, $method = null, array $get = null)
   {
-    if(is_string($redirect_way))
-    {
-        $url = $redirect_way;
-    } elseif(is_array($redirect_way)) 
-    {
-        $url = Helper::url($redirect_way, $get);
-    } else {
-      $url = Helper::url(array(Routing::DEFAULT_CLASS, Routing::DEFAULT_METHOD), $get);
-    }
+    $url = Helper::url($class, $method, $get);
     header('Location: ' . $url);
   }
   

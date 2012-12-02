@@ -9,7 +9,7 @@
 </div>
 <div class="row">
   <div class="span3 offset1">
-    <a href="<?=Helper::url(array('Cv', 'aboutMe'))?>">
+    <a href="<?=Helper::url('Cv')?>">
       <div class="img-text" >
         <div class="text extra-big invert" >CV</div>
         <img src="<?=HTTP_ROOT ?>images/ilfate.png" width="300px" height="300px" class="img-rounded">
@@ -17,7 +17,7 @@
     </a>
   </div>
   <div class="span3 offset1">
-    <a href="<?=Helper::url(array('Game_Main', 'index'))?>" data-target=".main-content-well">
+    <a href="<?=Helper::url('Game_Main')?>" data-target=".main-content-well">
       <div class="img-text" >
         <div class="text invert" >Game</div>
         <img src="<?=HTTP_ROOT ?>images/game/tank1_s.jpg" width="300px" height="300px" class="img-rounded">

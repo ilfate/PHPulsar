@@ -16,9 +16,9 @@ class Service_Layout extends CoreService
   const PRIORITY = 70;
   
   private static $menu = array(
-    'main'        => array('route' => array('Main', 'index'),  'text' => 'Main'),
-    'about_me'    => array('route' => array('Cv', 'aboutMe'),  'text' => 'About me'),
-    'game'	      => array('route' => array('Game_Main', 'index'),  'text' => 'Game'),
+    'main'        => array('class' => 'Main',       'method' => 'index',    'text' => 'Main'),
+    'about_me'    => array('class' => 'Cv',         'method' => 'aboutMe',  'text' => 'About me'),
+    'game'	      => array('class' => 'Game_Main',  'method' => 'index',    'text' => 'Game'),
   );
   private static $menu_map = array(
     'Auth'   => 'main',
