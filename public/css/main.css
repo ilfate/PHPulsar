@@ -44,6 +44,11 @@ body {
 	margin-right: 20px;
 }
 
+.table-centrated {}
+.table-centrated th, .table-centrated td{
+  text-align: center;
+}
+
 /****  Auth  *****/
 
 .form-signin {

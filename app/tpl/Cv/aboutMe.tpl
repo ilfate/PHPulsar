@@ -12,7 +12,7 @@
     ilfate@gmail.com<br>
     Skype: illidanfate<br>
     Phone: +7 (905) 713-67-48<br>
-  <a href="ilfate.net">Download CV</a>
+  <a href="<?= HTTP_ROOT ?>Rubinchik_Ilya.pdf">Download CV</a>
   </div>
 </div>
 
@@ -30,13 +30,14 @@
     </div>
     <div>
       <h1 class="pull-left">Skills</h1> 
-      <a class="pull-left like-h1" href="<?=Helper::url(array('Cv', 'skills'))?>">learn more</a>
+      <strong><a class="pull-left like-h1" href="<?=Helper::url(array('Cv', 'skills'))?>">learn more</a></strong>
       <div class="clearfix"></div>
       Languages: PHP, JavaScript, Java<br>
       Web development: CSS, HTML/XHTML, Jquery, Bootstrap<br>
       DB: MySql <span class="tip" rel="tooltip" title="Module for MySql to work with it like noSql database" >HandlerSocket</span> Sphinx, Oracle, Redis<br>
       VCS: Svn, Git<br>
-      Other: Nginx, Memcached, PHPUnit, Behat, Selenium, Phing
+      Other: Nginx, Memcached, PHPUnit, Behat, Selenium, Phing<br>
+      <a href="<?=Helper::url(array('Cv', 'skills'))?>">My skills table</a>
     </div>
     <div>
       <h1>Certificates</h1> 
