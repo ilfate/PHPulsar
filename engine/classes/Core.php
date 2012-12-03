@@ -131,7 +131,7 @@ class Core {
       {
         throw $e;
       } else {
-        Helper::redirect(array('Error', 'page500'));
+        Helper::redirect('Error', 'page500');
       }
     }
     
@@ -170,7 +170,7 @@ class Core {
       {
         throw $e;
       } else {
-        Helper::redirect(array('Error', 'page500'));
+        Helper::redirect('Error', 'page500');
       }
     }
   }
