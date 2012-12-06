@@ -18,11 +18,13 @@ class CoreRequest implements CoreInterfaceRequest {
   
   
   const EXECUTE_MODE_HTTP = 'http';
-  const EXECUTE_MODE_HTTP_AJAX = 'ajax';
+  const EXECUTE_MODE_AJAX = 'ajax';
+  const EXECUTE_MODE_HTTP_AJAX = 'http_ajax';
   const EXECUTE_MODE_HTTP_SUBQUERY = 'subquery';
   const EXECUTE_MODE_CLI = 'cli';
   
-  const PARAM_AJAX = '__ajax';
+  const PARAM_AJAX      = '__ajax';
+  const PARAM_AJAX_HTML = '__html';
 
   private static $executingMode;
   
@@ -124,9 +126,13 @@ class CoreRequest implements CoreInterfaceRequest {
   {
     if(!self::$executingMode) 
     {
-      if(isset(self::$get[self::PARAM_AJAX]))
+      if(isset(self::$get[self::PARAM_AJAX]) && isset(self::$get[self::PARAM_AJAX_HTML]))
       {
         self::$executingMode = self::EXECUTE_MODE_HTTP_AJAX;
+	  } elseif(isset(self::$get[self::PARAM_AJAX]) && !isset(self::$get[self::PARAM_AJAX_HTML])) {
+		  
+        self::$executingMode = self::EXECUTE_MODE_AJAX;
+		
       } else {
         // if no mode setted, let it be HTTP
         self::$executingMode = self::EXECUTE_MODE_HTTP;

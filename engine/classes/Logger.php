@@ -26,7 +26,8 @@ class CoreLogger
   
   private static $is_file_logging_enabled = true;
   
-  private static $log_file = 'logs/CoreLog';
+  private static $log_file = 'CoreLog.log';
+  private static $log_path = '';
   
   private static $is_day_logging = false;
   
@@ -50,7 +51,7 @@ class CoreLogger
   
   public static function __staticConstruct() {
     self::$is_log_sql = Core::getConfig('log_sql');
-    
+    self::$log_path = Core::getConfig('logs_path');
     if(self::$is_log_sql) 
     {
       self::$sql_logger = new CoreLogger_Sql();
@@ -133,7 +134,7 @@ class CoreLogger
 	  self::dump('Execution time = ' . (microtime(true)-$time));
   }
   
-  private static function outputData($data)
+  private static function outputData($data, $force_out = false)
   {
     ob_start();
     if(is_array($data) || is_object($data))
@@ -144,7 +145,7 @@ class CoreLogger
     }
     $content = ob_get_clean();
     
-    if(self::$variable_logging == self::VARIABLES_OUTPUT)
+    if(self::$variable_logging == self::VARIABLES_OUTPUT || $force_out)
     {
       echo $content;
     } else {
@@ -155,12 +156,12 @@ class CoreLogger
   private static function saveToFile($data, $file = null)
   {
     ob_start();
-    self::outputData($data);
+    self::outputData($data, true);
     $content = ob_get_clean();
     
     if(!$file) $file = self::$log_file;
-    if(self::$is_day_logging) $file .= '_' . date('Ymd');
-    $file .= '.log';
+    $file = self::$log_path . $file;
+    
     file_put_contents(
       $file, 
       "\n-----------------------------" . date('d.m.Y H:i:s') . "-----------------------------\n" . $content . "\n", 

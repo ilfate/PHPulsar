@@ -11,7 +11,7 @@
  *
  * @author ilfate
  */
-class CoreResponse_HttpAjax extends CoreResponse 
+class CoreResponse_Ajax extends CoreResponse 
 {
       
   /**
@@ -32,11 +32,6 @@ class CoreResponse_HttpAjax extends CoreResponse
    */
   private $result;
     
-  /**
-   *
-   * @var string 
-   */
-  private $content;
   
   
   /**
@@ -51,7 +46,6 @@ class CoreResponse_HttpAjax extends CoreResponse
     {
       throw new CoreException_ResponseHttpError('Returned content of type Array expected');
     }
-	$this->view = $view;
      
     $this->result = $result;
   }
@@ -62,12 +56,7 @@ class CoreResponse_HttpAjax extends CoreResponse
    */
   public function getContent() 
   {
-    if(!$this->content) 
-    {
-      $tpl = isset($this->result['tpl']) ? $this->result['tpl'] : '';
-      $this->content = $this->view->render($tpl, $this->result, array());
-    }
-    return $this->content;
+    return json_encode($this->result);
   }
 
   
