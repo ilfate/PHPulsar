@@ -91,7 +91,7 @@ class Controller_Main extends Controller {
   public function flush()
   {
   Cache::flush();
-  Helper::redirect(array('Main', 'index'));
+  Helper::redirect('Main', 'index');
   }
 }
 

@@ -73,7 +73,7 @@ class Service_Auth extends CoreService
     { // it is guest here
       if(!self::isRoutePublic())
       {
-        Helper::redirect(array('Auth', 'needRegistration'), array('access_restricted' => true));
+        Helper::redirect('Auth', 'needRegistration', array('access_restricted' => true));
       }
     } 
   }

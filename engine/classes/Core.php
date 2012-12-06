@@ -170,7 +170,8 @@ class Core {
       {
         throw $e;
       } else {
-        //Helper::redirect('Error', 'page500');
+        Helper::redirect('Error', 'page500');
+
       }
     }
   }
