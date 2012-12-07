@@ -74,7 +74,7 @@ class CoreRouting implements CoreInterfaceRouting{
    */
   public static function getPrefixedClass() 
   {
-    return self::CLASS_PREFIX . self::getClass();
+    return self::CLASS_PREFIX . static::getClass();
   }
 
   /**
@@ -182,7 +182,7 @@ class CoreRouting implements CoreInterfaceRouting{
   
   public function getDefaultLayout()
   {
-    $class_name = self::getPrefixedClass();
+    $class_name = static::getPrefixedClass();
     return $class_name::$layout;
   }
 }
