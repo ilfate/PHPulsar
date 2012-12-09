@@ -17,7 +17,7 @@ class CoreServiceExecuter implements CoreInterfaceServiceExecuter
   const SERVICES_PREFIX = 'Service_';
   const SERVICES_PATH   = 'app/classes/Service/';
   
-  const CACHE_KEY       = 'CoreServiceExecutersList';
+  const CACHE_KEY       = 'CoreServiceExecutersList_Engine';
   
   /**
    * saved services
