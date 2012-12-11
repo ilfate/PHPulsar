@@ -45,7 +45,7 @@ abstract class CoreCachingClass
    * @param string $tag tag name
    * @return string
    */
-  public static function getCacheTag($tag, $parameters) 
+  public static function getCacheTag($tag, $parameters = array()) 
   {
     $class = get_called_class();
     if(strpos($tag, '[') !== false)
