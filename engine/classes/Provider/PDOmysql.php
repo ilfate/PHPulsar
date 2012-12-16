@@ -79,7 +79,12 @@ class CoreProvider_PDOmysql extends CoreProvider
     $source = self::$PDO->prepare($query);
     $data = $source->execute($params);
     Logger::sql_finish();
-    return $data;
+    if($data) 
+    {
+      return $source->rowCount();
+    } else {
+      return false;
+    }
   }
   
   public static function lastInsertId()

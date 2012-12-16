@@ -75,26 +75,30 @@ class Core {
   {
     if(self::$inited) 
     {
-        die("Fatal error. Attempt to init Core second time");
-      }
-      self::$inited = true;
-      
-      session_start();
+      die("Fatal error. Attempt to init Core second time");
+    }
+    self::$inited = true;
 
-      include ILFATE_PATH . '/engine/functions.php';
+    session_start();
 
-      self::$config =  require 'config.php';
+    include ILFATE_PATH . '/engine/functions.php';
 
-      spl_autoload_register('ilfate_autoloader');
+    self::$config =  require 'config.php';
 
-      self::$request = new Request();
-      self::$routing = new Routing(self::$request);
-    
-    if(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP) 
+    spl_autoload_register('ilfate_autoloader');
+
+    self::$request = new Request();
+    self::$routing = new Routing(self::$request);
+
+    switch (Request::getExecutingMode())
     {
-      self::commonExecuting();
-    } elseif(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP_AJAX) {
-      self::ajaxExecuting();
+      case Request::EXECUTE_MODE_HTTP : {
+        self::commonExecuting();
+      } break;
+      case Request::EXECUTE_MODE_HTTP_AJAX : 
+      case Request::EXECUTE_MODE_AJAX : {
+        self::ajaxExecuting();
+      } break;
     }
   }
   
@@ -237,7 +241,7 @@ class Core {
     {
       $mode = $content['mode'];
     } else {
-      $mode = self::$request->getExecutingMode();
+      $mode = Request::getExecutingMode();
     }
     
     if(!isset(self::$config['project']['Response'][$mode])) 
