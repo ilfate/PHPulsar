@@ -32,13 +32,22 @@ class CoreHelper
     return Core::subExecute($class, $method, $get, $post);
   }
   
+  /**
+   * This functions returns html div with Loading git that will be showd while 
+   * ajax content of $class $mathod will be loading. 
+   * After loading that content will be placed in that div instead of Gif
+   *
+   * @param type $class
+   * @param type $method
+   * @param type $get
+   * @return type 
+   */
   public static function exeAjax($class, $method, $get = null)
   {
-    
     $div_id = 'ajax_load_'.  mt_rand(1000, 9999);
     $url = self::url($class, $method, $get);
     Js::add(Js::C_ONAFTERLOAD, 'Ajax.html("'.$url.'", "#'.$div_id.'")');
-    return '<div id="'.$div_id.'"></div>';
+    return '<div class="ajax_load" id="'.$div_id.'"><div class="loader"></div></div>';
   }
   
   /**

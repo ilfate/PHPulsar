@@ -25,7 +25,7 @@ if(!defined('HTTP_ROOT'))
 	$http_path = (strtoupper($_SERVER['SERVER_PROTOCOL'][5]) == 'S' ? 'https://' : 'http://')
 		.$_SERVER['HTTP_HOST'].$http_path;
 	
-	define('HTTP_ROOT',   $http_path . 'public/');
+	define('HTTP_ROOT',   $http_path);
 
 	unset($http_path, $path);
 }
