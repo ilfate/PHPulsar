@@ -18,7 +18,7 @@ class Core {
   public static $modules_path = '/modules';
   
   /**
-   *
+   * Here we keep Request
    * @var CoreInterfaceRequest 
    */
   private static $request;
@@ -30,7 +30,7 @@ class Core {
   private static $routing;
   
   /**
-   *
+   * An Array of all inited Views
    * @var array
    */
   private static $views;
@@ -90,6 +90,7 @@ class Core {
     self::$request = new Request();
     self::$routing = new Routing(self::$request);
 
+    // depends on Mode we can different types of execution
     switch (Request::getExecutingMode())
     {
       case Request::EXECUTE_MODE_HTTP : {
@@ -181,7 +182,7 @@ class Core {
   }
   
   /**
-   * Creates new core execution ( like open link with anther link )
+   * Creates new core execution ( like open link with another link )
    * And return result of this execution
    * instead of url we use here direct class and method names
    * it is just simplier and faster coz we dont need to use Routing
@@ -238,9 +239,9 @@ class Core {
   public static function initResponse($content) 
   {
     if(is_array($content) && isset($content['mode']))
-    {
+    { // if mode is set by content
       $mode = $content['mode'];
-    } else {
+    } else { // or we need to get current Mode
       $mode = Request::getExecutingMode();
     }
     
@@ -250,7 +251,7 @@ class Core {
     }
     
     if(!isset(self::$views[$mode]))
-    {
+    { // if view is not inited we create it
       if(isset(self::$config['project']['View'][$mode])) 
       {
         self::$views[$mode] = new self::$config['project']['View'][$mode]();
@@ -310,6 +311,7 @@ class Core {
   {
     if(!isset(self::$stored_controllers[$name]))
     {
+      // if need to, we create new one.
       self::$stored_controllers[$name] = new $name();
     }
     return self::$stored_controllers[$name];
