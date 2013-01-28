@@ -73,7 +73,7 @@ abstract class CoreCachingClass
 
   /**
    * What we doing here? We saying that every class that extends from this one
-   * can cache in methods. 
+   * can cache its methods. 
    * To cache myMethod you need to create _myMethod in that class instead.
    * To that method you need apply @cache phpDoc comment.
    * If you write "@cache 30" that method will be cached for 30 seconds
@@ -114,7 +114,15 @@ abstract class CoreCachingClass
     return $result;
   }
   
-  
+  /**
+   * What we doing here? We saying that every class that extends from this one
+   * can cache its methods. 
+   * To cache myMethod you need to create _myMethod in that class instead.
+   * To that method you need apply @cache phpDoc comment.
+   * If you write "@cache 30" that method will be cached for 30 seconds
+   * if you write "@cache 60 myTag" method will be cached with "myTag" tag.
+   * 
+   */
   public function __call($method, $arguments = array()) 
   {
     $callMethod = "_" . $method;
