@@ -161,7 +161,7 @@ class CoreLogger
     
     if(!$file) $file = self::$log_file;
     $file = self::$log_path . $file;
-    
+
     file_put_contents(
       $file, 
       "\n-----------------------------" . date('d.m.Y H:i:s') . "-----------------------------\n" . $content . "\n", 

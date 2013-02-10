@@ -19,8 +19,9 @@ return array(
 		),
       
     'log_sql' => true,
-    'is_dev'  => false,
-    'logs_path' => '/home/ilfate/www/php/logs/'
+    'is_dev'  => true,
+    'logs_path' => '/home/ilfate/www/php/ilfate_php_engine/logs/',
+    'site_url' => 'php_engine.ru'
       
   ),
   'CoreProvider_PDOmysql' => array(

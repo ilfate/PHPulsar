@@ -17,7 +17,7 @@ class CoreCache {
   
   private static $cache;
   private static $local;
-  
+  protected static $preffix;
   
   public static function __staticConstruct() 
   {
@@ -69,12 +69,32 @@ class CoreCache {
   }
   
   /**
+   * This adds preffix if it needs to.
+   *
+   * @param String $key
+   * @return type 
+   */
+  protected static function processKey($key)
+  {
+    if(empty(self::$preffix))
+    {
+      self::$preffix = Core::getConfig('cache_preffix') ?: Core::getConfig('site_url');
+    }
+    if(strstr($key, self::$preffix) == $key)
+    {
+      return $key;
+    }
+    return self::$preffix . '_' . $key;
+  }
+  
+  /**
    *
    * @param String $key
    * @return mixed 
    */
   public static function get($key)
   {
+    $key = self::processKey($key);
     if(!isset(self::$local[$key])) 
     {
       self::$local[$key] = self::$cache->get($key);
@@ -91,6 +111,7 @@ class CoreCache {
    */
   public static function set($key, $value, $expire = 0, array $tags = null)
   {
+    $key = self::processKey($key);
     if($expire>0)
     {
       $expire+=time();
@@ -102,6 +123,7 @@ class CoreCache {
       $need_to_set = array();
       foreach ($tags as $tag) // Try to append keys if tag exists
       {
+        $tag = self::processKey($tag);
         if (!self::$cache->append("__tag__" . $tag, "||" . $key)) 
         {
           $need_to_set["__tag__" . $tag] = $key;
@@ -127,6 +149,7 @@ class CoreCache {
    */
   public static function add($key, $value, $expire, array $tags = null)
   {
+    $key = self::processKey($key);
     if($expire>0)
     {
       $expire+=time();
@@ -139,6 +162,7 @@ class CoreCache {
       $need_to_set = array();
       foreach ($tags as $tag) // Try to append keys if tag exists
       {
+        $tag = self::processKey($tag);
         if (!self::$cache->append("__tag__" . $tag, "||" . $key)) 
         {
           $need_to_set["__tag__" . $tag] = $key;
@@ -164,6 +188,7 @@ class CoreCache {
    */
   public static function delete($key)
   {
+    $key = self::processKey($key);
     if(isset(self::$local[$key])) 
     {
       unset(self::$local[$key]);
@@ -179,6 +204,7 @@ class CoreCache {
    */
   public static function deleteTag($tag) 
   {
+    $tag = self::processKey($tag);
     $keys = self::$cache->get("__tag__" . $tag);
     if ($keys) 
     {

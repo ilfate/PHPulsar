@@ -37,7 +37,7 @@ class Service_Auth extends CoreService
    * @var type 
    */
   private static $public_controllers = array(
-    'Main' => array('index', 'mysql', 'aboutMe'),
+    'Main' => array('index', 'mysql', 'aboutMe', 'cache'),
     'MainPages' => self::ALL_METHODS_ARE_PUBLIC,
     'Error' => self::ALL_METHODS_ARE_PUBLIC,
     'Auth' => self::ALL_METHODS_ARE_PUBLIC,

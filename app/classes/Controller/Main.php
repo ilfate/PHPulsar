@@ -40,12 +40,14 @@ class Controller_Main extends Controller {
   }
   
   /**
-   * @cache 10 tag tag2aw[1] tags t2[2][0]
-   * @return type 
+   * @cache 10 tag tag2aw 
+   * @return type  tags t2[2][0]
    */
   public static function _cache() {
     Logger::dump('_cache method. no chache<br>');
-    return array();
+    return array(
+        'tpl' => 'Main/index.tpl'
+    );
   }
   
   public function mysql()

@@ -20,7 +20,8 @@ return array(
       
     'log_sql' => %%log_sql%%,
     'is_dev'  => %%is_dev%%,
-    'logs_path' => '%%logs_path%%'
+    'logs_path' => '%%logs_path%%',
+    'site_url' => '%%site_url%%'
       
   ),
   'CoreProvider_PDOmysql' => array(
