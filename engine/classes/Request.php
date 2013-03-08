@@ -54,9 +54,16 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getPost() 
+  public static function getPost($param = null) 
   {
-    return self::$post;
+	if(!$param)
+	{
+      return self::$post;
+	} elseif(isset(self::$post[$param])) {
+	  return self::$post[$param];
+	} else {
+      return null;
+	}
   }
   
   /**
@@ -72,7 +79,7 @@ class CoreRequest implements CoreInterfaceRequest {
       {
         return self::$get[$param];
       } else {
-        return false;
+        return null;
       }
     } else {
       return self::$get;
@@ -190,6 +197,23 @@ class CoreRequest implements CoreInterfaceRequest {
     } else {
       return null;
     }
+  }
+  
+  public static function getParameter($name)
+  {
+    if(!is_null($val = self::getPost($name)))
+    {
+      return $val;
+    }
+    if(!is_null($val = self::getGet($name)))
+    {
+      return $val;
+    }
+	if(isset(self::$add) && isset(self::$add[$name]))
+    {
+      return self::$add[$name];
+    }
+    return null;
   }
 
   /**
