@@ -6,10 +6,14 @@
  */
 
 /**
- * Request class 
- *
+ * 
  * @author ilfate
  */
-class Model extends ModuleModel {
+class CoreException_ConfigError extends CoreException_Error
+{
   
 }
+
+
+
+?>

@@ -6,14 +6,12 @@
  */
 
 /**
- * Description of ServiceExecuter
+ * Description of FrontController
  *
  * @author ilfate
  */
-class ServiceExecuter extends ModuleServiceExecuter
+class FrontController extends ModuleFrontController
 {
   
 }
 
-
-?>

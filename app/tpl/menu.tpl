@@ -8,10 +8,10 @@
         <? } ?>
         <li><a href="#!/error"><?=$access_restricted ? 'RESRICTED' : ''?></a></li>
       </ul>
-      <? if(Service_Auth::isAuth()) { ?>
+      <? if(FrontController_Auth::isAuth()) { ?>
         <div class="btn-group pull-right">
         <button class="btn dropdown-toggle" data-toggle="dropdown">
-          <?=Service_Auth::getUser()->name?>
+          <?=FrontController_Auth::getUser()->name?>
           <span class="caret"></span>
           </button>
           <ul class="dropdown-menu">
@@ -21,8 +21,8 @@
         </div>
       <? } else { ?>
         <div class="btn-group pull-right">
-          <a href="#ilfateModal" data-remote="<?= Helper::urlAjax(array('Auth', 'logInForm')) ?>" role="button" data-toggle="modal" class="btn btn-primary">Log in</a>
-          <a href="#ilfateModal" data-remote="<?= Helper::urlAjax(array('Auth', 'signUpForm')) ?>" role="button" data-toggle="modal" class="btn btn-success">Sign up</a>
+          <a href="#ilfateModal" data-remote="<?= Helper::urlAjax('Auth', 'logInForm') ?>" role="button" data-toggle="modal" class="btn btn-primary">Log in</a>
+          <a href="#ilfateModal" data-remote="<?= Helper::urlAjax('Auth', 'signUpForm') ?>" role="button" data-toggle="modal" class="btn btn-success">Sign up</a>
         </div>
      
         

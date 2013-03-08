@@ -10,11 +10,10 @@
  *
  * @author ilfate
  */
-interface CoreInterfaceService 
+interface CoreInterfaceFrontController
 {
   public static function preExecute();
   public static function postExecute();
   
 }
 
-?>

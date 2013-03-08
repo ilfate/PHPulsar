@@ -78,7 +78,8 @@ class CoreCache {
   {
     if(empty(self::$preffix))
     {
-      self::$preffix = Core::getConfig('cache_preffix') ?: Core::getConfig('site_url');
+      $config = Service::getConfig();
+      self::$preffix = $config->get('cache_preffix') ?: $config->get('site_url');
     }
     if(strstr($key, self::$preffix) == $key)
     {

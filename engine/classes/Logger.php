@@ -20,18 +20,18 @@ class CoreLogger
    *
    * @var Boolean 
    */
-  private static $is_logger_enabled = true;
+  protected static $is_logger_enabled = true;
   
-  private static $is_output_enabled = false;
+  protected static $is_output_enabled = false;
   
-  private static $is_file_logging_enabled = true;
+  protected static $is_file_logging_enabled = true;
   
-  private static $log_file = 'CoreLog.log';
-  private static $log_path = '';
+  protected static $log_file = 'CoreLog.log';
+  protected static $log_path = '';
   
-  private static $is_day_logging = false;
+  protected static $is_day_logging = false;
   
-  private static $is_log_sql = false;
+  protected static $is_log_sql = false;
   
   /**
    * Shows is Sql query logging is enabled
@@ -50,15 +50,16 @@ class CoreLogger
   
   
   public static function __staticConstruct() {
-    self::$is_log_sql = Core::getConfig('log_sql');
-    self::$log_path = Core::getConfig('logs_path');
-    if(self::$is_log_sql) 
-    {
+    $config = Service::getConfig();
+    self::$is_log_sql = $config->get('log_sql');
+    self::$log_path = $config->get('logs_path');
+    if(self::$is_log_sql) {
       self::$sql_logger = new CoreLogger_Sql();
     } else {
       self::$sql_logger = new CoreLogger_SqlEmpty();
     }
   }
+
   /**
    *
    * @param type $data
@@ -66,8 +67,10 @@ class CoreLogger
    */
   public static function dump($data, $mode = 'auto', $file = null)
   {
-    if(Request::getExecutingMode() != Request::EXECUTE_MODE_CLI && ( $mode != 'file' && Core::getConfig('is_dev')) )
-    {
+    if (
+      Request::getExecutingMode() != Request::EXECUTE_MODE_CLI
+      && ( $mode != 'file' && Service::getConfig()->get('is_dev') )
+    ) {
       self::outputData($data);
     } else if($mode == 'file' || (Request::getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {
       self::saveToFile($data, $file);
@@ -120,15 +123,13 @@ class CoreLogger
   
   public static function time($function, $times = 1000) 
   {
-	  if($function instanceof Closure)
-	  {
+	  if($function instanceof Closure) {
 		  $func = $function;
 	  } else {
 		  $func = function () use($function) { eval($function); };
 	  }
 	  $time = microtime(true);
-	  for($i=0; $i < $times; $i++)
-	  {
+	  for($i=0; $i < $times; $i++) {
 		  $func();
 	  }
 	  self::dump('Execution time = ' . (microtime(true)-$time));
@@ -137,16 +138,14 @@ class CoreLogger
   private static function outputData($data, $force_out = false)
   {
     ob_start();
-    if(is_array($data) || is_object($data))
-    {
+    if(is_array($data) || is_object($data)) {
       print_r($data);
     } else {
       var_dump($data);
     }
     $content = ob_get_clean();
     
-    if(self::$variable_logging == self::VARIABLES_OUTPUT || $force_out)
-    {
+    if(self::$variable_logging == self::VARIABLES_OUTPUT || $force_out) {
       echo $content;
     } else {
       self::$variables_container[] = $content;
@@ -159,7 +158,9 @@ class CoreLogger
     self::outputData($data, true);
     $content = ob_get_clean();
     
-    if(!$file) $file = self::$log_file;
+    if(!$file) {
+      $file = self::$log_file;
+    }
     $file = self::$log_path . $file;
 
     file_put_contents(

@@ -39,15 +39,8 @@ class CoreProvider_PDOmysql extends CoreProvider
   }
   public static function init()
   {
-    
-    self::$config = array(
-	'dbname' => Core::getExtendedConfig(__CLASS__, 'dbname'),
-	'host'   => Core::getExtendedConfig(__CLASS__, 'host'),
-	'login'  => Core::getExtendedConfig(__CLASS__, 'login'),
-	'pass'  =>  Core::getExtendedConfig(__CLASS__, 'pass'),
-  );
-  
-    
+    self::$config = Service::getConfig()->get('CoreProvider_PDOmysql');
+
     try 
     {
       self::$PDO = new PDO(

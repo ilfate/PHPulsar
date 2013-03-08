@@ -6,7 +6,8 @@
  */
 
 
-function ilfate_autoloader($class) {
+function ilfate_autoloader($class)
+{
   if(strpos($class, 'Core') === 0) {
     $path = Core::$engine_path;
     $class_edited = substr($class, 4);
@@ -34,7 +35,7 @@ function ilfate_autoloader($class) {
  	  try{
 		call_user_func($class.'::__staticConstruct');
 	  } catch (Exception $e) {
-		  if(Core::getConfig('is_dev')) {
+		  if(Service::getConfig()->get('is_dev')) {
 			  echo $e->getMessage();
 		  }
 		  //throw new CoreException_Error("The class '$class' or the file '$file' failed to spl_autoload. Reason:" . $e->getMessage());

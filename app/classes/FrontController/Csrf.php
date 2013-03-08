@@ -6,12 +6,12 @@
  */
 
 /**
- * Description of Service_Auth
+ * Description of FrontController_Auth
  * 
  *
  * @author ilfate
  */
-class Service_Csrf extends CoreService
+class FrontController_Csrf implements CoreInterfaceFrontController
 {
   const PRIORITY = 80;
   

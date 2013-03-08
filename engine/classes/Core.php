@@ -36,18 +36,6 @@ class Core {
   private static $views;
   
   /**
-   *
-   * @var CoreInterfaceServiceExecuter
-   */
-  private static $serviceExecuter;
-  
-  /**
-   * Project configuration
-   * @var mixed 
-   */
-  private static $config;
-  
-  /**
    * shows is Core initialized
    * @var Boolean
    */
@@ -82,10 +70,14 @@ class Core {
     session_start();
 
     include ILFATE_PATH . '/engine/functions.php';
-
-    self::$config =  require 'config.php';
-
     spl_autoload_register('ilfate_autoloader');
+
+    // Here we create config object
+    class_exists('Service');
+    $config = Service::getConfig();
+    $config->init(require 'config.php');
+
+
 
     self::$request = new Request();
     self::$routing = new Routing(self::$request);
@@ -111,13 +103,13 @@ class Core {
     
     try
     {
-      self::$serviceExecuter = new ServiceExecuter();
+      $frontController = Service::getFrontController();
 
       // define routing class and method
       self::$routing->execute();
     
       // here we execute services BEFORE main content
-      self::$serviceExecuter->callPreServices();
+      $frontController->callPreExecution();
 
       $class = self::$routing->getPrefixedClass();
       $method = self::$routing->getMethod();
@@ -129,10 +121,10 @@ class Core {
       
       self::output($response);
       // here we execute services AFTER main content
-      self::$serviceExecuter->callPostServices();
+      $frontController->callPostExecution();
     } catch (Exception $e) {
       Logger::dump($e->getMessage(), 'file', 'CoreError.log');
-      if(self::getConfig('is_dev')) 
+      if(Service::getConfig()->get('is_dev'))
       {
         throw $e;
       } else {
@@ -150,13 +142,13 @@ class Core {
     
     try
     {
-      self::$serviceExecuter = new ServiceExecuter();
+      $frontController = Service::getFrontController();
 
       // define routing class and method
       self::$routing->execute();
     
       // here we execute services BEFORE main content
-      self::$serviceExecuter->callPreServices();
+      $frontController->callPreExecution();
 
       $class = self::$routing->getPrefixedClass();
       $method = self::$routing->getMethod();
@@ -168,10 +160,10 @@ class Core {
       
       self::output($response);
       // here we execute services AFTER main content
-      self::$serviceExecuter->callPostServices();
+      $frontController->callPostExecution();
     } catch (Exception $e) {
       Logger::dump($e->getMessage(), 'file', 'CoreError.log');
-      if(self::getConfig('is_dev')) 
+      if(Service::getConfig()->get('is_dev'))
       {
         throw $e;
       } else {
@@ -244,55 +236,26 @@ class Core {
     } else { // or we need to get current Mode
       $mode = Request::getExecutingMode();
     }
-    
-    if(!isset(self::$config['project']['Response'][$mode])) 
+
+    $config = Service::getConfig();
+    $response = $config->get('Response');
+    if(!isset($response[$mode]))
     {
       throw new CoreException_Error('Cant find Response implementation class for "' . $mode . '" in config');
     }
     
     if(!isset(self::$views[$mode]))
     { // if view is not inited we create it
-      if(isset(self::$config['project']['View'][$mode])) 
+      $view = $config->get('View');
+      if(isset($view[$mode]))
       {
-        self::$views[$mode] = new self::$config['project']['View'][$mode]();
+        self::$views[$mode] = new $view[$mode]();
       } else {
       self::$views[$mode] = null;
       }
     }
     
-    return new self::$config['project']['Response'][$mode]($content, self::$routing, self::$views[$mode]);
-  }
-  
-  /**
-   * Returns main project configuration field
-   * 
-   * @param type $name
-   * @return mixed
-   */
-  public static function getConfig($name) 
-  {
-    if(isset(self::$config['project'][$name]))
-    {
-      return self::$config['project'][$name];
-    } else {
-      return null;
-    }
-  }
-  
-  /**
-   * Returns extended project configuration field
-   * 
-   * @param type $name
-   * @return mixed
-   */
-  public static function getExtendedConfig($type, $name) 
-  {
-    if(isset(self::$config[$type]) && isset(self::$config[$type][$name]))
-    {
-      return self::$config[$type][$name];
-    } else {
-      return null;
-    }
+    return new $response[$mode]($content, self::$routing, self::$views[$mode]);
   }
   
   /**
@@ -317,5 +280,3 @@ class Core {
     return self::$stored_controllers[$name];
   }
 }
-
-?>

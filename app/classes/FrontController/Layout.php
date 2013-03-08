@@ -6,12 +6,12 @@
  */
 
 /**
- * Description of Service_Auth
+ * Description of FrontController_Auth
  * 
  *
  * @author ilfate
  */
-class Service_Layout extends CoreService
+class FrontController_Layout implements CoreInterfaceFrontController
 {
   const PRIORITY = 70;
   

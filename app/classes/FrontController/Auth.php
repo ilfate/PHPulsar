@@ -11,7 +11,7 @@
  *
  * @author ilfate
  */
-class Service_Auth extends CoreService
+class FrontController_Auth implements CoreInterfaceFrontController
 {
   const SESSION_AUTH_KEY          = 'user_auth';
   const SESSION_AUTH_KEY_EXPIRES  = 3600;
