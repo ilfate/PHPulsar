@@ -56,7 +56,9 @@ class FrontController_Layout implements CoreInterfaceFrontController
       if (!isset($active_menu)) {
         $active_menu = self::$default_menu;
       }
-      self::$menu[$active_menu]['active'] = true;
+      if(isset(self::$menu[$active_menu])) {
+        self::$menu[$active_menu]['active'] = true;
+      }
       CoreView_Http::setGlobal('ilfate_menu', self::$menu);
 
       /**

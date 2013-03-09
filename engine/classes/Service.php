@@ -29,6 +29,11 @@ class CoreService
    */
   private static $routing;
 
+  /**
+   * @var Language
+   */
+  private static $language;
+
 
 
 
@@ -79,6 +84,14 @@ class CoreService
   {
     $params = func_get_args();
     return self::getting('routing', $params);
+  }
+
+  /**
+   * @return Language
+   */
+  public static function getLanguage()
+  {
+    return self::getting('language');
   }
 
 }

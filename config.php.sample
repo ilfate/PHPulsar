@@ -21,6 +21,7 @@ return array(
   'is_dev'    => %%is_dev%%,
   'logs_path' => '%%logs_path%%',
   'site_url'  => '%%site_url%%',
+  'default_language' => 'EN',
 
   'CoreProvider_PDOmysql' => array(
 	'dbname' => 'ilfate',

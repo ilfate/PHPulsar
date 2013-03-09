@@ -103,10 +103,17 @@ class CoreHelper
     $url = Helper::url($class, $method, $get);
     header('Location: ' . $url);
   }
-  
-  
+
+  /**
+   * Returns text by key name
+   *
+   * @param $key
+   * @return string
+   */
+  public static function lang($key)
+  {
+    return Service::getLanguage()->get($key);
+  }
   
  
 }
-
-?>

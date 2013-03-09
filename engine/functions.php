@@ -65,3 +65,14 @@ function is_hash(&$array)
   return @is_string($keys[0]) ? true : false;
 }
 
+/**
+ * Returns text by key name
+ *
+ * @param $key
+ * @return string
+ */
+function _l($key)
+{
+  return Helper::lang($key);
+}
+

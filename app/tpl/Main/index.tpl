@@ -5,7 +5,7 @@
 */?>
 
 <div class="hero-unit">
-  <h1>Hello! My name is Ilya Rubinchik and this is my website!</h1>
+  <h1><?= _l('main_index_hello_text') ?></h1>
 </div>
 <div class="row">
 
