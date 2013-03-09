@@ -19,14 +19,31 @@ class CoreService
    */
   private static $frontController;
 
+  /**
+   * @var Request
+   */
+  private static $request;
+
+  /**
+   * @var Routing
+   */
+  private static $routing;
 
 
 
-  private static function getting($name)
+
+  private static function getting($name, $params = null)
   {
-    if(empty(self::$$name)) {
+    if (empty(self::$$name)) {
       $class_name = ucfirst($name);
-      self::$$name = new $class_name();
+      if (is_null($params)) {
+        self::$$name = new $class_name();
+      } elseif (count($params) == 1) {
+        self::$$name = new $class_name($params[0]);
+      } else {
+        $reflection = new ReflectionClass(                                                                                                                                           $class_name);
+        self::$$name = $reflection->newInstanceArgs($params);
+      }
     }
     return self::$$name;
   }
@@ -45,6 +62,23 @@ class CoreService
   public static function getFrontController()
   {
     return self::getting('frontController');
+  }
+
+  /**
+   * @return Request
+   */
+  public static function getRequest()
+  {
+    return self::getting('request');
+  }
+
+  /**
+   * @return Routing
+   */
+  public static function getRouting()
+  {
+    $params = func_get_args();
+    return self::getting('routing', $params);
   }
 
 }

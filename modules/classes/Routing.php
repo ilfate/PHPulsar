@@ -12,9 +12,7 @@
  */
 class ModuleRouting extends CoreRouting{
   
-  
-  
-  
+
    /**
    * Main executing method.
    * Will find a class and method for execution
@@ -27,16 +25,14 @@ class ModuleRouting extends CoreRouting{
    */
   public function execute() 
   {
-    $uri = Request::getDocUri();
+    $uri = Service::getRequest()->getDocUri();
     $uri_arr = array_values(array_filter(explode('/', $uri)));
     $arr_len = sizeof($uri_arr);
-    if($arr_len >= 2) 
-    {
+    if ($arr_len >= 2) {
       $class = implode('_', array_slice($uri_arr, 0, -1));
       $method = $uri_arr[$arr_len-1];
     } else {
-      if($arr_len == 1) 
-      {
+      if ($arr_len == 1) {
         $class = $uri_arr[0];
       } else {
         $class = self::DEFAULT_CLASS;
@@ -53,13 +49,13 @@ class ModuleRouting extends CoreRouting{
       throw new CoreException_RoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
     }
 
-    if(!method_exists($prefixed_class, $method) && !method_exists($prefixed_class, '_' . $method) ) 
-    {
+    if (!method_exists($prefixed_class, $method) && !method_exists($prefixed_class, '_' . $method) ) {
       throw new CoreException_RoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
     }
 
-    self::$class = $class;
-    self::$method = $method;
+    $this->class = $class;
+    $this->method = $method;
+    return $this;
   }
   
   
@@ -72,15 +68,11 @@ class ModuleRouting extends CoreRouting{
    */
   public function getUrl($class, $method)
   {
-    if(strpos($class, '_') !== false)
-    {
+    if (strpos($class, '_') !== false) {
       $class_str = str_replace('_', '/', $class);
     } else {
       $class_str = $class;
     }
     return '/' . $class_str . '/' . $method;
   }
-  
 }
-
-?>

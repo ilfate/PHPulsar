@@ -17,12 +17,10 @@ class FrontController_Csrf implements CoreInterfaceFrontController
   
   public static function preExecute() 
   {
-    if(Request::getMethod() == "POST")
-    {
-      if(!Csrf::check())
-	  {
-		  throw new CoreException_Error('No CSRF token found');
-	  }
+    if (Service::getRequest()->getMethod() == "POST") {
+      if (!Csrf::check()) {
+		    throw new CoreException_Error('No CSRF token found');
+	    }
     }
   }
   
@@ -33,6 +31,3 @@ class FrontController_Csrf implements CoreInterfaceFrontController
   
   
 }
-
-
-?>

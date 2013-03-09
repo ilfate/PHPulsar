@@ -30,4 +30,3 @@ class CoreException_Error extends Exception
  * To init module class must exist under the possible path to autoloader
  */
 
-?>

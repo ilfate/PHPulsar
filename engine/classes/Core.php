@@ -18,18 +18,6 @@ class Core {
   public static $modules_path = '/modules';
   
   /**
-   * Here we keep Request
-   * @var CoreInterfaceRequest 
-   */
-  private static $request;
-  
-  /**
-   *
-   * @var CoreInterfaceRouting 
-   */
-  private static $routing;
-  
-  /**
    * An Array of all inited Views
    * @var array
    */
@@ -40,9 +28,8 @@ class Core {
    * @var Boolean
    */
   private static $inited = false;
-  /**
-   * we close it for singltone
-   */
+
+
   
   /**
    * keeps all initiaalized controllers
@@ -50,8 +37,10 @@ class Core {
    * @var array 
    */
   private static $stored_controllers = array();
-  
-  
+
+  /**
+   * we close it for singltone
+   */
   private function __construct() 
   {
     self::init();
@@ -61,8 +50,7 @@ class Core {
    */
   public static function init() 
   {
-    if(self::$inited) 
-    {
+    if (self::$inited) {
       die("Fatal error. Attempt to init Core second time");
     }
     self::$inited = true;
@@ -78,13 +66,11 @@ class Core {
     $config->init(require 'config.php');
 
 
-
-    self::$request = new Request();
-    self::$routing = new Routing(self::$request);
+    $request = Service::getRequest();
+    Service::getRouting($request);
 
     // depends on Mode we can different types of execution
-    switch (Request::getExecutingMode())
-    {
+    switch ($request->getExecutingMode()) {
       case Request::EXECUTE_MODE_HTTP : {
         self::commonExecuting();
       } break;
@@ -101,18 +87,17 @@ class Core {
   public static function commonExecuting() 
   {
     
-    try
-    {
+    try {
       $frontController = Service::getFrontController();
 
       // define routing class and method
-      self::$routing->execute();
+      $routing = Service::getRouting()->execute();
     
       // here we execute services BEFORE main content
       $frontController->callPreExecution();
 
-      $class = self::$routing->getPrefixedClass();
-      $method = self::$routing->getMethod();
+      $class = $routing->getPrefixedClass();
+      $method = $routing->getMethod();
       $obj = self::getController($class);
       $response = Core::initResponse($obj->$method());
       
@@ -124,8 +109,7 @@ class Core {
       $frontController->callPostExecution();
     } catch (Exception $e) {
       Logger::dump($e->getMessage(), 'file', 'CoreError.log');
-      if(Service::getConfig()->get('is_dev'))
-      {
+      if (Service::getConfig()->get('is_dev')) {
         throw $e;
       } else {
         Helper::redirect('Error', 'page500');
@@ -139,19 +123,17 @@ class Core {
    */
   public static function ajaxExecuting() 
   {
-    
-    try
-    {
+    try {
       $frontController = Service::getFrontController();
 
       // define routing class and method
-      self::$routing->execute();
+      $routing = Service::getRouting()->execute();
     
       // here we execute services BEFORE main content
       $frontController->callPreExecution();
 
-      $class = self::$routing->getPrefixedClass();
-      $method = self::$routing->getMethod();
+      $class = $routing->getPrefixedClass();
+      $method = $routing->getMethod();
       $obj = self::getController($class);
       $response = Core::initResponse($obj->$method());
       
@@ -163,12 +145,10 @@ class Core {
       $frontController->callPostExecution();
     } catch (Exception $e) {
       Logger::dump($e->getMessage(), 'file', 'CoreError.log');
-      if(Service::getConfig()->get('is_dev'))
-      {
+      if (Service::getConfig()->get('is_dev')) {
         throw $e;
       } else {
         Helper::redirect('Error', 'page500');
-
       }
     }
   }
@@ -189,18 +169,18 @@ class Core {
    */
   public static function subExecute($class, $method, $get, $post)
   {
-    self::$request->setFakeRequest($get, $post);
-    self::$routing->setFakeRouting($class, $method);
+    $request = Service::getRequest()->setFakeRequest($get, $post);
+    $routing = Service::getRouting()->setFakeRouting($class, $method);
     
-    $call_class = self::$routing->getPrefixedClass();
-    $call_method = self::$routing->getMethod();
+    $call_class = $routing->getPrefixedClass();
+    $call_method = $routing->getMethod();
     $obj = self::getController($call_class);
     $response = Core::initResponse($obj->$call_method());
     
     $return = self::output($response, true);
     
-    self::$routing->restoreRouting();
-    self::$request->restoreRequest();
+    $routing->restoreRouting();
+    $request->restoreRequest();
     return $return;
   }
   
@@ -215,8 +195,7 @@ class Core {
 
     $headers = $response->setHeaders();
     
-    if(!$return_string)
-    {
+    if (!$return_string) {
       echo $content;
     } else {
       return $content;
@@ -230,50 +209,35 @@ class Core {
    */
   public static function initResponse($content) 
   {
-    if(is_array($content) && isset($content['mode']))
-    { // if mode is set by content
+    if (is_array($content) && isset($content['mode'])) {
+      // if mode is set by content
       $mode = $content['mode'];
     } else { // or we need to get current Mode
-      $mode = Request::getExecutingMode();
+      $mode = Service::getRequest()->getExecutingMode();
     }
 
     $config = Service::getConfig();
     $response = $config->get('Response');
-    if(!isset($response[$mode]))
-    {
+    if (!isset($response[$mode])) {
       throw new CoreException_Error('Cant find Response implementation class for "' . $mode . '" in config');
     }
     
-    if(!isset(self::$views[$mode]))
-    { // if view is not inited we create it
+    if (!isset(self::$views[$mode])) {
+      // if view is not inited we create it
       $view = $config->get('View');
-      if(isset($view[$mode]))
-      {
+      if (isset($view[$mode])) {
         self::$views[$mode] = new $view[$mode]();
       } else {
-      self::$views[$mode] = null;
+        self::$views[$mode] = null;
       }
     }
     
-    return new $response[$mode]($content, self::$routing, self::$views[$mode]);
+    return new $response[$mode]($content, self::$views[$mode]);
   }
   
-  /**
-   * crete url via routing
-   *
-   * @param type $class
-   * @param type $method
-   * @return type 
-   */
-  public static function createUrl($class, $method)
+  protected static function getController($name)
   {
-    return self::$routing->getUrl($class, $method);
-  }
-  
-  private static function getController($name)
-  {
-    if(!isset(self::$stored_controllers[$name]))
-    {
+    if (!isset(self::$stored_controllers[$name])) {
       // if need to, we create new one.
       self::$stored_controllers[$name] = new $name();
     }

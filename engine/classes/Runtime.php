@@ -94,6 +94,3 @@ class CoreRuntime implements CoreInterfaceRuntime
     return self::$headers;
   }
 }
-
-
-?>

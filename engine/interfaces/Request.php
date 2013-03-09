@@ -12,20 +12,18 @@
  */
 interface CoreInterfaceRequest {
   
-  public static function getPost();
-  public static function getGet();
+  public function getPost();
+  public function getGet();
   
-  public static function getExecutingMode();
+  public function getExecutingMode();
   
-  public static function getValue($name);
+  public function getValue($name);
 
 
-  public static function getSession($name);
-  public static function setSession($name, $value);
-  public static function deleteSession($name);
+  public function getSession($name);
+  public function setSession($name, $value);
+  public function deleteSession($name);
   
-  public static function getCookie($name);
-  
+  public function getCookie($name);
+
 }
-
-?>

@@ -13,7 +13,3 @@ class CoreException_CacheError extends CoreException_Error
 {
   
 }
-
-
-
-?>

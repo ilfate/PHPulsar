@@ -60,14 +60,14 @@ class CoreHelper
    */
   public static function url($class = null, $method = null, array $get = null)
   {
-    if(!$class) {
+    if (!$class) {
       $class = Routing::DEFAULT_CLASS;
     }
-    if(!$method) {
+    if (!$method) {
       $method = Routing::DEFAULT_METHOD;
     }
-    $url = Core::createUrl($class, $method);
-    if($get)
+    $url = Service::getRouting()->getUrl($class, $method);
+    if ($get)
     {  
         $url .= (strpos($url, '?') === false) ? '?' : '&';
       $url .= http_build_query($get);

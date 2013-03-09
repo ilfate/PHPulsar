@@ -15,5 +15,3 @@ class CoreException_RoutingError extends CoreException_Error
 }
 
 
-
-?>

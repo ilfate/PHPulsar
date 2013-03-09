@@ -13,5 +13,3 @@
 class ModuleRequest extends CoreRequest {
 
 }
-
-?>

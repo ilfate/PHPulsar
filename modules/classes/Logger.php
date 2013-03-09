@@ -14,6 +14,3 @@ class ModuleLogger extends CoreLogger
 {
   
 }
-
-
-?>

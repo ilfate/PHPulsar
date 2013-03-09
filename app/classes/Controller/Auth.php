@@ -54,12 +54,11 @@ class Controller_Auth extends Controller
         'pass'  => array('notEmpty', array('equalField', 'pass2'), array('minLength', 6)),
         'name'  => array('notEmpty', array('minLength', 4), array('maxLength', 16), 'userNameUnique'),
       )  
-    ))
-    {
+    )) {
       return Validator::getFormErrorAnswer();
     }
 	
-    $post = Request::getPost();
+    $post = Service::getRequest()->getPost();
     $user = Model_User::createUserWithEmail($post['email'], $post['pass'], $post['name']);
     self::auth($user);
 	  Message::add('Welcome!!');
@@ -74,11 +73,10 @@ class Controller_Auth extends Controller
     $config = array(
       'email' => array(array('authEmailAndPassword', 'password')),
     );
-    if(!Validator::validateForm($config))
-    {
+    if(!Validator::validateForm($config)) {
       return Validator::getFormErrorAnswer();
     }
-    $post = Request::getPost();
+    $post = Service::getRequest()->getPost();
     $user = Model_User::getUserByEmailAndPassword($post['email'], $post['password']);
     self::auth($user);
     Message::add('Hi!!!');
@@ -91,7 +89,7 @@ class Controller_Auth extends Controller
   
   public function logOut()
   {
-    Request::setSession(Service_Auth::SESSION_AUTH_KEY, null);
+    Service::getRequest()->setSession(Service_Auth::SESSION_AUTH_KEY, null);
     Runtime::setCookie(Service_Auth::COOKIE_AUTH_KEY, null, null);
     return array(
       'sucsess' => true,
@@ -103,7 +101,7 @@ class Controller_Auth extends Controller
   
   private static function auth(Model_User $user)
   {
-    Request::setSession(Service_Auth::SESSION_AUTH_KEY, array('id' => $user->id, 'time' => time()));
+    Service::getRequest()->setSession(Service_Auth::SESSION_AUTH_KEY, array('id' => $user->id, 'time' => time()));
     Runtime::setCookie(Service_Auth::COOKIE_AUTH_KEY, $user->cookie, Service_Auth::COOKIE_AUTH_KEY_EXPIRES);
   }
   
@@ -112,8 +110,4 @@ class Controller_Auth extends Controller
   {
     return array();
   }
-  
-  
 }
-
-?>

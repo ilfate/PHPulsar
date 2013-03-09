@@ -13,7 +13,3 @@ class CoreException_ConfigError extends CoreException_Error
 {
   
 }
-
-
-
-?>

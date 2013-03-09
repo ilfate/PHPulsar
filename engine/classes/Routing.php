@@ -16,15 +16,15 @@ class CoreRouting implements CoreInterfaceRouting{
    * Executing class name
    * @var String
    */
-  protected static $class;
+  protected $class;
   
   /**
    * Executing class method name
    * @var String
    */
-  protected static $method;
+  protected $method;
   
-  protected static $save;
+  protected $save;
   
   /**
    * prefix witch we will add to all route class to call
@@ -56,11 +56,11 @@ class CoreRouting implements CoreInterfaceRouting{
    * @return String
    * @throws CoreRoutingError
    */
-  public static function getClass() 
+  public function getClass()
   {
-    if(self::$class) 
+    if ($this->class)
     {
-      return self::$class;  
+      return $this->class;
     } else {
       throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
     }
@@ -72,9 +72,9 @@ class CoreRouting implements CoreInterfaceRouting{
    * @return String
    * @throws CoreRoutingError
    */
-  public static function getPrefixedClass() 
+  public function getPrefixedClass()
   {
-    return self::CLASS_PREFIX . static::getClass();
+    return self::CLASS_PREFIX . $this->getClass();
   }
 
   /**
@@ -83,11 +83,10 @@ class CoreRouting implements CoreInterfaceRouting{
    * @return String
    * @throws CoreRoutingError$prefixed_class
    */
-  public static function getMethod() 
+  public function getMethod()
   {
-    if(self::$method) 
-    {
-      return self::$method;  
+    if ($this->method) {
+      return $this->method;
     } else {
       throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
     }
@@ -105,9 +104,9 @@ class CoreRouting implements CoreInterfaceRouting{
    */
   public function execute() 
   {
-    $get = Request::getGet();
-    if(!$get) // if there is no params in GET we need to set default
-    {
+    $get = Service::getRequest()->getGet();
+    if (!$get) {
+      // if there is no params in GET we need to set default
       $class = self::DEFAULT_CLASS;
       $method = self::DEFAULT_METHOD;
     } else {
@@ -124,13 +123,12 @@ class CoreRouting implements CoreInterfaceRouting{
       throw new CoreException_RoutingError('Cant find route for "'. $class.'". Possible problem: ' . $e->getMessage());
     }
 
-    if(!method_exists($prefixed_class, $method) && !method_exists($prefixed_class, '_' . $method) ) 
-    {
+    if (!method_exists($prefixed_class, $method) && !method_exists($prefixed_class, '_' . $method) ) {
       throw new CoreException_RoutingError('Cant find method for "'. $class . '" -> "' . $method .'"');
     }
 
-    self::$class = $class;
-    self::$method = $method;
+    $this->class = $class;
+    $this->method = $method;
   }
   
   
@@ -143,14 +141,14 @@ class CoreRouting implements CoreInterfaceRouting{
   public function setFakeRouting($class, $method)
   {
     $data = array('class' => $this->getClass(), 'method' => $this->getMethod());
-    if(!self::$save)
-    {
-      self::$save = array($data);
+    if (!$this->save) {
+      $this->save = array($data);
     } else {
-      self::$save[] = $data;
+      $this->save[] = $data;
     }
-    self::$class = $class;
-    self::$method = $method;
+    $this->class = $class;
+    $this->method = $method;
+    return $this;
   }
   
   /**
@@ -158,14 +156,14 @@ class CoreRouting implements CoreInterfaceRouting{
    */
   public function restoreRouting()
   {
-    if(self::$save)
-    {
-      $data = array_pop(self::$save);
-      self::$class = $data['class'];
-      self::$method = $data['method'];
+    if ($this->save) {
+      $data = array_pop($this->save);
+      $this->class = $data['class'];
+      $this->method = $data['method'];
     } else {
       throw new CoreException_RoutingError('Cant restore Routing settings.');
-  }
+    }
+    return $this;
   }
   
   /**
@@ -187,4 +185,3 @@ class CoreRouting implements CoreInterfaceRouting{
   }
 }
 
-?>

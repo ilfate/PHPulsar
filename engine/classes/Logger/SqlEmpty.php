@@ -34,6 +34,3 @@ class CoreLogger_SqlEmpty
   }
           
 }
-
-
-?>

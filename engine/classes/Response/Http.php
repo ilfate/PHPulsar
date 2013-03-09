@@ -13,14 +13,6 @@
  */
 class CoreResponse_Http extends CoreResponse 
 {
-
-    
-  /**
-   *
-   * @var CoreInterfaceRouting 
-   */
-  private $routing;
-  
   /**
    *
    * @var CoreInterfaceView 
@@ -51,31 +43,24 @@ class CoreResponse_Http extends CoreResponse
   /**
    * 
    * @param array                    $result
-   * @param CoreInterfaceRouting     $routing
    */
-  public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null) 
+  public function __construct($result, CoreInterfaceView $view = null)
   {
-    $this->routing = $routing;
-    if(!is_array($result))
-    {
+    if (!is_array($result)) {
       throw new CoreException_ResponseHttpError('Returned content of type Array expected');
     }
 
-    if(!$view)
-    {
+    if (!$view) {
       throw new CoreException_ResponseHttpError('ResponseHttp needs View to build response');
     }
     $this->view = $view;
-    if(!isset($result['tpl']))
-    {
+    if (!isset($result['tpl'])) {
       $result['tpl'] = $this->getTemplateByRoute();
     }
     
-    if(!isset($result['layout']))
-    {
-      if(Request::getExecutingMode() == Request::EXECUTE_MODE_HTTP)
-      {
-        $result['layout'] = $routing->getDefaultLayout();
+    if (!isset($result['layout'])) {
+      if (Service::getRequest()->getExecutingMode() == Request::EXECUTE_MODE_HTTP) {
+        $result['layout'] = Service::getRouting()->getDefaultLayout();
       } else {
         $result['layout'] = array();
       }
@@ -94,7 +79,8 @@ class CoreResponse_Http extends CoreResponse
    */
   private function getTemplateByRoute() 
   {
-    return $this->routing->getClass() . '/' . $this->routing->getMethod() . '.' . CoreView_Http::TEMPLATE_FILE_EXTENSION;    
+    $routing = Service::getRouting();
+    return $routing->getClass() . '/' . $routing->getMethod() . '.' . CoreView_Http::TEMPLATE_FILE_EXTENSION;
   }
   
   /**
@@ -102,18 +88,10 @@ class CoreResponse_Http extends CoreResponse
    */
   public function getContent() 
   {
-    if(!$this->content) 
-    {
+    if (!$this->content) {
       $tpl = isset($this->result['tpl']) ? $this->result['tpl'] : '';
       $this->content = $this->view->render($tpl, $this->result, $this->layout);
     }
     return $this->content;
   }
-
-  
-  
-  
 }
-
-
-?>

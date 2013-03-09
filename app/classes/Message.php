@@ -21,20 +21,19 @@ class Message
    */
   public static function add($message)
   {
-	  $messages = Request::getSession(self::SESSEION_KEY);
+    $request = Service::getRequest();
+	  $messages = $request->getSession(self::SESSEION_KEY);
 	  $messages[] = $message;
-	  Request::setSession(self::SESSEION_KEY, $messages);
+    $request->setSession(self::SESSEION_KEY, $messages);
   }
   
   public static function getMessages()
   {
-    return Request::getSession(self::SESSEION_KEY);
+    return Service::getRequest()->getSession(self::SESSEION_KEY);
   }
   
   public static function clear()
   {
-    Request::setSession(self::SESSEION_KEY, null);
+    Service::getRequest()->setSession(self::SESSEION_KEY, null);
   }
 }
-
-?>

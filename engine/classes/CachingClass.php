@@ -48,20 +48,16 @@ abstract class CoreCachingClass
   public static function getCacheTag($tag, $parameters = array()) 
   {
     $class = get_called_class();
-    if(strpos($tag, '[') !== false)
-    {
+    if (strpos($tag, '[') !== false) {
       $maches = array();
     // search for params like [0] [1] [2] ect...
       preg_match_all('#\[(\d+)\]#', $tag, $maches);
     
-      if(sizeof($maches) > 0)
-      {
+      if (sizeof($maches) > 0) {
         $param_arr = $maches[1];
         $tag = strstr($tag, '[', true) . self::TAGS_PARAM_DELIMITER;
-        foreach ($param_arr as $param_num)
-        {
-          if(!isset($parameters[$param_num]))
-          {
+        foreach ($param_arr as $param_num) {
+          if (!isset($parameters[$param_num])) {
             throw new CoreException_CacheError('Error during caching Tag with param. Param '. $param_num . ' is mising');
           }
           $tag .= '_' . $parameters[$param_num];
@@ -87,19 +83,15 @@ abstract class CoreCachingClass
     $metaKey = self::getMetaKeyMethod($method, true);
     
     // If if have correct params we starting to looking for cache
-    if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
-    {
+    if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) {
       $cacheKey = self::getCacheKey($method, $arguments);
-      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false)  
-      {
+      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) {
         $result = forward_static_call_array(array($class, $callMethod), $arguments);
         $tags = null;
-        if (!empty(self::$meta[$metaKey]["tags"])) 
-        {
+        if (!empty(self::$meta[$metaKey]["tags"])) {
         // set up tags, if they are exists
           $tags = array();
-          foreach (self::$meta[$metaKey]["tags"] as $tag) 
-          {
+          foreach (self::$meta[$metaKey]["tags"] as $tag) {
             $tags[] = self::getCacheTag($tag, $arguments);
           }
         }
@@ -129,19 +121,15 @@ abstract class CoreCachingClass
     $metaKey = self::getMetaKeyMethod($method, false);
     
     // If if have correct params we starting to looking for cache
-    if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) 
-    {
+    if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) {
       $cacheKey = self::getCacheKey($method, $arguments);
-      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) 
-      {
+      if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) {
         $result = call_user_func_array(array($this, $callMethod), $arguments);
         $tags = null;
-        if (!empty(self::$meta[$metaKey]["tags"])) 
-        {
-      // set up tags, if they are exists
+        if (!empty(self::$meta[$metaKey]["tags"])) {
+          // set up tags, if they are exists
           $tags = array();
-          foreach (self::$meta[$metaKey]["tags"] as $tag) 
-          {
+          foreach (self::$meta[$metaKey]["tags"] as $tag) {
             $tags[] = self::getCacheTag($tag, $arguments);
           }
         }
@@ -160,22 +148,19 @@ abstract class CoreCachingClass
   {
     $class = get_called_class();
     $callMethod = "_" . $method;
-    if (!method_exists($class, $callMethod)) 
-    {
+    if (!method_exists($class, $callMethod)) {
       throw new CoreException_Error("Method " . $class . ($is_static?"::":"->") . $method . "() does not exist");
     }
     $metaKey = $class . ($is_static?"::":"->") . $callMethod;
-    if (!isset(self::$meta[$metaKey])) 
-    {
+    if (!isset(self::$meta[$metaKey])) {
       $meta = new ReflectionMethod($class, $callMethod);
       $comment = $meta->getDocComment();
       $params = array();
       $matches = array();
-      if (!empty($comment)) // If there is phpDoc search it for comments that we need
-      { 
+      if (!empty($comment)) {
+        // If there is phpDoc search it for comments that we need
         preg_match("/@cache([ \t]+(\d+)){0,1}([ \t]+([\w \t\[\]]+[\w\]])){0,1}/", $comment, $matches);
-        if (!empty($matches)) 
-        {
+        if (!empty($matches)) {
           $params["cache"] = true;
           $params["expire"] = !empty($matches[2]) ? (int) $matches[2] : 0;
           $params["tags"] = !empty($matches[4]) ? preg_split("/[ \t]+/", $matches[4]) : array();
@@ -185,7 +170,4 @@ abstract class CoreCachingClass
     }
     return $metaKey;
   }
- 
 }
-
-?>

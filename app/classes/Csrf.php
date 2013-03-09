@@ -21,13 +21,15 @@ class Csrf {
    *
    * @return string 
    */
+
   public static function create() 
   {
-    if (Request::getSession(Csrf::CSRF_SESSION_FIELD)) 
+    $request = Service::getRequest();
+    if ($request->getSession(Csrf::CSRF_SESSION_FIELD))
     {
-      return Request::getSession(Csrf::CSRF_SESSION_FIELD);
+      return $request->getSession(Csrf::CSRF_SESSION_FIELD);
     }
-    $id = Request::getCookie(self::CSRF_COOKIE_FIELD);
+    $id = $request->getCookie(self::CSRF_COOKIE_FIELD);
     if (!$id) $id = session_id();    
     $csrf = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5(Csrf::$csrf_key), $id . "||" . time(), MCRYPT_MODE_ECB);
     $csrfHex = "";
@@ -35,7 +37,7 @@ class Csrf {
     for ($i =  0; $i < $csrfLength; $i++) {
       $csrfHex .= sprintf("%02x", ord($csrf{$i}));
     }
-    Request::setSession(Csrf::CSRF_SESSION_FIELD, $csrfHex);
+    $request->setSession(Csrf::CSRF_SESSION_FIELD, $csrfHex);
     return $csrfHex;
   }
 
@@ -56,9 +58,10 @@ class Csrf {
    */
   public static function check() 
   {
-    $id = Request::getCookie(Csrf::CSRF_COOKIE_FIELD);
+    $request = Service::getRequest();
+    $id = $request->getCookie(Csrf::CSRF_COOKIE_FIELD);
     if (!$id) $id = session_id();
-    $csrfHex = Request::getValue(Csrf::CSRF_REQUEST_FIELD);
+    $csrfHex = $request->getValue(Csrf::CSRF_REQUEST_FIELD);
     if (!$csrfHex) return false;
     $csrf = "";
     $csrfHexLength = strlen($csrfHex) / 2;
@@ -78,9 +81,8 @@ class Csrf {
    * Clears cached CSRF-key
    */
   public static function reset() {
-    Request::deleteSession(Csrf::CSRF_SESSION_FIELD);
+    Service::getRequest()->deleteSession(Csrf::CSRF_SESSION_FIELD);
   }
 
 }
-?>
 

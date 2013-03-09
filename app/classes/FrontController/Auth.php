@@ -48,31 +48,29 @@ class FrontController_Auth implements CoreInterfaceFrontController
   
   public static function preExecute() 
   {
-      // try auth via session
-    if($session = Request::getSession(self::SESSION_AUTH_KEY))
-    { // if session exists
-      if(time() < ($session['time'] + self::SESSION_AUTH_KEY_EXPIRES))
-      { // if seesion if not expired
+    // try auth via session
+    $request = Service::getRequest();
+    if ($session = $request->getSession(self::SESSION_AUTH_KEY)) {
+      // if session exists
+      if (time() < ($session['time'] + self::SESSION_AUTH_KEY_EXPIRES)) {
+        // if seesion if not expired
         $user = Model_User::getByPK($session['id']);
-        if($user)
-        {
+        if ($user) {
           self::$current_user = $user;
         }
       }
     } 
-    if(empty(self::$current_user) && $cookie = Request::getCookie(self::COOKIE_AUTH_KEY)) 
-    { // try auth via cookie  
+    if (empty(self::$current_user) && $cookie = $request->getCookie(self::COOKIE_AUTH_KEY)) {
+      // try auth via cookie
       $user = Model_User::getRecord(array('cookie' => $cookie));
-      if($user)
-      {
+      if ($user) {
         self::$current_user = $user;
       }
     }
     
-    if(empty(self::$current_user))
-    { // it is guest here
-      if(!self::isRoutePublic())
-      {
+    if (empty(self::$current_user)) {
+      // it is guest here
+      if (!self::isRoutePublic()) {
         Helper::redirect('Auth', 'needRegistration', array('access_restricted' => true));
       }
     } 
@@ -84,16 +82,14 @@ class FrontController_Auth implements CoreInterfaceFrontController
   
   private static function isRoutePublic()
   {
-    $class = Routing::getClass();
-    if(isset(self::$public_controllers[$class]))
-    { // ok class is public
-      if(self::$public_controllers[$class] === self::ALL_METHODS_ARE_PUBLIC)
-      {
+    $class = Service::getRouting()->getClass();
+    if (isset(self::$public_controllers[$class])) {
+      // ok class is public
+      if (self::$public_controllers[$class] === self::ALL_METHODS_ARE_PUBLIC) {
         return true;
       } else {
-        $method = Routing::getMethod();
-        if(in_array($method, self::$public_controllers[$class]))
-        {
+        $method = Service::getRouting()->getMethod();
+        if (in_array($method, self::$public_controllers[$class])) {
           return true;
         }
       }
@@ -107,7 +103,7 @@ class FrontController_Auth implements CoreInterfaceFrontController
       'id'   => $id_user,
       'time' => time()
     );
-    Request::setSession(self::SESSION_AUTH_KEY, $session);
+    Service::getRequest()->setSession(self::SESSION_AUTH_KEY, $session);
   }
   
   public static function isAuth()
@@ -122,6 +118,3 @@ class FrontController_Auth implements CoreInterfaceFrontController
   
   
 }
-
-
-?>

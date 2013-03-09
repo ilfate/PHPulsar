@@ -40,8 +40,7 @@ abstract class CoreModel extends CoreCachingClass
    */
   public function __construct($data, $is_new_object = false) {
     $this->data = $data;
-    if(!$is_new_object)
-    {
+    if (!$is_new_object) {
       $this->origin_data = $data;
     }
   }
@@ -55,8 +54,7 @@ abstract class CoreModel extends CoreCachingClass
   
   protected static function initProvider()
   {
-    if(!class_exists(self::$provider_type)) 
-    {
+    if (!class_exists(self::$provider_type)) {
       throw new CoreException_ModelError('Cant init Model. "'.self::$provider_type.'" class is missing.');
     }
   
@@ -74,8 +72,8 @@ abstract class CoreModel extends CoreCachingClass
    */
   public static function getByPK($pk)
   {
-    if(!is_array(self::$PK)) // here all simple
-    {
+    if (!is_array(self::$PK)) {
+      // here all simple
       $where = '`' . static::$PK .'` = ?';
       $pk = self::filter($pk);
     } else {
@@ -86,8 +84,7 @@ abstract class CoreModel extends CoreCachingClass
     $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
     
     $data = self::select($query, is_array(static::$PK)?$params:array($pk));
-    if($data)
-    {
+    if ($data) {
       $class = get_called_class();
       return new $class($data[0]);
     } else {
@@ -110,8 +107,7 @@ abstract class CoreModel extends CoreCachingClass
     
     $query = 'SELECT * FROM ' .static::$table_name . ' WHERE '. $where;
     $data = self::select($query, $params);
-    if(isset($data[0]))
-    {
+    if (isset($data[0])) {
       $class = get_called_class();
       return new $class($data[0]);
     } else {
@@ -173,11 +169,11 @@ abstract class CoreModel extends CoreCachingClass
     list($where, $params) = self::getWhereStringAndParams($where, $params);    
     $query = 'SELECT `' . $field . '` FROM ' .static::$table_name . ' WHERE '. $where;
     $data = self::select($query, $params);
-    if($data && isset($data[0])) {
-    return $data[0][$field];
-  } else {
-    return false;
-  }
+    if ($data && isset($data[0])) {
+      return $data[0][$field];
+    } else {
+      return false;
+    }
   }
   
   /**
@@ -222,10 +218,8 @@ abstract class CoreModel extends CoreCachingClass
    */
   public static function filter($data)
   {
-    if(is_array($data)) 
-    {
-      foreach ($data as &$str)
-      {
+    if (is_array($data)) {
+      foreach ($data as &$str) {
         $str = self::filter($str);
       }
       return $data;
@@ -235,8 +229,7 @@ abstract class CoreModel extends CoreCachingClass
   }
   
   public function __get($name) {
-    if(isset($this->data[$name]))
-    {
+    if (isset($this->data[$name])) {
       return $this->data[$name];
     } else {
       return null;
@@ -255,16 +248,14 @@ abstract class CoreModel extends CoreCachingClass
   
   public function save()
   {
-    if($this->origin_data)
-    {
+    if ($this->origin_data) {
       $new_data = array_diff_assoc($this->data, $this->origin_data);
-      if(!is_array(static::$PK))
-      {       // single field PK
+      if (!is_array(static::$PK)) {
+        // single field PK
         $where = array(static::$PK => $this->data[static::$PK]);
       } else {  // multi field PK
         $where = array();
-        foreach (static::$PK as $pk_field)
-        {
+        foreach (static::$PK as $pk_field) {
           $where[$pk_field] = $this->data[$pk_field];
         }
       }
@@ -284,8 +275,7 @@ abstract class CoreModel extends CoreCachingClass
   public static function update(array $data, $where)
   {
     $set = array();
-    foreach ($data as $key => $value)
-    {
+    foreach ($data as $key => $value) {
       $set[] = '`' . $key . '` = ' . (ctype_digit($value)?'':'"') . $value . (ctype_digit($value)?'':'"');
     }
     $set = implode(', ', $set);
@@ -306,8 +296,7 @@ abstract class CoreModel extends CoreCachingClass
     $fields_arr = array();
     $values_arr = array();
     $params = array();
-    foreach ($data as $key => $value)
-    {
+    foreach ($data as $key => $value) {
       $fields_arr[] = '`' . $key . '`';
       $values_arr[] = '?';
       $params[] = $value;
@@ -331,12 +320,10 @@ abstract class CoreModel extends CoreCachingClass
   
   protected static function getWhereStringAndParams($data, $params = null)
   {
-    if(is_array($data))
-    {
+    if (is_array($data)) {
       $string_arr = array();
       $params = array();
-      foreach ($data as $key => $val)
-      {
+      foreach ($data as $key => $val) {
         $string_arr[] = '`' . $key . '` = ?';
         $params[] = $val;
       }
@@ -350,8 +337,7 @@ abstract class CoreModel extends CoreCachingClass
   protected static function getFieldsString(array $fields)
   {
     $fields_arr = array();
-    foreach ($fields as $field)
-    {
+    foreach ($fields as $field) {
       $fields_arr[] = '`' .$field . '`';
     }
     $fields_string = implode(', ', $fields_arr);
@@ -361,13 +347,11 @@ abstract class CoreModel extends CoreCachingClass
   protected static function createObjectList($data, $class, $is_assoc = true)
   {
     $return = array();
-    if($data)
-    {
+    if ($data) {
       foreach ($data as $row) 
       {
         $obj = new $class($row);
-        if($is_assoc && !is_array(static::$PK) && isset($row[static::$PK]))
-        {
+        if ($is_assoc && !is_array(static::$PK) && isset($row[static::$PK])) {
           $return[$row[static::$PK]] = $obj;
         } else {
           $return[] = $obj;
@@ -377,6 +361,3 @@ abstract class CoreModel extends CoreCachingClass
     return $return;
   }
 }
-
-
-?>

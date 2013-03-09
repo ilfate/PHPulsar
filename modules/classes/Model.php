@@ -20,6 +20,3 @@ class ModuleModel extends CoreModel{
   
   
 }
-
-
-?>

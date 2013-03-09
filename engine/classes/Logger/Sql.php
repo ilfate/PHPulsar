@@ -28,8 +28,7 @@ class CoreLogger_Sql
   
   public function start($query)
   {
-    if($this->started)
-    {
+    if ($this->started) {
       throw new CoreException_Error('Error due CoreLogger_Sql. Double starter timer');
     }
     $this->started = microtime(true);
@@ -44,6 +43,3 @@ class CoreLogger_Sql
     $this->query_log[$key]['time'] = microtime(true) - $this->query_log[$key]['time'];
   }
 }
-
-
-?>

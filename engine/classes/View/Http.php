@@ -51,11 +51,9 @@ class CoreView_Http extends CoreView
     
     $html = ob_get_clean();
     
-    if(!$render__layout)
-    {
+    if (!$render__layout) {
       return $html;
     } else {
-      
       $layout_template = array_pop($render__layout);
       $render__values['content'] = $html;
       return $this->render($layout_template, $render__values, $render__layout);
@@ -70,10 +68,8 @@ class CoreView_Http extends CoreView
    */
   private function checkFile($file) 
   {
-    if(!isset($this->checked_files[$file]))
-    {
-      if(!file_exists(ILFATE_PATH . $file)) 
-      {
+    if (!isset($this->checked_files[$file])) {
+      if (!file_exists(ILFATE_PATH . $file)) {
         throw new CoreException_ViewHttpError('Can`t locate template file at ' . $file);
       }  
       $this->checked_files[$file] = true;
@@ -98,6 +94,3 @@ class CoreView_Http extends CoreView
     self::$global_values[$name] = $value;
   }
 }
-
-
-?>

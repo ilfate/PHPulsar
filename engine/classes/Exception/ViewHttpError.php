@@ -14,6 +14,3 @@ class CoreException_ViewHttpError extends CoreException_Error
   
 }
 
-
-
-?>

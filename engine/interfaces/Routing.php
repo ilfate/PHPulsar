@@ -16,15 +16,13 @@ interface CoreInterfaceRouting
   public function __construct(CoreInterfaceRequest $request);
   
   // return class name in wich action shuld take place
-  public static function getClass();
+  public function getClass();
   
-  public static function getPrefixedClass();
+  public function getPrefixedClass();
   
-  public static function getMethod();
+  public function getMethod();
   
   public function execute();
   
   public function getUrl($class, $method);
 }
-
-?>

@@ -64,8 +64,7 @@ class Validator
   }
   public static function authEmailAndPassword($value, $param) 
   {
-    if(isset(self::$form[$param])) 
-    {
+    if(isset(self::$form[$param])) {
       return Model_User::getUserByEmailAndPassword($value, self::$form[$param]);
     } 
     return false;
@@ -79,18 +78,14 @@ class Validator
    */
   public static function validate($value, array $filters)
   {
-    foreach ($filters as $filter)
-    {
-      if(!is_array($filter))
-      {
+    foreach ($filters as $filter) {
+      if(!is_array($filter)) {
         $param = null;
       } else {
         list($filter, $param) = $filter;
       }
-      if(method_exists('Validator', $filter))
-      {
-        if(!Validator::$filter($value, $param))
-        {
+      if(method_exists('Validator', $filter)) {
+        if(!Validator::$filter($value, $param)) {
           self::addError($filter, $param);
           return false;
         }
@@ -101,12 +96,11 @@ class Validator
   
   private static function addError($filter, $param)
   {
-	if(isset(self::$error_names[$filter]))
-	{
+    if(isset(self::$error_names[$filter])) {
       self::$errors[] = $param ? sprintf(self::$error_names[$filter], $param) : self::$error_names[$filter];
-	} else {
-	  self::$errors[] = 'Error occurred in form. Please try to fix data.'; 
-	}
+    } else {
+      self::$errors[] = 'Error occurred in form. Please try to fix data.';
+    }
   }
   
   public static function getLastError()
@@ -117,17 +111,16 @@ class Validator
   
   public static function validateForm(array $config, array $form = null)
   {
-    if(!$form) $form = Request::getPost();
-	self::$form = $form;
-    foreach ($config as $field_name => $filters)
-    {
-      if(!isset(self::$form[$field_name]))
-      {
+    if(!$form) {
+      $form = Service::getRequest()->getPost();
+    }
+	  self::$form = $form;
+    foreach ($config as $field_name => $filters) {
+      if(!isset(self::$form[$field_name])) {
         self::$formErrors[] = array('field' => $field_name, 'error' => 'Field not found');
         return false;
       }
-      if(!self::validate(self::$form[$field_name], $filters))
-      {
+      if(!self::validate(self::$form[$field_name], $filters)) {
         self::$formErrors[] = array('field' => $field_name, 'error' => self::getLastError());
         return false;
       }
@@ -148,5 +141,3 @@ class Validator
   }
  
 }
-
-?>

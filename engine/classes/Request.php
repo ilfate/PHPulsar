@@ -12,9 +12,9 @@
  */
 class CoreRequest implements CoreInterfaceRequest {
   
-  private static $post;
-  private static $get;
-  private static $save;
+  protected $post;
+  protected $get;
+  protected $save;
   
   
   const EXECUTE_MODE_HTTP = 'http';
@@ -26,7 +26,7 @@ class CoreRequest implements CoreInterfaceRequest {
   const PARAM_AJAX      = '__ajax';
   const PARAM_AJAX_HTML = '__html';
 
-  private static $executingMode;
+  protected $executingMode;
   
   public function __construct() 
   {
@@ -36,16 +36,14 @@ class CoreRequest implements CoreInterfaceRequest {
     
     };
     
-    self::$get = $_GET;
-    self::$post = $_POST;
+    $this->get = $_GET;
+    $this->post = $_POST;
        
-    if(self::$post) 
-    {
-      array_walk_recursive(self::$post, $escape_function);
+    if ($this->post) {
+      array_walk_recursive($this->post, $escape_function);
     }
-    if(self::$get) 
-    {
-      array_walk_recursive(self::$get, $escape_function);
+    if ($this->get) {
+      array_walk_recursive($this->get, $escape_function);
     }
   }
   
@@ -54,16 +52,15 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getPost($param = null) 
+  public function getPost($param = null)
   {
-	if(!$param)
-	{
-      return self::$post;
-	} elseif(isset(self::$post[$param])) {
-	  return self::$post[$param];
-	} else {
+    if (!$param) {
+      return $this->post;
+    } elseif (isset($this->post[$param])) {
+      return $this->post[$param];
+    } else {
       return null;
-	}
+    }
   }
   
   /**
@@ -71,25 +68,21 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return Array
    */
-  public static function getGet($param = null) 
+  public function getGet($param = null)
   {
-    if($param)
-    {
-      if(isset(self::$get[$param]))
-      {
-        return self::$get[$param];
-      } else {
-        return null;
-      }
-    } else {
-      return self::$get;
+    if (!$param) {
+      return $this->get;
     }
+    if (!isset($this->get[$param])) {
+      return null;
+    }
+    return $this->get[$param];
   }
   
   /**
    * Returns method
    */
-  public static function getMethod()
+  public function getMethod()
   {
     return $_SERVER['REQUEST_METHOD'];  
   }
@@ -101,27 +94,27 @@ class CoreRequest implements CoreInterfaceRequest {
    */
   public function setFakeRequest($get, $post)
   {
-    $data = array('get' => self::$get, 'post' => $post, 'mode' => $this->getExecutingMode());
-    if(!self::$save)
-    {
-      self::$save = array($data);
+    $data = array('get' => $this->get, 'post' => $post, 'mode' => $this->getExecutingMode());
+    if (!$this->save) {
+      $this->save = array($data);
     } else {
-      self::$save[] = $data;
+      $this->save[] = $data;
     }
-    self::$get = $get;
-    self::$post = $post;
-    self::$executingMode = self::EXECUTE_MODE_HTTP_SUBQUERY;
+    $this->get = $get;
+    $this->post = $post;
+    $this->executingMode = self::EXECUTE_MODE_HTTP_SUBQUERY;
+    return $this;
   }
   
   public function restoreRequest()
   {
-    if(self::$save)
-    {
-      $data = array_pop(self::$save);
-      self::$get = $data['get'];
-      self::$post = $data['post'];
-      self::$executingMode = $data['mode'];
+    if ($this->save) {
+      $data = array_pop($this->save);
+      $this->get = $data['get'];
+      $this->post = $data['post'];
+      $this->executingMode = $data['mode'];
     }
+    return $this;
   }
   
   /**
@@ -129,23 +122,19 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return string
    */
-  public static function getExecutingMode() 
+  public function getExecutingMode()
   {
-    if(!self::$executingMode) 
-    {
-      if(isset(self::$get[self::PARAM_AJAX]) && isset(self::$get[self::PARAM_AJAX_HTML]))
-      {
-        self::$executingMode = self::EXECUTE_MODE_HTTP_AJAX;
-	  } elseif(isset(self::$get[self::PARAM_AJAX]) && !isset(self::$get[self::PARAM_AJAX_HTML])) {
-		  
-        self::$executingMode = self::EXECUTE_MODE_AJAX;
-		
+    if (!$this->executingMode) {
+      if (isset($this->get[self::PARAM_AJAX]) && isset($this->get[self::PARAM_AJAX_HTML])) {
+        $this->executingMode = self::EXECUTE_MODE_HTTP_AJAX;
+	    } elseif (isset($this->get[self::PARAM_AJAX]) && !isset($this->get[self::PARAM_AJAX_HTML])) {
+        $this->executingMode = self::EXECUTE_MODE_AJAX;
       } else {
         // if no mode setted, let it be HTTP
-        self::$executingMode = self::EXECUTE_MODE_HTTP;
+        $this->executingMode = self::EXECUTE_MODE_HTTP;
       }
     }
-    return self::$executingMode;
+    return $this->executingMode;
   }
   
   
@@ -154,9 +143,12 @@ class CoreRequest implements CoreInterfaceRequest {
    *
    * @return string
    */
-  public static function getRemoteAddress() 
+  public function getRemoteAddress()
   {
-    return (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && !empty($_SERVER["HTTP_X_FORWARDED_FOR"])) ? $_SERVER["HTTP_X_FORWARDED_FOR"] : $_SERVER["REMOTE_ADDR"];
+    return
+      (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && !empty($_SERVER["HTTP_X_FORWARDED_FOR"]))
+        ? $_SERVER["HTTP_X_FORWARDED_FOR"]
+        : $_SERVER["REMOTE_ADDR"];
   }
   
   /**
@@ -164,24 +156,24 @@ class CoreRequest implements CoreInterfaceRequest {
    *
    * @return string
    */
-  public static function getUri() 
+  public function getUri()
   {
-    if(isset($_SERVER["REQUEST_URI"])) 
-    {
+    if (isset($_SERVER["REQUEST_URI"])) {
       $uri = parse_url($_SERVER["REQUEST_URI"]);
       return ($uri["path"] == "/" ? $uri["path"] : rtrim($uri["path"], "/")) . (isset($uri["query"]) ? "?" . $uri["query"] : "");
     } else {
       return "";
     }
   }
+
   /**
    * Get URI of the request (without server adress)
    *
    * @return string
    */
-  public static function getDocUri() 
+  public function getDocUri()
   {
-    if(isset($_SERVER["DOCUMENT_URI"])) 
+    if (isset($_SERVER["DOCUMENT_URI"])) 
     {
       return $_SERVER["DOCUMENT_URI"];
     } else {
@@ -189,29 +181,25 @@ class CoreRequest implements CoreInterfaceRequest {
     }
   }
   
-  public static function getValue($name)
+  public function getValue($name)
   {
-    if(isset($_REQUEST[$name]))
-    {
+    if (isset($_REQUEST[$name])) {
       return $_REQUEST[$name];
     } else {
       return null;
     }
   }
   
-  public static function getParameter($name)
+  public function getParameter($name)
   {
-    if(!is_null($val = self::getPost($name)))
-    {
+    if (!is_null($val = $this->getPost($name))) {
       return $val;
     }
-    if(!is_null($val = self::getGet($name)))
-    {
+    if (!is_null($val = $this->getGet($name))) {
       return $val;
     }
-	if(isset(self::$add) && isset(self::$add[$name]))
-    {
-      return self::$add[$name];
+	  if (isset($this->add) && isset($this->add[$name])) {
+      return $this->add[$name];
     }
     return null;
   }
@@ -222,10 +210,9 @@ class CoreRequest implements CoreInterfaceRequest {
    * @param type $name
    * @return null 
    */
-  public static function getSession($name) 
+  public function getSession($name)
   {
-    if(isset($_SESSION[$name]))
-    {
+    if (isset($_SESSION[$name])) {
       return $_SESSION[$name];
     } else {
       return null;
@@ -238,10 +225,9 @@ class CoreRequest implements CoreInterfaceRequest {
    * @param type $name
    * @param type $value 
    */
-  public static function setSession($name, $value) 
+  public function setSession($name, $value)
   {
-    if($value === null) 
-    {
+    if ($value === null) {
       unset($_SESSION[$name]);
     } else {
       $_SESSION[$name] = $value;
@@ -252,7 +238,7 @@ class CoreRequest implements CoreInterfaceRequest {
    * unsets SESSION value
    * @param type $name 
    */
-  public static function deleteSession($name) 
+  public function deleteSession($name)
   {
     unset($_SESSION[$name]);
   }
@@ -263,10 +249,9 @@ class CoreRequest implements CoreInterfaceRequest {
    * @param type $name
    * @return null 
    */
-  public static function getCookie($name) 
+  public function getCookie($name)
   {
-    if(isset($_COOKIE[$name]))
-    {
+    if (isset($_COOKIE[$name])) {
       return $_COOKIE[$name];
     } else {
       return null;
@@ -278,8 +263,10 @@ class CoreRequest implements CoreInterfaceRequest {
    * 
    * @return string 
    */
-  public static function getReferer() {
-    return isset($_REQUEST["__referer"]) ? $_REQUEST["__referer"] : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");
+  public function getReferer() {
+    return isset($_REQUEST["__referer"])
+      ? $_REQUEST["__referer"]
+      : (isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : "");
   }
 
   /**
@@ -287,10 +274,10 @@ class CoreRequest implements CoreInterfaceRequest {
    *
    * @return type 
    */
-  public static function getHost() {
-    return isset($_SERVER["HTTP_X_FORWARDED_HOST"]) ? $_SERVER["HTTP_X_FORWARDED_HOST"] : (isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "");
+  public function getHost() {
+    return isset($_SERVER["HTTP_X_FORWARDED_HOST"])
+      ? $_SERVER["HTTP_X_FORWARDED_HOST"]
+      : (isset($_SERVER["HTTP_HOST"]) ? $_SERVER["HTTP_HOST"] : "");
   }
 
 }
-
-?>

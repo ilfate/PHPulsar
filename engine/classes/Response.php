@@ -66,23 +66,20 @@ abstract class CoreResponse implements CoreInterfaceResponse
   
   
   
-  public function setHeaders() {
+  public function setHeaders()
+  {
     $protocol = isset($_SERVER["SERVER_PROTOCOL"]) ? $_SERVER["SERVER_PROTOCOL"] : "HTTP/1.0";
 		header($protocol . " " . $this->statusCode . " " . self::$statusTexts[$this->statusCode]);
     
     $headers = Runtime::getNewHeaders();
-    if($headers)
-    {
-      foreach ($headers as $name => $value) 
-      {
+    if ($headers) {
+      foreach ($headers as $name => $value) {
         header($name . ": " . $value);
       }
     }
     $cookies = Runtime::getNewCookies();
-    if($cookies)
-    {
-      foreach ($cookies as $cookie) 
-      {
+    if ($cookies) {
+      foreach ($cookies as $cookie) {
         setrawcookie($cookie["name"], $cookie["value"], $cookie["expire"], $cookie["path"], $cookie["domain"], $cookie["secure"], $cookie["httpOnly"]);
       }
     }
@@ -90,6 +87,3 @@ abstract class CoreResponse implements CoreInterfaceResponse
     return $headers;
   }
 }
-
-
-?>

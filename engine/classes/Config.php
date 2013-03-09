@@ -21,7 +21,7 @@ class CoreConfig {
 
   public function init($config)
   {
-    if(!$this->defaultConfig) {
+    if (!$this->defaultConfig) {
       $this->defaultConfig = $config;
     } else {
       throw new CoreException_ConfigError('Here we got problems with attempt of second init');
@@ -36,18 +36,18 @@ class CoreConfig {
    */
   public function get($name, $type = null)
   {
-    if(is_null($type)) {
+    if (is_null($type)) {
       $type = self::DEFAULT_TYPE;
     }
 
-    if(empty($this->$type)) {
+    if (empty($this->$type)) {
       $this->$type = require self::CONFIGS_PATH . 'config.' . $type . '.php';
-      if(empty($this->$type)) {
+      if (empty($this->$type)) {
         throw new CoreException_ConfigError('One wants to get wrong Config type here...');
       }
     }
     $config = $this->$type;
-    if(empty($config[$name])) {
+    if (empty($config[$name])) {
       return null;
     }
     return $config[$name];

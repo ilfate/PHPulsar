@@ -15,5 +15,3 @@ abstract class CoreProvider implements CoreInterfaceProvider
   
 }
 
-
-?>

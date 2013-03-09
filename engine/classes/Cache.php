@@ -28,10 +28,7 @@ class CoreCache {
   {
     $cache = self::getMemCache();
     $servers = self::getServers();
-    if($servers)
-    {
-      
-    } else {
+    if (!$servers) {
       $cache->addServer('localhost', 11211);
     }
   }
@@ -44,15 +41,11 @@ class CoreCache {
    */
   protected static function getMemCache()
   {
-    if(self::$cache !== null)
-    {
+    if (self::$cache !== null) {
       return self::$cache;
-    }
-    else
-    {
+    } else {
       $extension = self::MEMCACHED;
-      if(!extension_loaded($extension))
-      {
+      if (!extension_loaded($extension)) {
         throw new CoreException_CacheError('Cache requires PHP ' . $extension . ' extension to be loaded');
       }
       self::$cache = new Memcached;
@@ -76,13 +69,11 @@ class CoreCache {
    */
   protected static function processKey($key)
   {
-    if(empty(self::$preffix))
-    {
+    if (empty(self::$preffix)) {
       $config = Service::getConfig();
       self::$preffix = $config->get('cache_preffix') ?: $config->get('site_url');
     }
-    if(strstr($key, self::$preffix) == $key)
-    {
+    if (strstr($key, self::$preffix) == $key) {
       return $key;
     }
     return self::$preffix . '_' . $key;
@@ -96,8 +87,7 @@ class CoreCache {
   public static function get($key)
   {
     $key = self::processKey($key);
-    if(!isset(self::$local[$key])) 
-    {
+    if (!isset(self::$local[$key])) {
       self::$local[$key] = self::$cache->get($key);
     } 
     return self::$local[$key];
@@ -113,32 +103,29 @@ class CoreCache {
   public static function set($key, $value, $expire = 0, array $tags = null)
   {
     $key = self::processKey($key);
-    if($expire>0)
-    {
+    if ($expire>0) {
       $expire+=time();
     } else {
       $expire=0;
     }
-    if($tags)
-    {
+    if ($tags) {
       $need_to_set = array();
-      foreach ($tags as $tag) // Try to append keys if tag exists
-      {
+      foreach ($tags as $tag) {
+        // Try to append keys if tag exists
         $tag = self::processKey($tag);
-        if (!self::$cache->append("__tag__" . $tag, "||" . $key)) 
-        {
+        if (!self::$cache->append("__tag__" . $tag, "||" . $key)) {
           $need_to_set["__tag__" . $tag] = $key;
         }
       }
-      if (!empty($need_to_set)) // Creating tags that are not exists
-      {
-          self::$cache->setMulti($need_to_set);
+      if (!empty($need_to_set)) {
+        // Creating tags that are not exists
+        self::$cache->setMulti($need_to_set);
       }
     }
     
     self::$local[$key] = $value;
     
-  return self::$cache->set($key, $value, $expire);
+    return self::$cache->set($key, $value, $expire);
   }
   
   /**
@@ -151,32 +138,28 @@ class CoreCache {
   public static function add($key, $value, $expire, array $tags = null)
   {
     $key = self::processKey($key);
-    if($expire>0)
-    {
+    if ($expire>0) {
       $expire+=time();
     } else {
       $expire=0;
     }
     
-    if($tags)
-    {
+    if ($tags) {
       $need_to_set = array();
-      foreach ($tags as $tag) // Try to append keys if tag exists
-      {
+      foreach ($tags as $tag) {
+        // Try to append keys if tag exists
         $tag = self::processKey($tag);
-        if (!self::$cache->append("__tag__" . $tag, "||" . $key)) 
-        {
+        if (!self::$cache->append("__tag__" . $tag, "||" . $key)) {
           $need_to_set["__tag__" . $tag] = $key;
         }
       }
-      if (!empty($need_to_set)) // Creating tags that are not exists
-      {
+      if (!empty($need_to_set)) {
+        // Creating tags that are not exists
           self::$cache->setMulti($need_to_set);
       }
     }
     
-    if(!isset(self::$local[$key]))
-    {
+    if (!isset(self::$local[$key])) {
       self::$local[$key] = $value;
     }
     return self::$cache->add($key, $value, $expire);
@@ -190,8 +173,7 @@ class CoreCache {
   public static function delete($key)
   {
     $key = self::processKey($key);
-    if(isset(self::$local[$key])) 
-    {
+    if (isset(self::$local[$key])) {
       unset(self::$local[$key]);
     }
     return self::$cache->delete($key, 0);
@@ -207,11 +189,9 @@ class CoreCache {
   {
     $tag = self::processKey($tag);
     $keys = self::$cache->get("__tag__" . $tag);
-    if ($keys) 
-    {
+    if ($keys) {
       $keys = explode("||", $keys);
-      foreach ($keys as $key) 
-      {
+      foreach ($keys as $key) {
         self::delete($key);
       }
       self::delete("__tag__" . $tag);
@@ -221,15 +201,14 @@ class CoreCache {
     }
     return $result;
   }
-  
-  
+
+  /**
+   * Flushes all cache
+   * @return mixed
+   */
   public static function flush()
   {
     self::$local = array();
     return self::$cache->flush();
   }
-  
-  
 }
-
-?>

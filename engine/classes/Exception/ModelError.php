@@ -14,6 +14,3 @@ class CoreException_ModelError extends CoreException_Error
   
 }
 
-
-
-?>

@@ -31,8 +31,7 @@ class CoreFrontController
   public function callPreExecution()
   {
     $services = $this->getControllers();
-    foreach ($services as $service)
-    {
+    foreach ($services as $service) {
       
       $service::preExecute();
     }
@@ -41,8 +40,7 @@ class CoreFrontController
   public function callPostExecution()
   {
     $services = $this->getControllers();
-    foreach ($services as $service)
-    {
+    foreach ($services as $service) {
       $service::postExecute();
     }
   }
@@ -50,31 +48,11 @@ class CoreFrontController
   
   private function getControllers()
   {
-    if(!$this->controllers)
-    {
+    if (!$this->controllers) {
       $list = Service::getConfig()->get('list', 'frontController');
       foreach ($list as $name) {
         $this->controllers[] = self::SERVICES_PREFIX . $name;
       }
-
-//      class_exists('Cache');
-//      $cached = Cache::get(self::CACHE_KEY);
-//      if(!$cached) {
-//        $iterator = new GlobIterator(ILFATE_PATH . self::SERVICES_PATH . '*.php');
-//        $filelist = array();
-//        foreach($iterator as $entry)
-//        {
-//          $name = self::SERVICES_PREFIX . substr($entry->getFilename(), 0, -4);
-//          $filelist[$name] = $name::PRIORITY;
-//          // keys are names and values are priority indexs for sorting
-//        }
-//        asort($filelist);
-//
-//        $this->controllers = array_keys($filelist);
-//        Cache::set(self::CACHE_KEY, $this->controllers, 36000);
-//      } else {
-//        $this->controllers = $cached;
-//      }
     }
     return $this->controllers;
   }
@@ -83,5 +61,3 @@ class CoreFrontController
   
 }
 
-
-?>

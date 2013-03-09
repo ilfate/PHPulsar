@@ -13,13 +13,6 @@
  */
 class CoreResponse_HttpAjax extends CoreResponse 
 {
-      
-  /**
-   *
-   * @var CoreInterfaceRouting 
-   */
-  private $routing;
-  
   /**
    *
    * @var CoreInterfaceView 
@@ -42,37 +35,26 @@ class CoreResponse_HttpAjax extends CoreResponse
   /**
    * 
    * @param array                    $result
-   * @param CoreInterfaceRouting     $routing
    */
-  public function __construct($result, CoreInterfaceRouting $routing, CoreInterfaceView $view = null) 
+  public function __construct($result, CoreInterfaceView $view = null)
   {
-    $this->routing = $routing;
-    if(!is_array($result))
-    {
+    if (!is_array($result)) {
       throw new CoreException_ResponseHttpError('Returned content of type Array expected');
     }
-	$this->view = $view;
-     
+	  $this->view = $view;
     $this->result = $result;
   }
-  
-  
+
   /**
    * returns content
    */
   public function getContent() 
   {
-    if(!$this->content) 
-    {
+    if (!$this->content) {
       $tpl = isset($this->result['tpl']) ? $this->result['tpl'] : '';
       $this->content = $this->view->render($tpl, $this->result, array());
     }
     return $this->content;
   }
-
-  
-  
 }
 
-
-?>

@@ -14,4 +14,3 @@ class ModuleCache extends CoreCache {
     
 }
 
-?>

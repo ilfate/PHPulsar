@@ -15,5 +15,3 @@ class CoreException_ResponseHttpError extends CoreException_Error
 }
 
 
-
-?>

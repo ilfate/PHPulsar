@@ -14,6 +14,3 @@ abstract class CoreView implements CoreInterfaceView
 {
 
 }
-
-
-?>

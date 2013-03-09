@@ -68,11 +68,11 @@ class CoreLogger
   public static function dump($data, $mode = 'auto', $file = null)
   {
     if (
-      Request::getExecutingMode() != Request::EXECUTE_MODE_CLI
+      Service::getRequest()->getExecutingMode() != Request::EXECUTE_MODE_CLI
       && ( $mode != 'file' && Service::getConfig()->get('is_dev') )
     ) {
       self::outputData($data);
-    } else if($mode == 'file' || (Request::getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {
+    } else if($mode == 'file' || (Service::getRequest()->getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {
       self::saveToFile($data, $file);
     }   
   }
