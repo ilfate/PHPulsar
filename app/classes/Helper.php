@@ -10,7 +10,7 @@
  *
  * @author ilfate
  */
-class Helper extends CoreHelper
+class Helper extends Helper
 {
   
  

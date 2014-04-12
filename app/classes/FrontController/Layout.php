@@ -11,7 +11,7 @@
  *
  * @author ilfate
  */
-class FrontController_Layout implements CoreInterfaceFrontController
+class FrontController_Layout implements InterfaceFrontController
 {
   const PRIORITY = 70;
   
@@ -36,8 +36,8 @@ class FrontController_Layout implements CoreInterfaceFrontController
     if (Service::getRequest()->getExecutingMode() == Request::EXECUTE_MODE_HTTP)
     {
       $access_restricted = Service::getRequest()->getGet('access_restricted');
-      CoreView_Http::setGlobal('page_title', 'Ilfate');
-      CoreView_Http::setGlobal('access_restricted', $access_restricted);
+      Http::setGlobal('page_title', 'Ilfate');
+      Http::setGlobal('access_restricted', $access_restricted);
 
       /**
        * Menu handler 
@@ -59,7 +59,7 @@ class FrontController_Layout implements CoreInterfaceFrontController
       if(isset(self::$menu[$active_menu])) {
         self::$menu[$active_menu]['active'] = true;
       }
-      CoreView_Http::setGlobal('ilfate_menu', self::$menu);
+      Http::setGlobal('ilfate_menu', self::$menu);
 
       /**
        * Messages handler 

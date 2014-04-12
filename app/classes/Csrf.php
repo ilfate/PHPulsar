@@ -71,7 +71,7 @@ class Csrf {
     }    
     $csrf = explode("||", mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5(Csrf::$csrf_key), $csrf, MCRYPT_MODE_ECB));
     if (sizeof($csrf) != 2 || $csrf[0] != $id || time() - (int) $csrf[1] > Csrf::$life) {
-      throw new CoreException_Error('CSRF Attack detected.');
+      throw new Error('CSRF Attack detected.');
       return false;
     }
     return true;

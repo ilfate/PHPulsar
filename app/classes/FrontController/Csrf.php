@@ -11,7 +11,7 @@
  *
  * @author ilfate
  */
-class FrontController_Csrf implements CoreInterfaceFrontController
+class FrontController_Csrf implements InterfaceFrontController
 {
   const PRIORITY = 80;
   
@@ -19,7 +19,7 @@ class FrontController_Csrf implements CoreInterfaceFrontController
   {
     if (Service::getRequest()->getMethod() == "POST") {
       if (!Csrf::check()) {
-		    throw new CoreException_Error('No CSRF token found');
+		    throw new Error('No CSRF token found');
 	    }
     }
   }

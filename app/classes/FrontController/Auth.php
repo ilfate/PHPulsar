@@ -11,7 +11,7 @@
  *
  * @author ilfate
  */
-class FrontController_Auth implements CoreInterfaceFrontController
+class FrontController_Auth implements InterfaceFrontController
 {
   const SESSION_AUTH_KEY          = 'user_auth';
   const SESSION_AUTH_KEY_EXPIRES  = 3600;

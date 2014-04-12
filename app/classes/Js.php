@@ -70,7 +70,7 @@ Class Js
         if(!isset(self::$events[$eve])) self::$events[$eve] = array();
         self::$events[$eve][] = $js . ';';
       } else {  
-        throw new CoreException_Error('Error on attempt to add JS code to an unexisting event named: '.$eve);
+        throw new Error('Error on attempt to add JS code to an unexisting event named: '.$eve);
       }
     }
     

@@ -10,7 +10,7 @@
  *
  * @author ilfate
  */
-class Controller extends CoreCachingClass
+class Controller extends CachingClass
 {
   public static $layout = array('html.tpl', 'head.tpl', 'layout.tpl');
  

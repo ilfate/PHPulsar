@@ -3,8 +3,8 @@
   <title><?= $page_title ?></title>
  
   
-  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" >
-  <link rel="stylesheet" href="/bootstrap/css/bootstrap-responsive.min.css" type="text/css" media="screen" >
+  <link rel="stylesheet" href="/libs/bootstrap/css/bootstrap.min.css" type="text/css" media="screen" >
+  <link rel="stylesheet" href="/libs/bootstrap/css/bootstrap-responsive.min.css" type="text/css" media="screen" >
   
   <link rel="stylesheet" href="/css/main.css" type="text/css" />
   
@@ -13,8 +13,8 @@
 </head>
 <body>
   
-  <script type="text/javascript" src="/js/jquery-1.8.2.min.js"></script>
-  <script type="text/javascript" src="/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/libs/jquery/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="/libs/bootstrap/js/bootstrap.min.js"></script>
   
   <script type="text/javascript" src="/js/events.js"></script>
   
