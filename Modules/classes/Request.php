@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\Request;
-
 /**
  * Description of CoreRouting
  *
  * @author ilfate
  */
-class ModuleRequest extends Request
+class Request extends \Core\Request
 {
 
 }

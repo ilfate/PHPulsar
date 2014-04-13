@@ -9,7 +9,6 @@ namespace Modules;
 
 use Core\Exception\Error;
 use Core\Exception\RoutingError;
-use Core\Routing;
 use Core\Service;
 
 /**
@@ -17,9 +16,8 @@ use Core\Service;
  *
  * @author ilfate
  */
-class ModuleRouting extends Routing
+class Routing extends \Core\Routing
 {
-
     /**
      * Main executing method.
      * Will find a class and method for execution

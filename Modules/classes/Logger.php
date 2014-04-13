@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\Logger;
-
 /**
  * Description of ModuleLogger
  *
  * @author ilfate
  */
-class ModuleLogger extends Logger
+class Logger extends \Core\Logger
 {
   
 }

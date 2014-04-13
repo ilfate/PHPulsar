@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\FrontController;
-
 /**
  * Description of ModuleFrontController
  *
  * @author ilfate
  */
-class ModuleFrontController extends FrontController
+class FrontController extends \Core\FrontController
 {
   
 }

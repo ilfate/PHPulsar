@@ -7,9 +7,7 @@
 
 namespace Modules;
 
-use Core\Config;
-
-class ModuleConfig extends Config
+class Config extends \Core\Config
 {
 
 }

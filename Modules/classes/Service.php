@@ -7,13 +7,11 @@
 
 namespace Modules;
 
-use Core\Service;
-
 /**
  * Class ModuleService
  * @package Modules
  */
-class ModuleService extends Service
+class Service extends \Core\Service
 {
 
 }

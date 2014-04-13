@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\Model;
-
 /**
  * Description of ModuleModel
  *
  * @author ilfate
  */
-class ModuleModel extends Model
+class Model extends \Core\Model
 {
 
     public static function __staticConstruct()

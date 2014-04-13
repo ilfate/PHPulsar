@@ -3,19 +3,19 @@
 
 return array(
 
-  'Service'  => 'CoreService',
+  'Service'  => '\Core\Service',
   'Response' => array(
-    'abstract'      => 'CoreResponse',
-    'http'          => 'CoreResponse_Http',
-    'subquery'      => 'CoreResponse_Http',
-    'ajax'          => 'CoreResponse_Ajax',
-    'http_ajax'     => 'CoreResponse_HttpAjax',
+    'abstract'      => '\Core\Response',
+    'http'          => '\Core\Response\Http',
+    'subquery'      => '\Core\Response\Http',
+    'ajax'          => '\Core\Response\Ajax',
+    'http_ajax'     => '\Core\Response\HttpAjax',
   ),
   'View'                       => array(
-    'abstract'      => 'CoreView',
-    'http'          => 'CoreView_Http',
-    'http_ajax'     => 'CoreView_Http',
-    'subquery'      => 'CoreView_Http',
+    'abstract'      => '\Core\View',
+    'http'          => '\Core\View\Http',
+    'http_ajax'     => '\Core\View\Http',
+    'subquery'      => '\Core\View\Http',
   ),
 
   'log_sql'   => true,
@@ -24,7 +24,7 @@ return array(
   'site_url'  => 'php_engine.ru',
   'default_language' => 'EN',
 
-  'CoreProvider_PDOmysql' => array(
+  '\Core\Provider\PDOmysql' => array(
     'dbname' => 'ilfate',
     'host'   => 'localhost',
     'login'  => 'root',

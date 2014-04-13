@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\Cache;
-
 /**
  * Cache class
  *
  * @author ilfate
  */
-class ModuleCache extends Cache
+class Cache extends \Core\Cache
 {
 
 }

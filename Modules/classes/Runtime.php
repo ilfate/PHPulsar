@@ -7,14 +7,12 @@
 
 namespace Modules;
 
-use Core\Runtime;
-
 /**
  * Description of CoreRuntime
  *
  * @author ilfate
  */
-class ModuleRuntime extends Runtime
+class Runtime extends \Core\Runtime
 {
 
 }
