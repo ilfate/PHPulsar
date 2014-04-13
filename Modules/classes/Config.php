@@ -5,7 +5,11 @@
  * 2013
  */
 
+namespace Modules;
 
-class ModuleConfig extends CoreConfig{
+use Core\Config;
+
+class ModuleConfig extends Config
+{
 
 }

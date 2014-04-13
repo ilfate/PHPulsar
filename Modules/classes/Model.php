@@ -5,18 +5,21 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\Model;
+
 /**
  * Description of ModuleModel
  *
  * @author ilfate
  */
-class ModuleModel extends CoreModel{
-  
-  public static function __staticConstruct()
-  {
-    
-    
-  } 
-  
-  
+class ModuleModel extends Model
+{
+
+    public static function __staticConstruct()
+    {
+
+    }
+
 }

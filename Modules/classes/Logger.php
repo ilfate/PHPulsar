@@ -5,13 +5,16 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\Logger;
+
 /**
- * Description of CoreRuntime
+ * Description of ModuleLogger
  *
  * @author ilfate
  */
-class ModuleRuntime extends CoreRuntime
+class ModuleLogger extends Logger
 {
-
+  
 }
-

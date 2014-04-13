@@ -5,11 +5,17 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\Cache;
+
 /**
- * Description of CoreRouting
+ * Cache class
  *
  * @author ilfate
  */
-class ModuleRequest extends CoreRequest {
+class ModuleCache extends Cache
+{
 
 }
+

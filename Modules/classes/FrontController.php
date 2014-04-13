@@ -5,12 +5,16 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\FrontController;
+
 /**
  * Description of ModuleFrontController
  *
  * @author ilfate
  */
-class ModuleFrontController extends CoreFrontController
+class ModuleFrontController extends FrontController
 {
   
 }

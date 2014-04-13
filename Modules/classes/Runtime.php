@@ -5,12 +5,17 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\Runtime;
+
 /**
- * Cache class 
+ * Description of CoreRuntime
  *
  * @author ilfate
  */
-class ModuleCache extends CoreCache {
-    
+class ModuleRuntime extends Runtime
+{
+
 }
 

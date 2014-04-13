@@ -5,12 +5,16 @@
  * 2012
  */
 
+namespace Modules;
+
+use Core\Request;
+
 /**
- * Description of ModuleLogger
+ * Description of CoreRouting
  *
  * @author ilfate
  */
-class ModuleLogger extends CoreLogger
+class ModuleRequest extends Request
 {
-  
+
 }
