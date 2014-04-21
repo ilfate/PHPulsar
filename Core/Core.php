@@ -62,7 +62,7 @@ class Core
 
         session_start();
 
-        include ILFATE_PATH . '/engine/functions.php';
+        include ILFATE_PATH . '/Core/functions.php';
         spl_autoload_register('ilfate_autoloader');
 
         // Here we create config object

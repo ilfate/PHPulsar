@@ -31,9 +31,9 @@ if(!defined('HTTP_ROOT'))
 }
 
 // include main engine class
-require 'Core/classes/Core.php';
+require 'Core/Core.php';
 // and initialize it
-Core::init();
+Core\Core::init();
 
 
 
