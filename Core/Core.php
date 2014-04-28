@@ -63,7 +63,13 @@ class Core
         session_start();
 
         include ILFATE_PATH . '/Core/functions.php';
-        spl_autoload_register('ilfate_autoloader');
+        //spl_autoload_register('ilfate_autoloader');
+        $classLoader = new SplClassLoader('Core', ILFATE_PATH . 'Core');
+        $classLoader->register();
+        $classLoader = new SplClassLoader('App', ILFATE_PATH . 'App');
+        $classLoader->register();
+        $classLoader = new SplClassLoader('Modules', ILFATE_PATH . 'Modules');
+        $classLoader->register();
 
         // Here we create config object
         class_exists('Service');
