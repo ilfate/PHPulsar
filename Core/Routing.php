@@ -9,6 +9,7 @@ namespace Core;
 
 use Core\Exception\Error;
 use Core\Exception\RoutingError;
+use Core\Interfaces\Request as RequestInteface;
 use Core\Interfaces\Routing as RoutingInterface;
 
 /**
@@ -36,7 +37,7 @@ class Routing implements RoutingInterface
     /**
      * prefix witch we will add to all route class to call
      */
-    const CLASS_PREFIX = 'Controller_';
+    const CLASS_PREFIX = '\App\Controller\\';
 
     const DEFAULT_CLASS  = 'Main';
     const DEFAULT_METHOD = 'index';
@@ -47,7 +48,7 @@ class Routing implements RoutingInterface
      */
     private static $request;
 
-    public function __construct(Request $request)
+    public function __construct(RequestInteface $request)
     {
         self::$request = $request;
     }
@@ -61,14 +62,14 @@ class Routing implements RoutingInterface
      * returns executing class name
      *
      * @return String
-     * @throws CoreRoutingError
+     * @throws RoutingError
      */
     public function getClass()
     {
         if ($this->class) {
             return $this->class;
         } else {
-            throw new CoreException_RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
+            throw new RoutingError('Error on attempt to get Routing class. Routing hasint beed executed yet');
         }
     }
 
@@ -76,7 +77,7 @@ class Routing implements RoutingInterface
      * returns executing class name
      *
      * @return String
-     * @throws CoreRoutingError
+     * @throws RoutingError
      */
     public function getPrefixedClass()
     {
@@ -87,14 +88,14 @@ class Routing implements RoutingInterface
      * returns executing metod name
      *
      * @return String
-     * @throws CoreRoutingError$prefixed_class
+     * @throws RoutingError $prefixed_class
      */
     public function getMethod()
     {
         if ($this->method) {
             return $this->method;
         } else {
-            throw new CoreException_RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
+            throw new RoutingError('Error on attempt to get Routing method. Routing hasint beed executed yet');
         }
     }
 

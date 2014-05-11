@@ -21,7 +21,7 @@ class Config
     protected $defaultConfig;
 
     const DEFAULT_TYPE = 'defaultConfig';
-    const CONFIGS_PATH = 'app/config/';
+    const CONFIGS_PATH = 'App/config/';
 
     public function init($config)
     {

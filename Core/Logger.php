@@ -31,7 +31,7 @@ class Logger
     protected static $is_file_logging_enabled = true;
 
     protected static $log_file = 'CoreLog.log';
-    protected static $log_path = '';
+    protected static $log_path = 'logs/';
 
     protected static $is_day_logging = false;
 

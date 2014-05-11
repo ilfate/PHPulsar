@@ -17,8 +17,8 @@ class FrontController
 {
     const PRIORITY = 1;
 
-    const SERVICES_PREFIX = 'FrontController_';
-    const SERVICES_PATH   = 'app/classes/FrontController/';
+    const SERVICES_PREFIX = '\App\FrontController\\';
+    const SERVICES_PATH   = 'App/FrontController/';
 
     const CACHE_KEY = 'CoreServiceExecutersList_Engine';
 

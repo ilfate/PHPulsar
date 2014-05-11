@@ -62,17 +62,18 @@ class Core
 
         session_start();
 
+        include ILFATE_PATH . '/Core/SplClassLoader.php';
         include ILFATE_PATH . '/Core/functions.php';
         //spl_autoload_register('ilfate_autoloader');
-        $classLoader = new SplClassLoader('Core', ILFATE_PATH . 'Core');
+        $classLoader = new SplClassLoader('Core', ILFATE_PATH);
         $classLoader->register();
-        $classLoader = new SplClassLoader('App', ILFATE_PATH . 'App');
+        $classLoader = new SplClassLoader('App', ILFATE_PATH);
         $classLoader->register();
-        $classLoader = new SplClassLoader('Modules', ILFATE_PATH . 'Modules');
+        $classLoader = new SplClassLoader('Modules', ILFATE_PATH);
         $classLoader->register();
 
         // Here we create config object
-        class_exists('Service');
+        class_exists('\Core\Service');
         $config = Service::getConfig();
         $config->init(require 'config.php');
 
@@ -105,7 +106,8 @@ class Core
             $frontController = Service::getFrontController();
 
             // define routing class and method
-            $routing = Service::getRouting()->execute();
+            $routing = Service::getRouting();
+            $routing->execute();
 
             // here we execute services BEFORE main content
             $frontController->callPreExecution();

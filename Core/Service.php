@@ -13,6 +13,8 @@ namespace Core;
  */
 class Service
 {
+    /** @var  array */
+    protected static $storage = array();
 
     /**
      * @var Config
@@ -35,24 +37,24 @@ class Service
     private static $routing;
 
     /**
-     * @var Language
+     * @var \App\Language
      */
     private static $language;
 
     private static function getting($name, $params = null)
     {
-        if (empty(self::$$name)) {
+        if (empty(self::$storage[$name])) {
             $class_name = ucfirst($name);
             if (is_null($params)) {
-                self::$$name = new $class_name();
+                self::$storage[$name] = new $class_name();
             } elseif (count($params) == 1) {
-                self::$$name = new $class_name($params[0]);
+                self::$storage[$name] = new $class_name($params[0]);
             } else {
-                $reflection  = new \ReflectionClass($class_name);
-                self::$$name = $reflection->newInstanceArgs($params);
+                $reflection           = new \ReflectionClass($class_name);
+                self::$storage[$name] = $reflection->newInstanceArgs($params);
             }
         }
-        return self::$$name;
+        return self::$storage[$name];
     }
 
     /**
@@ -60,7 +62,7 @@ class Service
      */
     public static function getConfig()
     {
-        return self::getting('config');
+        return self::getting('Core\Config');
     }
 
     /**
@@ -68,7 +70,7 @@ class Service
      */
     public static function getFrontController()
     {
-        return self::getting('frontController');
+        return self::getting('Core\FrontController');
     }
 
     /**
@@ -76,7 +78,7 @@ class Service
      */
     public static function getRequest()
     {
-        return self::getting('request');
+        return self::getting('Core\Request');
     }
 
     /**
@@ -85,15 +87,15 @@ class Service
     public static function getRouting()
     {
         $params = func_get_args();
-        return self::getting('routing', $params);
+        return self::getting('Core\Routing', $params);
     }
 
     /**
-     * @return Language
+     * @return \App\Language
      */
     public static function getLanguage()
     {
-        return self::getting('language');
+        return self::getting('App\Language');
     }
 
 }
