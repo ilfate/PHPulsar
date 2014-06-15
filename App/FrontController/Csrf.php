@@ -21,7 +21,7 @@ class Csrf implements FrontController
 {
     const PRIORITY = 80;
 
-    public static function preExecute()
+    public function preExecute()
     {
         if (Service::getRequest()->getMethod() == "POST") {
             if (!\App\Csrf::check()) {
@@ -30,7 +30,7 @@ class Csrf implements FrontController
         }
     }
 
-    public static function postExecute()
+    public function postExecute()
     {
 
     }

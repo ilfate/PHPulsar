@@ -20,17 +20,6 @@ use App\Request;
  */
 class Main extends Controller
 {
-    /** @var \App\Logger */
-    protected $log;
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->log = \App\Logger::getInstance();
-    }
-
     /**
      *
      * @return array
@@ -105,8 +94,7 @@ class Main extends Controller
 
     public function flush()
     {
-        $cache = Cache::getInstance();
-        $cache->flush();
+        $this->cache->flush();
         Helper::redirect('Main', 'index');
     }
 }

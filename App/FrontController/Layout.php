@@ -41,7 +41,7 @@ class Layout implements FrontController
 
     private static $side_bars = array();
 
-    public static function preExecute()
+    public function preExecute()
     {
         if (Service::getRequest()->getExecutingMode() == Request::EXECUTE_MODE_HTTP) {
             $access_restricted = Service::getRequest()->getGet('access_restricted');
@@ -100,7 +100,7 @@ class Layout implements FrontController
         self::$side_bars[] = array($class, $method);
     }
 
-    public static function postExecute()
+    public function postExecute()
     {
 
     }

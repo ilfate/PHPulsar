@@ -14,9 +14,9 @@ namespace Core\Interfaces;
  */
 interface FrontController
 {
-    public static function preExecute();
+    public function preExecute();
 
-    public static function postExecute();
+    public function postExecute();
 
 }
 

@@ -47,7 +47,7 @@ class User extends Model
      *
      * @return \App\Model\User
      */
-    public static function createUserWithEmail($email, $password, $name)
+    public function createUserWithEmail($email, $password, $name)
     {
         $user       = array(
             'name'             => $name,
@@ -68,7 +68,7 @@ class User extends Model
      *
      * @return type
      */
-    public static function encodePassword($password)
+    public function encodePassword($password)
     {
         return sha1(self::PASS_SALT_PRE . $password . self::PASS_SALT);
     }
@@ -78,7 +78,7 @@ class User extends Model
      *
      * @return string
      */
-    public static function genCookie()
+    public function genCookie()
     {
         return md5(time() + mt_rand(10000, 99999));
     }
@@ -93,7 +93,7 @@ class User extends Model
      *
      * @return User
      */
-    public static function _getUserByEmailAndPassword($email, $password)
+    public function _getUserByEmailAndPassword($email, $password)
     {
         $pass = self::encodePassword($password);
         return self::getRecord(array('email' => $email, 'password' => $pass));
@@ -106,7 +106,7 @@ class User extends Model
      *
      * @return Boolean
      */
-    public static function isEmailExists($email)
+    public function isEmailExists($email)
     {
         $list = self::getFields(array('id'), array('email' => $email));
         return !!$list;
@@ -119,7 +119,7 @@ class User extends Model
      *
      * @return Boolean
      */
-    public static function isNameExists($name)
+    public function isNameExists($name)
     {
         $list = self::getFields(array('id'), array('name' => $name));
         return !!$list;

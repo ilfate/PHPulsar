@@ -28,6 +28,7 @@ class Auth extends Controller
     /** Constructor */
     public function __construct()
     {
+        parent::__construct();
         $this->userModel = User::getInstance();
     }
 

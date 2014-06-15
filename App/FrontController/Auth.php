@@ -53,7 +53,16 @@ class Auth implements FrontController
         'Game_Main' => array('index'),
     );
 
-    public static function preExecute()
+    /** @var User */
+    protected $userModel;
+
+    /** Constructor */
+    public function __construct()
+    {
+        $this->userModel = User::getInstance();
+    }
+
+    public function preExecute()
     {
         // try auth via session
         $request = Service::getRequest();
@@ -61,7 +70,7 @@ class Auth implements FrontController
             // if session exists
             if (time() < ($session['time'] + self::SESSION_AUTH_KEY_EXPIRES)) {
                 // if seesion if not expired
-                $user = User::getByPK($session['id']);
+                $user = $this->userModel->getByPK($session['id']);
                 if ($user) {
                     self::$current_user = $user;
                 }
@@ -69,7 +78,7 @@ class Auth implements FrontController
         }
         if (empty(self::$current_user) && $cookie = $request->getCookie(self::COOKIE_AUTH_KEY)) {
             // try auth via cookie
-            $user = User::getRecord(array('cookie' => $cookie));
+            $user = $this->userModel->getRecord(array('cookie' => $cookie));
             if ($user) {
                 self::$current_user = $user;
             }
@@ -83,7 +92,7 @@ class Auth implements FrontController
         }
     }
 
-    public static function postExecute()
+    public  function postExecute()
     {
     }
 

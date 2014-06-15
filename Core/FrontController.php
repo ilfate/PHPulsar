@@ -25,7 +25,7 @@ class FrontController
     /**
      * saved services
      *
-     * @var array
+     * @var \Core\Interfaces\FrontController[]
      */
     private $controllers;
 
@@ -33,8 +33,7 @@ class FrontController
     {
         $services = $this->getControllers();
         foreach ($services as $service) {
-
-            $service::preExecute();
+            $service->preExecute();
         }
     }
 
@@ -42,7 +41,7 @@ class FrontController
     {
         $services = $this->getControllers();
         foreach ($services as $service) {
-            $service::postExecute();
+            $service->postExecute();
         }
     }
 
@@ -51,7 +50,8 @@ class FrontController
         if (!$this->controllers) {
             $list = Service::getConfig()->get('list', 'frontController');
             foreach ($list as $name) {
-                $this->controllers[] = self::SERVICES_PREFIX . $name;
+                $class = self::SERVICES_PREFIX . $name;
+                $this->controllers[] = new $class();
             }
         }
         return $this->controllers;
