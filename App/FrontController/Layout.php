@@ -28,13 +28,13 @@ class Layout implements FrontController
     private static $menu = array(
         'main'     => array('class' => 'Main', 'method' => 'index', 'text' => 'Main'),
         'about_me' => array('class' => 'Main', 'method' => 'aboutMe', 'text' => 'About me'),
-        'game'     => array('class' => 'Game_Main', 'method' => 'index', 'text' => 'Game'),
+       // 'game'     => array('class' => 'Game_Main', 'method' => 'index', 'text' => 'Game'),
     );
     private static $menu_map = array(
         'Auth' => 'main',
         'Main' => array('index' => 'main', 'aboutMe' => 'about_me'),
         'Main' => 'about_me',
-        'Game' => 'game',
+       // 'Game' => 'game',
     );
 
     private static $default_menu = 'main';
