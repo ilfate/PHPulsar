@@ -45,7 +45,7 @@ abstract class Model extends CachingClass
      */
     public $primaryKey = 'id';
 
-    public $provider_type = 'CoreProvider_PDOmysql';
+    public $provider_type = '\Core\Provider\PDOmysql';
 
     /** @var Provider */
     protected $provider;

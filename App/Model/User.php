@@ -36,7 +36,7 @@ class User extends Model
     const PASS_SALT     = 'adG34gWe34hb';
     const PASS_SALT_PRE = 'cXs3';
 
-    public static $table_name = 'users';
+    public $table_name = 'users';
 
     /**
      * creates user by listed params

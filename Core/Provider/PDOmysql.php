@@ -42,7 +42,7 @@ class PDOmysql extends Provider
 
     public function __construct()
     {
-        $this->log = $this->log->getInstance();
+        $this->log = Logger::getInstance();
         $this->init();
     }
 
