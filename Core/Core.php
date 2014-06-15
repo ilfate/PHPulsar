@@ -16,54 +16,56 @@ use Core\Interfaces\Response;
  *
  * @author ilfate
  */
-class Core
+class Core extends AbstractFactory
 {
 
-    public static $engine_path = '/engine';
-    public static $app_path = '/app';
-    public static $modules_path = '/modules';
+    public $engine_path = '/engine';
+    public $app_path = '/app';
+    public $modules_path = '/modules';
 
     /**
      * An Array of all inited Views
      * @var array
      */
-    private static $views;
+    private $views;
 
     /**
      * shows is Core initialized
      * @var Boolean
      */
-    private static $inited = false;
+    private $inited = false;
 
     /**
      * keeps all initiaalized controllers
      *
      * @var array
      */
-    private static $stored_controllers = array();
+    private $stored_controllers = array();
+
+    /** @var Logger */
+    protected $log;
 
     /**
-     * we close it for singltone
+     * Core constructor
      */
-    private function __construct()
+    public function __construct()
     {
-        self::init();
     }
 
     /*
      * here we start to build all we need for our engine
      */
-    public static function init()
+    public function init()
     {
-        if (self::$inited) {
+        if ($this->inited) {
             die("Fatal error. Attempt to init Core second time");
         }
-        self::$inited = true;
+        $this->inited = true;
 
         session_start();
 
-        include ILFATE_PATH . '/Core/SplClassLoader.php';
-        include ILFATE_PATH . '/Core/functions.php';
+        include ILFATE_PATH . 'Core/SplClassLoader.php';
+        include ILFATE_PATH . 'Core/functions.php';
         //spl_autoload_register('ilfate_autoloader');
         $classLoader = new SplClassLoader('Core', ILFATE_PATH);
         $classLoader->register();
@@ -75,31 +77,29 @@ class Core
         // Here we create config object
         class_exists('\Core\Service');
         $config = Service::getConfig();
-        $config->init(require 'config.php');
+        $config->init(require ILFATE_PATH . 'config.php');
 
         $request = Service::getRequest();
         Service::getRouting($request);
 
+        $this->log = Logger::getInstance();
+
         // depends on Mode we can different types of execution
         switch ($request->getExecutingMode()) {
             case Request::EXECUTE_MODE_HTTP :
-            {
-                self::commonExecuting();
-            }
-                break;
+                $this->commonExecuting();
+            break;
             case Request::EXECUTE_MODE_HTTP_AJAX :
             case Request::EXECUTE_MODE_AJAX :
-            {
-                self::ajaxExecuting();
-            }
-                break;
+                $this->ajaxExecuting();
+            break;
         }
     }
 
     /**
      * Normal executing
      */
-    public static function commonExecuting()
+    public function commonExecuting()
     {
 
         try {
@@ -114,17 +114,17 @@ class Core
 
             $class    = $routing->getPrefixedClass();
             $method   = $routing->getMethod();
-            $obj      = self::getController($class);
-            $response = Core::initResponse($obj->$method());
+            $obj      = $this->getController($class);
+            $response = $this->initResponse($obj->$method());
 
             Runtime::setHttpHeader("Content-Type", "text/html; charset=utf-8");
             $response->setHeaders();
 
-            self::output($response);
+            $this->output($response);
             // here we execute services AFTER main content
             $frontController->callPostExecution();
         } catch (\Exception $e) {
-            Logger::dump($e->getMessage(), 'file', 'CoreError.log');
+            $this->log->dump($e->getMessage(), 'file', 'CoreError.log');
             if (Service::getConfig()->get('is_dev')) {
                 throw $e;
             } else {
@@ -137,7 +137,7 @@ class Core
     /**
      * Ajax executing
      */
-    public static function ajaxExecuting()
+    public function ajaxExecuting()
     {
         try {
             $frontController = Service::getFrontController();
@@ -150,17 +150,17 @@ class Core
 
             $class    = $routing->getPrefixedClass();
             $method   = $routing->getMethod();
-            $obj      = self::getController($class);
-            $response = Core::initResponse($obj->$method());
+            $obj      = $this->getController($class);
+            $response = $this->initResponse($obj->$method());
 
             Runtime::setHttpHeader("Content-Type", "application/json; charset=utf-8");
             $response->setHeaders();
 
-            self::output($response);
+            $this->output($response);
             // here we execute services AFTER main content
             $frontController->callPostExecution();
         } catch (\Exception $e) {
-            Logger::dump($e->getMessage(), 'file', 'CoreError.log');
+            $this->log->dump($e->getMessage(), 'file', 'CoreError.log');
             if (Service::getConfig()->get('is_dev')) {
                 throw $e;
             } else {
@@ -184,17 +184,17 @@ class Core
      *
      * @return string
      */
-    public static function subExecute($class, $method, $get, $post)
+    public function subExecute($class, $method, $get, $post)
     {
         $request = Service::getRequest()->setFakeRequest($get, $post);
         $routing = Service::getRouting()->setFakeRouting($class, $method);
 
         $call_class  = $routing->getPrefixedClass();
         $call_method = $routing->getMethod();
-        $obj         = self::getController($call_class);
-        $response    = Core::initResponse($obj->$call_method());
+        $obj         = $this->getController($call_class);
+        $response    = $this->initResponse($obj->$call_method());
 
-        $return = self::output($response, true);
+        $return = $this->output($response, true);
 
         $routing->restoreRouting();
         $request->restoreRequest();
@@ -209,7 +209,7 @@ class Core
      *
      * @return
      */
-    public static function output(Response $response, $returnString = false)
+    public function output(Response $response, $returnString = false)
     {
         $content = $response->getContent();
 
@@ -230,7 +230,7 @@ class Core
      * @throws Exception\Error
      * @return
      */
-    public static function initResponse($content)
+    public function initResponse($content)
     {
         if (is_array($content) && isset($content['mode'])) {
             // if mode is set by content
@@ -245,25 +245,25 @@ class Core
             throw new Error('Cant find Response implementation class for "' . $mode . '" in config');
         }
 
-        if (!isset(self::$views[$mode])) {
+        if (!isset($this->views[$mode])) {
             // if view is not inited we create it
             $view = $config->get('View');
             if (isset($view[$mode])) {
-                self::$views[$mode] = new $view[$mode]();
+                $this->views[$mode] = new $view[$mode]();
             } else {
-                self::$views[$mode] = null;
+                $this->views[$mode] = null;
             }
         }
 
-        return new $response[$mode]($content, self::$views[$mode]);
+        return new $response[$mode]($content, $this->views[$mode]);
     }
 
-    protected static function getController($name)
+    protected function getController($name)
     {
-        if (!isset(self::$stored_controllers[$name])) {
+        if (!isset($this->stored_controllers[$name])) {
             // if need to, we create new one.
-            self::$stored_controllers[$name] = new $name();
+            $this->stored_controllers[$name] = new $name();
         }
-        return self::$stored_controllers[$name];
+        return $this->stored_controllers[$name];
     }
 }

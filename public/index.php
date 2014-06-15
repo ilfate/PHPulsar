@@ -11,7 +11,8 @@ if (version_compare(phpversion(), '5.3', '<') == true) {
 	die("requires PHP 5.3.x");
 }
 
-define('ILFATE_PATH', __DIR__ . '/');
+$pulsarPath = strpos(__DIR__, '/public') !== false ? substr(__DIR__, 0, -7) : __DIR__;
+define('ILFATE_PATH', $pulsarPath . '/');
 
 define('SERVER_NAME', $_SERVER['SERVER_NAME']);
 
@@ -31,9 +32,12 @@ if(!defined('HTTP_ROOT'))
 }
 
 // include main engine class
-require 'Core/Core.php';
+require '../Core/AbstractFactory.php';
+require '../Core/Core.php';
 // and initialize it
-Core\Core::init();
+/** @var Core\Core $core */
+$core = Core\Core::getInstance();
+$core->init();
 
 
 

@@ -14,7 +14,7 @@ use Core\Logger\SqlEmpty;
  *
  * @author ilfate
  */
-class Logger
+class Logger extends AbstractFactory
 {
 
     const VARIABLES_OUTPUT = 'output';
@@ -24,61 +24,62 @@ class Logger
      *
      * @var Boolean
      */
-    protected static $is_logger_enabled = true;
+    protected $is_logger_enabled = true;
 
-    protected static $is_output_enabled = false;
+    protected $is_output_enabled = false;
 
-    protected static $is_file_logging_enabled = true;
+    protected $is_file_logging_enabled = true;
 
-    protected static $log_file = 'CoreLog.log';
-    protected static $log_path = 'logs/';
+    protected $log_file = 'CoreLog.log';
+    protected $log_path = 'logs/';
 
-    protected static $is_day_logging = false;
+    protected $is_day_logging = false;
 
-    protected static $is_log_sql = false;
+    protected $is_log_sql = false;
 
     /**
      * Shows is Sql query logging is enabled
      * @var \Core\Interfaces\Logger
      */
-    private static $sqlLogger;
+    private $sqlLogger;
 
     /**
      * Could be 'logger' OR 'output'
      *
      * @var String
      */
-    private static $variable_logging = self::VARIABLES_LOGGER;
+    private $variable_logging = self::VARIABLES_LOGGER;
 
-    private static $variables_container;
+    private $variables_container;
 
-    public static function __staticConstruct()
+    public function __construct()
     {
         $config           = Service::getConfig();
-        self::$is_log_sql = $config->get('log_sql');
-        self::$log_path   = $config->get('logs_path');
-        if (self::$is_log_sql) {
-            self::$sqlLogger = new Sql();
+        $this->is_log_sql = $config->get('log_sql');
+        $this->log_path   = $config->get('logs_path');
+        if ($this->is_log_sql) {
+            $this->sqlLogger = new Sql();
         } else {
-            self::$sqlLogger = new SqlEmpty();
+            $this->sqlLogger = new SqlEmpty();
         }
     }
 
     /**
+     * Drop data to display it in stream or store it to file
      *
      * @param mixed  $data
      * @param String $mode can be 'auto'  'file'  'output'
      * @param null   $file
      */
-    public static function dump($data, $mode = 'auto', $file = null)
+    public function dump($data, $mode = 'auto', $file = null)
     {
         if (
             Service::getRequest()->getExecutingMode() != Request::EXECUTE_MODE_CLI
             && ($mode != 'file' && Service::getConfig()->get('is_dev'))
         ) {
-            self::outputData($data);
+            $this->outputData($data);
         } else if ($mode == 'file' || (Service::getRequest()->getExecutingMode() == Request::EXECUTE_MODE_CLI && $mode != 'output')) {
-            self::saveToFile($data, $file);
+            $this->saveToFile($data, $file);
         }
     }
 
@@ -87,47 +88,47 @@ class Logger
      *
      * @param mixed $data
      */
-    public static function output($data)
+    public function output($data)
     {
-        self::dump($data, 'output');
+        $this->dump($data, 'output');
     }
 
-    public static function getDump()
+    public function getDump()
     {
-        return self::$variables_container;
+        return $this->variables_container;
     }
 
-    public static function setVariablesOutput()
+    public function setVariablesOutput()
     {
-        self::$variable_logging = self::VARIABLES_OUTPUT;
+        $this->variable_logging = self::VARIABLES_OUTPUT;
     }
 
-    public static function setVariablesLogging()
+    public function setVariablesLogging()
     {
-        self::$variable_logging = self::VARIABLES_LOGGER;
+        $this->variable_logging = self::VARIABLES_LOGGER;
     }
 
-    public static function sql_addQuery($query)
+    public function sql_addQuery($query)
     {
-        self::$sqlLogger->addQuery($query);
+        $this->sqlLogger->addQuery($query);
     }
 
-    public static function sql_getLog()
+    public function sql_getLog()
     {
-        return self::$sqlLogger->getLog();
+        return $this->sqlLogger->getLog();
     }
 
-    public static function sql_start($query)
+    public function sql_start($query)
     {
-        self::$sqlLogger->start($query);
+        $this->sqlLogger->start($query);
     }
 
-    public static function sql_finish()
+    public function sql_finish()
     {
-        self::$sqlLogger->finish();
+        $this->sqlLogger->finish();
     }
 
-    public static function time($function, $times = 1000)
+    public function time($function, $times = 1000)
     {
         if ($function instanceof \Closure) {
             $func = $function;
@@ -140,10 +141,10 @@ class Logger
         for ($i = 0; $i < $times; $i++) {
             $func();
         }
-        self::dump('Execution time = ' . (microtime(true) - $time));
+        $this->dump('Execution time = ' . (microtime(true) - $time));
     }
 
-    private static function outputData($data, $force_out = false)
+    private function outputData($data, $force_out = false)
     {
         ob_start();
         if (is_array($data) || is_object($data)) {
@@ -153,26 +154,26 @@ class Logger
         }
         $content = ob_get_clean();
 
-        if (self::$variable_logging == self::VARIABLES_OUTPUT || $force_out) {
+        if ($this->variable_logging == self::VARIABLES_OUTPUT || $force_out) {
             echo $content;
         } else {
-            self::$variables_container[] = $content;
+            $this->variables_container[] = $content;
         }
     }
 
-    private static function saveToFile($data, $file = null)
+    private function saveToFile($data, $file = null)
     {
         ob_start();
-        self::outputData($data, true);
+        $this->outputData($data, true);
         $content = ob_get_clean();
 
         if (!$file) {
-            $file = self::$log_file;
+            $file = $this->log_file;
         }
-        $file = self::$log_path . $file;
+        $file = $this->log_path . $file;
 
         file_put_contents(
-            $file,
+            ILFATE_PATH . $file,
             "\n-----------------------------" . date('d.m.Y H:i:s') . "-----------------------------\n" . $content . "\n",
             FILE_APPEND);
     }

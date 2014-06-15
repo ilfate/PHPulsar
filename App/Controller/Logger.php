@@ -16,14 +16,25 @@ use App\Controller;
  */
 class Logger extends Controller
 {
+    /** @var \App\Logger */
+    protected $log;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->log = \App\Logger::getInstance();
+    }
+
     /**
      *
      * @return array
      */
     public function index()
     {
-        $queryes   = \App\Logger::sql_getLog();
-        $variables = \App\Logger::getDump();
+        $queryes = $this->log->sql_getLog();
+        $variables = $this->log->getDump();
         return array(
             'queryes'   => $queryes,
             'variables' => is_array($variables) ? $variables : array()

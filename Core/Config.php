@@ -49,7 +49,7 @@ class Config
         }
 
         if (empty($this->$type)) {
-            $this->$type = require self::CONFIGS_PATH . 'config.' . $type . '.php';
+            $this->$type = require ILFATE_PATH . self::CONFIGS_PATH . 'config.' . $type . '.php';
             if (empty($this->$type)) {
                 throw new ConfigError('One wants to get wrong Config type here...');
             }

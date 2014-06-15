@@ -23,8 +23,11 @@ class PDOmysql extends Provider
      *
      * @var \PDO
      */
-    private static $PDO;
-    private static $config;
+    private $PDO;
+    private $config;
+    
+    /** @var Logger */
+    protected $log;
 
     /**
      * Default PDO options to set for each connection.
@@ -37,22 +40,25 @@ class PDOmysql extends Provider
         \PDO::ATTR_STRINGIFY_FETCHES => false
     );
 
-    public static function __staticConstruct()
+    public function __construct()
+    {
+        $this->log = $this->log->getInstance();
+        $this->init();
+    }
+
+    public function init()
     {
         if (!class_exists('PDO')) {
             throw new ModelError('PDO provider needs PDO class... surprise!');
         }
-    }
-
-    public static function init()
-    {
-        self::$config = Service::getConfig()->get('CoreProvider_PDOmysql');
+        
+        $this->config = Service::getConfig()->get('CoreProvider_PDOmysql');
 
         try {
-            self::$PDO = new \PDO(
-                'mysql:dbname=' . self::$config['dbname'] . ';host=' . self::$config['host'],
-                self::$config['login'],
-                self::$config['pass'],
+            $this->PDO = new \PDO(
+                'mysql:dbname=' . $this->config['dbname'] . ';host=' . $this->config['host'],
+                $this->config['login'],
+                $this->config['pass'],
                 static::$PDO_OPTIONS
             );
         } catch (\PDOException $e) {
@@ -62,22 +68,22 @@ class PDOmysql extends Provider
         }
     }
 
-    public static function fetch($query, $params)
+    public function fetch($query, $params)
     {
-        Logger::sql_start($query);
-        $source = self::$PDO->prepare($query);
+        $this->log->sql_start($query);
+        $source = $this->PDO->prepare($query);
         $source->execute($params);
         $data = $source->fetchAll(\PDO::FETCH_ASSOC);
-        Logger::sql_finish();
+        $this->log->sql_finish();
         return $data;
     }
 
-    public static function execute($query, $params)
+    public function execute($query, $params)
     {
-        Logger::sql_start($query);
-        $source = self::$PDO->prepare($query);
+        $this->log->sql_start($query);
+        $source = $this->PDO->prepare($query);
         $data   = $source->execute($params);
-        Logger::sql_finish();
+        $this->log->sql_finish();
         if ($data) {
             return $source->rowCount();
         } else {
@@ -85,9 +91,12 @@ class PDOmysql extends Provider
         }
     }
 
-    public static function lastInsertId()
+    /**
+     * @return int
+     */
+    public function lastInsertId()
     {
-        return self::$PDO->lastInsertId();
+        return $this->PDO->lastInsertId();
     }
 
     public function native_database_types()

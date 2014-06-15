@@ -22,6 +22,14 @@ use App\Validator;
  */
 class Auth extends Controller
 {
+    /** @var User  */
+    protected $userModel;
+
+    /** Constructor */
+    public function __construct()
+    {
+        $this->userModel = User::getInstance();
+    }
 
     /**
      *
@@ -68,7 +76,7 @@ class Auth extends Controller
         }
 
         $post = Service::getRequest()->getPost();
-        $user = User::createUserWithEmail($post['email'], $post['pass'], $post['name']);
+        $user = $this->userModel->createUserWithEmail($post['email'], $post['pass'], $post['name']);
         self::auth($user);
         Message::add('Welcome!!');
         return array(
@@ -89,7 +97,7 @@ class Auth extends Controller
             return Validator::getFormErrorAnswer();
         }
         $post = Service::getRequest()->getPost();
-        $user = User::getUserByEmailAndPassword($post['email'], $post['password']);
+        $user = $this->userModel->getUserByEmailAndPassword($post['email'], $post['password']);
         self::auth($user);
         Message::add('Hi!!!');
         return array(

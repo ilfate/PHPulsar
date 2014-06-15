@@ -84,6 +84,7 @@ abstract class CachingClass
      */
     public static function __callStatic($method, $arguments = array())
     {
+        $cache      = Cache::getInstance();
         $class      = get_called_class();
         $callMethod = "_" . $method;
         $metaKey    = self::getMetaKeyMethod($method, true);
@@ -91,7 +92,7 @@ abstract class CachingClass
         // If if have correct params we starting to looking for cache
         if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) {
             $cacheKey = self::getCacheKey($method, $arguments);
-            if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) {
+            if (static::$forceNoCache || ($result = $cache->get($cacheKey)) === false) {
                 $result = forward_static_call_array(array($class, $callMethod), $arguments);
                 $tags   = null;
                 if (!empty(self::$meta[$metaKey]["tags"])) {
@@ -101,7 +102,7 @@ abstract class CachingClass
                         $tags[] = self::getCacheTag($tag, $arguments);
                     }
                 }
-                Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
+                $cache->set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
             } elseif ($result === "\0") {
                 $result = false;
             }
@@ -123,13 +124,14 @@ abstract class CachingClass
      */
     public function __call($method, $arguments = array())
     {
+        $cache      = Cache::getInstance();
         $callMethod = "_" . $method;
         $metaKey    = self::getMetaKeyMethod($method, false);
 
         // If if have correct params we starting to looking for cache
         if (!empty(self::$meta[$metaKey]) && self::$meta[$metaKey]["cache"]) {
             $cacheKey = self::getCacheKey($method, $arguments);
-            if (static::$forceNoCache || ($result = Cache::get($cacheKey)) === false) {
+            if (static::$forceNoCache || ($result = $cache->get($cacheKey)) === false) {
                 $result = call_user_func_array(array($this, $callMethod), $arguments);
                 $tags   = null;
                 if (!empty(self::$meta[$metaKey]["tags"])) {
@@ -139,7 +141,7 @@ abstract class CachingClass
                         $tags[] = self::getCacheTag($tag, $arguments);
                     }
                 }
-                Cache::set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
+                $cache->set($cacheKey, ($result === false) ? "\0" : $result, self::$meta[$metaKey]["expire"], $tags);
             } elseif ($result === "\0") {
                 $result = false;
             }

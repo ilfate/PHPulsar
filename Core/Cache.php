@@ -14,28 +14,23 @@ use Core\Exception\CacheError;
  *
  * @author ilfate
  */
-class Cache
+class Cache extends AbstractFactory
 {
 
     const MEMCACHED = 'memcached';
     const MEMCACHE  = 'memcache';
 
     /** @var \Memcached */
-    private static $cache;
+    private $cache;
 
-    private static $local;
+    private $local;
 
-    protected static $preffix;
+    protected $preffix;
 
-    public static function __staticConstruct()
+    public function __construct()
     {
-        self::init();
-    }
-
-    public static function init()
-    {
-        $cache   = self::getMemCache();
-        $servers = self::getServers();
+        $cache   = $this->getMemCache();
+        $servers = $this->getServers();
         if (!$servers) {
             $cache->addServer('localhost', 11211);
         }
@@ -47,24 +42,26 @@ class Cache
      * @throws CacheError if extension isn't loaded
      * @return \Memcached the memcache instance
      */
-    protected static function getMemCache()
+    protected function getMemCache()
     {
-        if (self::$cache !== null) {
-            return self::$cache;
+        if ($this->cache !== null) {
+            return $this->cache;
         } else {
             $extension = self::MEMCACHED;
             if (!extension_loaded($extension)) {
+                phpinfo();
+                die;
                 throw new CacheError('Cache requires PHP ' . $extension . ' extension to be loaded');
             }
-            self::$cache = new \Memcached();
-            self::$cache->setOption(\Memcached::OPT_COMPRESSION, false);
-            self::$cache->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
+            $this->cache = new \Memcached();
+            $this->cache->setOption(\Memcached::OPT_COMPRESSION, false);
+            $this->cache->setOption(\Memcached::OPT_LIBKETAMA_COMPATIBLE, true);
 
-            return self::$cache;
+            return $this->cache;
         }
     }
 
-    private static function getServers()
+    private function getServers()
     {
         return null;
     }
@@ -76,16 +73,16 @@ class Cache
      *
      * @return string
      */
-    protected static function processKey($key)
+    protected function processKey($key)
     {
-        if (empty(self::$preffix)) {
+        if (empty($this->preffix)) {
             $config        = Service::getConfig();
-            self::$preffix = $config->get('cache_preffix') ? : $config->get('site_url');
+            $this->preffix = $config->get('cache_preffix') ? : $config->get('site_url');
         }
-        if (strstr($key, self::$preffix) == $key) {
+        if (strstr($key, $this->preffix) == $key) {
             return $key;
         }
-        return self::$preffix . '_' . $key;
+        return $this->preffix . '_' . $key;
     }
 
     /**
@@ -94,13 +91,13 @@ class Cache
      *
      * @return mixed
      */
-    public static function get($key)
+    public function get($key)
     {
-        $key = self::processKey($key);
-        if (!isset(self::$local[$key])) {
-            self::$local[$key] = self::$cache->get($key);
+        $key = $this->processKey($key);
+        if (!isset($this->local[$key])) {
+            $this->local[$key] = $this->cache->get($key);
         }
-        return self::$local[$key];
+        return $this->local[$key];
     }
 
     /**
@@ -112,9 +109,9 @@ class Cache
      *
      * @return Boolean
      */
-    public static function set($key, $value, $expire = 0, array $tags = null)
+    public function set($key, $value, $expire = 0, array $tags = null)
     {
-        $key = self::processKey($key);
+        $key = $this->processKey($key);
         if ($expire > 0) {
             $expire += time();
         } else {
@@ -124,20 +121,20 @@ class Cache
             $need_to_set = array();
             foreach ($tags as $tag) {
                 // Try to append keys if tag exists
-                $tag = self::processKey($tag);
-                if (!self::$cache->append("__tag__" . $tag, "||" . $key)) {
+                $tag = $this->processKey($tag);
+                if (!$this->cache->append("__tag__" . $tag, "||" . $key)) {
                     $need_to_set["__tag__" . $tag] = $key;
                 }
             }
             if (!empty($need_to_set)) {
                 // Creating tags that are not exists
-                self::$cache->setMulti($need_to_set);
+                $this->cache->setMulti($need_to_set);
             }
         }
 
-        self::$local[$key] = $value;
+        $this->local[$key] = $value;
 
-        return self::$cache->set($key, $value, $expire);
+        return $this->cache->set($key, $value, $expire);
     }
 
     /**
@@ -149,9 +146,9 @@ class Cache
      *
      * @return Boolean
      */
-    public static function add($key, $value, $expire, array $tags = null)
+    public function add($key, $value, $expire, array $tags = null)
     {
-        $key = self::processKey($key);
+        $key = $this->processKey($key);
         if ($expire > 0) {
             $expire += time();
         } else {
@@ -162,21 +159,21 @@ class Cache
             $need_to_set = array();
             foreach ($tags as $tag) {
                 // Try to append keys if tag exists
-                $tag = self::processKey($tag);
-                if (!self::$cache->append("__tag__" . $tag, "||" . $key)) {
+                $tag = $this->processKey($tag);
+                if (!$this->cache->append("__tag__" . $tag, "||" . $key)) {
                     $need_to_set["__tag__" . $tag] = $key;
                 }
             }
             if (!empty($need_to_set)) {
                 // Creating tags that are not exists
-                self::$cache->setMulti($need_to_set);
+                $this->cache->setMulti($need_to_set);
             }
         }
 
-        if (!isset(self::$local[$key])) {
-            self::$local[$key] = $value;
+        if (!isset($this->local[$key])) {
+            $this->local[$key] = $value;
         }
-        return self::$cache->add($key, $value, $expire);
+        return $this->cache->add($key, $value, $expire);
     }
 
     /**
@@ -185,13 +182,13 @@ class Cache
      *
      * @return Boolean
      */
-    public static function delete($key)
+    public function delete($key)
     {
-        $key = self::processKey($key);
-        if (isset(self::$local[$key])) {
-            unset(self::$local[$key]);
+        $key = $this->processKey($key);
+        if (isset($this->local[$key])) {
+            unset($this->local[$key]);
         }
-        return self::$cache->delete($key, 0);
+        return $this->cache->delete($key, 0);
     }
 
     /**
@@ -201,16 +198,16 @@ class Cache
      *
      * @return boolean
      */
-    public static function deleteTag($tag)
+    public function deleteTag($tag)
     {
-        $tag  = self::processKey($tag);
-        $keys = self::$cache->get("__tag__" . $tag);
+        $tag  = $this->processKey($tag);
+        $keys = $this->cache->get("__tag__" . $tag);
         if ($keys) {
             $keys = explode("||", $keys);
             foreach ($keys as $key) {
-                self::delete($key);
+                $this->delete($key);
             }
-            self::delete("__tag__" . $tag);
+            $this->delete("__tag__" . $tag);
             $result = true;
         } else {
             $result = false;
@@ -222,9 +219,9 @@ class Cache
      * Flushes all cache
      * @return mixed
      */
-    public static function flush()
+    public function flush()
     {
-        self::$local = array();
-        return self::$cache->flush();
+        $this->local = array();
+        return $this->cache->flush();
     }
 }

@@ -16,12 +16,26 @@ use Core\Exception\ModelError;
  */
 abstract class Model extends CachingClass
 {
+
+    /** @var AbstractFactory[]  */
+    private static $instances = array();
+
+    public static function getInstance()
+    {
+        $class = get_called_class();
+        if (empty(self::$instances[$class])) {
+
+            self::$instances[$class] = new $class();
+        }
+        return self::$instances[$class];
+    }
+    
     /**
      * obviosly Table name!
      *
      * @var String
      */
-    public static $table_name;
+    public $table_name;
 
     /**
      * Here we got Primary Key!
@@ -29,9 +43,12 @@ abstract class Model extends CachingClass
      *
      * @var Mixed
      */
-    public static $PK = 'id';
+    public $primaryKey = 'id';
 
-    public static $provider_type = 'CoreProvider_PDOmysql';
+    public $provider_type = 'CoreProvider_PDOmysql';
+
+    /** @var Provider */
+    protected $provider;
 
     private $data;
     private $originData;
@@ -42,29 +59,22 @@ abstract class Model extends CachingClass
      * @param mixed $data
      * @param bool  $is_new_object if true passed data will not be saved as origin
      */
-    public function __construct($data, $is_new_object = false)
+    public function __construct($data = null, $is_new_object = false)
     {
+        $this->initProvider();
         $this->data = $data;
         if (!$is_new_object) {
             $this->originData = $data;
-        }
+        }   
     }
 
-    /**
-     * Our static constructor will init for us that connection.
-     */
-    public static function __staticConstruct()
-    {
-        self::initProvider();
-    }
 
-    protected static function initProvider()
+    protected function initProvider()
     {
-        if (!class_exists(self::$provider_type)) {
-            throw new ModelError('Cant init Model. "' . self::$provider_type . '" class is missing.');
+        if (!class_exists($this->provider_type)) {
+            throw new ModelError('Cant init Model. "' . $this->provider_type . '" class is missing.');
         }
-
-        forward_static_call(array(self::$provider_type, 'init'));
+        $this->provider = forward_static_call(array($this->provider_type, 'getInstance'));
     }
 
     /**
@@ -77,20 +87,20 @@ abstract class Model extends CachingClass
      *
      * @return bool
      */
-    public static function getByPK($pk)
+    public function getByPK($pk)
     {
-        if (!is_array(self::$PK)) {
+        if (!is_array($this->primaryKey)) {
             // here all simple
-            $where = '`' . static::$PK . '` = ?';
-            $pk    = self::filter($pk);
+            $where = '`' . $this->primaryKey . '` = ?';
+            $pk    = $this->filter($pk);
         } else {
-            // here we have complicated PK
-            $where = array_intersect_key($pk, array_flip(static::$PK));
-            list($where, $params) = self::getWhereStringAndParams($where);
+            // here we have complicated primaryKey
+            $where = array_intersect_key($pk, array_flip($this->primaryKey));
+            list($where, $params) = $this->getWhereStringAndParams($where);
         }
-        $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
+        $query = 'SELECT * FROM ' . $this->table_name . ' WHERE ' . $where;
 
-        $data = self::select($query, is_array(static::$PK) ? $params : array($pk));
+        $data = $this->select($query, is_array($this->primaryKey) ? $params : array($pk));
         if ($data) {
             $class = get_called_class();
             return new $class($data[0]);
@@ -109,12 +119,12 @@ abstract class Model extends CachingClass
      *
      * @return array
      */
-    public static function getRecord($where, $params = null)
+    public function getRecord($where, $params = null)
     {
-        list($where, $params) = self::getWhereStringAndParams($where, $params);
+        list($where, $params) = $this->getWhereStringAndParams($where, $params);
 
-        $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
-        $data  = self::select($query, $params);
+        $query = 'SELECT * FROM ' . $this->table_name . ' WHERE ' . $where;
+        $data  = $this->select($query, $params);
         if (isset($data[0])) {
             $class = get_called_class();
             return new $class($data[0]);
@@ -133,20 +143,20 @@ abstract class Model extends CachingClass
      *
      * @return array
      */
-    public static function getList($where, $params = null)
+    public function getList($where, $params = null)
     {
-        list($where, $params) = self::getWhereStringAndParams($where, $params);
+        list($where, $params) = $this->getWhereStringAndParams($where, $params);
 
-        $query = 'SELECT * FROM ' . static::$table_name . ' WHERE ' . $where;
-        $data  = self::select($query, $params);
+        $query = 'SELECT * FROM ' . $this->table_name . ' WHERE ' . $where;
+        $data  = $this->select($query, $params);
 
-        return self::createObjectList($data, get_called_class());
+        return $this->createObjectList($data, get_called_class());
     }
 
     /**
      * Seme as ::getList() just returns only named fields for $fields array
      *
-     * return array will be NOT assoc (coz we not sure is PK field is returned)
+     * return array will be NOT assoc (coz we not sure is primaryKey field is returned)
      *
      * @param array $fields
      * @param mixed $where
@@ -154,13 +164,13 @@ abstract class Model extends CachingClass
      *
      * @return array
      */
-    public static function getFields($fields, $where, $params = null)
+    public function getFields($fields, $where, $params = null)
     {
-        list($where, $params) = self::getWhereStringAndParams($where, $params);
-        $query = 'SELECT ' . self::getFieldsString($fields) . ' FROM ' . static::$table_name . ' WHERE ' . $where;
-        $data  = self::select($query, $params);
+        list($where, $params) = $this->getWhereStringAndParams($where, $params);
+        $query = 'SELECT ' . $this->getFieldsString($fields) . ' FROM ' . $this->table_name . ' WHERE ' . $where;
+        $data  = $this->select($query, $params);
 
-        return self::createObjectList($data, get_called_class(), false);
+        return $this->createObjectList($data, get_called_class(), false);
     }
 
     /**
@@ -173,11 +183,11 @@ abstract class Model extends CachingClass
      *
      * @return String
      */
-    public static function getValue($field, $where, $params = null)
+    public function getValue($field, $where, $params = null)
     {
-        list($where, $params) = self::getWhereStringAndParams($where, $params);
-        $query = 'SELECT `' . $field . '` FROM ' . static::$table_name . ' WHERE ' . $where;
-        $data  = self::select($query, $params);
+        list($where, $params) = $this->getWhereStringAndParams($where, $params);
+        $query = 'SELECT `' . $field . '` FROM ' . $this->table_name . ' WHERE ' . $where;
+        $data  = $this->select($query, $params);
         if ($data && isset($data[0])) {
             return $data[0][$field];
         } else {
@@ -193,9 +203,10 @@ abstract class Model extends CachingClass
      *
      * @return mixed
      */
-    public static function select($query, $params)
+    public function select($query, $params)
     {
-        return forward_static_call(array(self::$provider_type, 'fetch'), $query, $params);
+        return $this->provider->fetch($query, $params);
+        //return forward_static_call(array($this->provider_type, 'fetch'), $query, $params);
     }
 
     /**
@@ -206,9 +217,10 @@ abstract class Model extends CachingClass
      *
      * @return type
      */
-    public static function execute($query, $params)
+    public function execute($query, $params)
     {
-        return forward_static_call(array(self::$provider_type, 'execute'), $query, $params);
+        return $this->provider->execute($query, $params);
+        //return forward_static_call(array($this->provider_type, 'execute'), $query, $params);
     }
 
     /**
@@ -216,9 +228,10 @@ abstract class Model extends CachingClass
      *
      * @return integer
      */
-    public static function lastInsertId()
+    public function lastInsertId()
     {
-        return forward_static_call(array(self::$provider_type, 'lastInsertId'));
+        return $this->provider->lastInsertId();
+        //return forward_static_call(array($this->provider_type, 'lastInsertId'));
     }
 
     /**
@@ -228,11 +241,11 @@ abstract class Model extends CachingClass
      *
      * @return type
      */
-    public static function filter($data)
+    public function filter($data)
     {
         if (is_array($data)) {
             foreach ($data as &$str) {
-                $str = self::filter($str);
+                $str = $this->filter($str);
             }
             return $data;
         } else {
@@ -263,18 +276,18 @@ abstract class Model extends CachingClass
     {
         if ($this->originData) {
             $new_data = array_diff_assoc($this->data, $this->originData);
-            if (!is_array(static::$PK)) {
-                // single field PK
-                $where = array(static::$PK => $this->data[static::$PK]);
-            } else { // multi field PK
+            if (!is_array($this->primaryKey)) {
+                // single field primaryKey
+                $where = array($this->primaryKey => $this->data[$this->primaryKey]);
+            } else { // multi field primaryKey
                 $where = array();
-                foreach (static::$PK as $pk_field) {
+                foreach ($this->primaryKey as $pk_field) {
                     $where[$pk_field] = $this->data[$pk_field];
                 }
             }
-            self::update($new_data, $where);
+            $this->update($new_data, $where);
         } else {
-            self::insert($this->data);
+            $this->insert($this->data);
         }
     }
 
@@ -285,7 +298,7 @@ abstract class Model extends CachingClass
      * @param array $data
      * @param mixed $where
      */
-    public static function update(array $data, $where)
+    public function update(array $data, $where)
     {
         $set = array();
         foreach ($data as $key => $value) {
@@ -293,10 +306,10 @@ abstract class Model extends CachingClass
         }
         $set = implode(', ', $set);
 
-        list($where, $params) = self::getWhereStringAndParams($where);
+        list($where, $params) = $this->getWhereStringAndParams($where);
 
-        $query = 'UPDATE ' . static::$table_name . ' SET ' . $set . ' WHERE ' . $where;
-        self::execute($query, $params);
+        $query = 'UPDATE ' . $this->table_name . ' SET ' . $set . ' WHERE ' . $where;
+        $this->execute($query, $params);
     }
 
     /**
@@ -306,7 +319,7 @@ abstract class Model extends CachingClass
      *
      * @return int
      */
-    public static function insert($data)
+    public function insert($data)
     {
         $fields_arr = array();
         $values_arr = array();
@@ -318,9 +331,9 @@ abstract class Model extends CachingClass
         }
         $fields = implode(', ', $fields_arr);
         $values = implode(', ', $values_arr);
-        $query  = 'INSERT INTO ' . static::$table_name . ' ( ' . $fields . ' ) VALUES ( ' . $values . ' ) ';
-        self::execute($query, $params);
-        return self::lastInsertId();
+        $query  = 'INSERT INTO ' . $this->table_name . ' ( ' . $fields . ' ) VALUES ( ' . $values . ' ) ';
+        $this->execute($query, $params);
+        return $this->lastInsertId();
     }
 
     /**
@@ -333,7 +346,7 @@ abstract class Model extends CachingClass
         return $this->data;
     }
 
-    protected static function getWhereStringAndParams($data, $params = null)
+    protected function getWhereStringAndParams($data, $params = null)
     {
         if (is_array($data)) {
             $string_arr = array();
@@ -349,7 +362,7 @@ abstract class Model extends CachingClass
         return array($where, $params);
     }
 
-    protected static function getFieldsString(array $fields)
+    protected function getFieldsString(array $fields)
     {
         $fields_arr = array();
         foreach ($fields as $field) {
@@ -359,14 +372,14 @@ abstract class Model extends CachingClass
         return $fields_string;
     }
 
-    protected static function createObjectList($data, $class, $is_assoc = true)
+    protected function createObjectList($data, $class, $is_assoc = true)
     {
         $return = array();
         if ($data) {
             foreach ($data as $row) {
                 $obj = new $class($row);
-                if ($is_assoc && !is_array(static::$PK) && isset($row[static::$PK])) {
-                    $return[$row[static::$PK]] = $obj;
+                if ($is_assoc && !is_array($this->primaryKey) && isset($row[$this->primaryKey])) {
+                    $return[$row[$this->primaryKey]] = $obj;
                 } else {
                     $return[] = $obj;
                 }

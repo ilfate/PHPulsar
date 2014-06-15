@@ -20,7 +20,7 @@ class Http extends View
 {
 
     const TEMPLATE_FILE_EXTENSION = 'tpl';
-    const TEMPLATE_PATH           = 'app/tpl/';
+    const TEMPLATE_PATH           = 'App/view/';
 
     private static $global_values = array();
 
@@ -43,14 +43,14 @@ class Http extends View
     public function render($render__template, $render__values = array(), array $render__layout = array())
     {
         $render__merged_values = array_merge(self::$global_values, $render__values);
-        $render__file          = self::TEMPLATE_PATH . $render__template;
+        $render__file          = ILFATE_PATH . self::TEMPLATE_PATH . $render__template;
 
         $this->checkFile($render__file);
 
         extract($render__merged_values);
         ob_start();
 
-        require ILFATE_PATH . $render__file;
+        require $render__file;
 
         $html = ob_get_clean();
 
@@ -73,7 +73,7 @@ class Http extends View
     private function checkFile($file)
     {
         if (!isset($this->checked_files[$file])) {
-            if (!file_exists(ILFATE_PATH . $file)) {
+            if (!file_exists($file)) {
                 throw new ViewHttpError('Can`t locate template file at ' . $file);
             }
             $this->checked_files[$file] = true;

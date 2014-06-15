@@ -14,6 +14,8 @@ namespace Core;
  */
 class Helper
 {
+    /** @var Core */
+    private static $core;
 
     /**
      * Creates new core execution ( like open link with anther link )
@@ -32,7 +34,8 @@ class Helper
      */
     public static function exe($class, $method, $get = null, $post = null)
     {
-        return Core::subExecute($class, $method, $get, $post);
+        $core = self::getCore();
+        return $core->subExecute($class, $method, $get, $post);
     }
 
     /**
@@ -117,6 +120,14 @@ class Helper
     public static function lang($key)
     {
         return Service::getLanguage()->get($key);
+    }
+
+    private static function getCore()
+    {
+        if (empty(self::$core)) {
+            self::$core = Core::getInstance();
+        }
+        return self::$core;
     }
 
 }

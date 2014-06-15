@@ -14,7 +14,7 @@ use \Core\Interfaces\Provider as ProviderInterface;
  *
  * @author ilfate
  */
-abstract class Provider implements ProviderInterface
+abstract class Provider extends AbstractFactory implements ProviderInterface
 {
 
 }

@@ -15,5 +15,3 @@ namespace Core\Interfaces;
 interface Provider {
   
 }
-
-?>

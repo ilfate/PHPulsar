@@ -1,4 +1,4 @@
-<?= App\FrontController\Csrf::createInput() ?>
+<?= App\Csrf::createInput() ?>
 <?= $this->render('menu.tpl') ?>
 
 

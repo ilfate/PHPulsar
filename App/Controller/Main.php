@@ -20,7 +20,16 @@ use App\Request;
  */
 class Main extends Controller
 {
-    //put your code here
+    /** @var \App\Logger */
+    protected $log;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->log = \App\Logger::getInstance();
+    }
 
     /**
      *
@@ -52,9 +61,9 @@ class Main extends Controller
      * @cache 10 tag tag2aw
      * @return array tags t2[2][0]
      */
-    public static function _cache()
+    public function _cache()
     {
-        Logger::dump('_cache method. no chache<br>');
+        $this->log->dump('_cache method. no chache<br>');
         return array(
             'tpl' => 'Main/index.tpl'
         );
@@ -62,11 +71,12 @@ class Main extends Controller
 
     public function mysql()
     {
-        $user       = User::getByPK(3);
+        $userModel = User::getInstance();
+        $user       = $userModel->getByPK(3);
         $user->name = 'masha_' . mt_rand(1000, 9999);
         $user->save();
-        $users = User::getValue('email', ' id > ?', array(3));
-        Logger::dump($users);
+        $users = $userModel->getValue('email', ' id > ?', array(3));
+        $this->log->dump($users);
         return array(
             'tpl' => 'Main/index.tpl'
         );
@@ -89,13 +99,14 @@ class Main extends Controller
      */
     public function _Menu()
     {
-        Logger::dump('menu no cahche');
+        $this->log->dump('menu no cahche');
         return array();
     }
 
     public function flush()
     {
-        Cache::flush();
+        $cache = Cache::getInstance();
+        $cache->flush();
         Helper::redirect('Main', 'index');
     }
 }
